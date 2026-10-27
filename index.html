@@ -270,7 +270,13 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
             <h2 style="font-size:18px; color:var(--teal);">Admin Login</h2>
             <button onclick="closeAdminLoginModal()" style="background:#e2e8f0; border:none; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer;">✕</button>
         </div>
-        <input id="adminPassword" type="password" placeholder="Enter Admin Password" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px; margin-bottom:15px; outline:none;">
+        <input id="adminPassword" type="password" placeholder="Enter Admin Password" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px; margin-bottom:10px; outline:none;">
+        
+        <!-- FORGOT PASSWORD LINK -->
+        <div style="text-align:right; margin-bottom:15px;">
+            <a href="javascript:void(0)" onclick="handleForgotPassword()" style="font-size:12px; color:var(--teal); text-decoration:none; font-weight:700;">Forgot Password?</a>
+        </div>
+
         <button onclick="adminLogin()" class="admin-submit-btn">Login</button>
     </div>
 </div>
@@ -1281,7 +1287,7 @@ function openOrdersModal(){
             }
 
             return `
-                <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:10px; margin-bottom:10px;">
+                <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:10px; margin-bottom:10px; position:relative;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
                         <b style="font-size:13px; color:var(--teal);">${o.id}</b>
                         ${statusBadge}
@@ -1290,8 +1296,9 @@ function openOrdersModal(){
                         মূল্য: ৳${o.total} | TrxID: ${o.trxId}<br>
                         ${o.itemsText.replace(/\n/g, '<br>')}
                     </div>
-                    <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
-                        ${actionButtons}
+                    <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:space-between;">
+                        <div style="display:flex; gap:6px; flex-wrap:wrap;">${actionButtons}</div>
+                        <button onclick="removeCustomerOrder(${idx})" style="background:#fee2e2; color:#ef4444; border:none; padding:5px 10px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:bold;" title="লিস্ট থেকে সরান"><i class="fa-solid fa-trash"></i> রিমুভ</button>
                     </div>
                 </div>
             `;
@@ -1309,6 +1316,13 @@ function customerCancelOrder(idx){
         openOrdersModal();
         showToast("অর্ডারটি সফলভাবে বাতিল করা হয়েছে।");
     }
+}
+
+function removeCustomerOrder(idx){
+    myOrders.splice(idx, 1);
+    localStorage.setItem("adoresMyOrders", JSON.stringify(myOrders));
+    openOrdersModal();
+    showToast("অর্ডারটি লিস্ট থেকে রিমুভ করা হয়েছে");
 }
 
 function openVoucher(idx){
@@ -1335,6 +1349,10 @@ function handleSecretClick(){
     }
 }
 function closeAdminLoginModal(){ document.getElementById("adminLoginModal").classList.remove("show"); }
+
+function handleForgotPassword(){
+    alert("পাসওয়ার্ড রিসেট করতে সাপোর্টে যোগাযোগ করুন (Call/WhatsApp: 01681578599)।");
+}
 
 function adminLogin(){
     if(document.getElementById("adminPassword").value === "DJ778899"){
@@ -1402,13 +1420,19 @@ function generateCouponBatch(){
     localStorage.setItem("adoresBatchCoupons", JSON.stringify(batchCoupons));
     renderAdminCouponsList();
     showToast(`${qty}টি ইউনিক কুপন সফলভাবে জেনারেট হয়েছে!`);
-    
-    closeAdminModal('couponModal');
 
     document.getElementById("couponPrefixInput").value = "";
     document.getElementById("couponQtyInput").value = "";
     document.getElementById("couponDiscountInput").value = "";
     document.getElementById("couponProductIdInput").value = "";
+}
+
+function copyCouponCode(code){
+    navigator.clipboard.writeText(code).then(() => {
+        showToast(`কুপন '${code}' কপি করা হয়েছে!`);
+    }).catch(() => {
+        showToast(`কুপন: ${code}`);
+    });
 }
 
 function renderAdminCouponsList(){
@@ -1427,7 +1451,10 @@ function renderAdminCouponsList(){
                     <b>${c.code}</b> (${c.discountPercent}%) ${statusBadge}<br>
                     <span style="color:#64748b;">${prodText} | মেয়াদ: ${expiryStr}</span>
                 </div>
-                <button onclick="deleteBatchCoupon(${idx})" style="background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:6px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                <div style="display:flex; gap:4px;">
+                    <button onclick="copyCouponCode('${c.code}')" style="background:var(--teal); color:#fff; border:none; padding:4px 8px; border-radius:6px; cursor:pointer;" title="কোড কপি করুন"><i class="fa-solid fa-copy"></i></button>
+                    <button onclick="deleteBatchCoupon(${idx})" style="background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:6px; cursor:pointer;" title="ডিলিট করুন"><i class="fa-solid fa-trash"></i></button>
+                </div>
             </div>
         `;
     }).join("");
@@ -1596,15 +1623,18 @@ function renderAdminOrders(){
         return `
             <div style="background:#fff; border:1px solid #cbd5e1; padding:8px; border-radius:8px; margin-bottom:8px; font-size:12px;">
                 <b>${o.id}</b> - ${o.name} (${o.phone})<br>৳${o.total} | TrxID: ${o.trxId}<br>
-                <div style="margin-top:6px; display:flex; gap:4px; flex-wrap:wrap;">
-                    ${currentAdminTab === 'pending' ? `
-                        <button onclick="updateOrderStatus(${origIdx}, 'packed')" style="background:#00897b; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">📦 প্যাকেজিং ডান</button>
-                        <button onclick="updateOrderStatus(${origIdx}, 'out_of_stock')" style="background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">❌ স্টক শেষ (Cancel)</button>
-                    ` : ''}
-                    ${currentAdminTab === 'packed' ? `
-                        <button onclick="updateOrderStatus(${origIdx}, 'completed')" style="background:#10b981; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">কমপ্লিট</button>
-                    ` : ''}
-                    <button onclick="updateOrderStatus(${origIdx}, 'cancelled')" style="background:#64748b; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">বাতিল করুন</button>
+                <div style="margin-top:6px; display:flex; gap:4px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
+                    <div style="display:flex; gap:4px; flex-wrap:wrap;">
+                        ${currentAdminTab === 'pending' ? `
+                            <button onclick="updateOrderStatus(${origIdx}, 'packed')" style="background:#00897b; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">📦 প্যাকেজিং ডান</button>
+                            <button onclick="updateOrderStatus(${origIdx}, 'out_of_stock')" style="background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">❌ স্টক শেষ (Cancel)</button>
+                        ` : ''}
+                        ${currentAdminTab === 'packed' ? `
+                            <button onclick="updateOrderStatus(${origIdx}, 'completed')" style="background:#10b981; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">কমপ্লিট</button>
+                        ` : ''}
+                        <button onclick="updateOrderStatus(${origIdx}, 'cancelled')" style="background:#64748b; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">বাতিল করুন</button>
+                    </div>
+                    <button onclick="deleteAdminOrder(${origIdx})" style="background:#fee2e2; color:#ef4444; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;" title="অর্ডারটি স্থায়ীভাবে ডিলিট করুন"><i class="fa-solid fa-trash"></i> ডিলিট</button>
                 </div>
             </div>
         `;
@@ -1616,6 +1646,13 @@ function updateOrderStatus(idx, status){
     localStorage.setItem("adoresMyOrders", JSON.stringify(myOrders));
     renderAdminOrders();
     showToast("অর্ডারের স্ট্যাটাস আপডেট হয়েছে!");
+}
+
+function deleteAdminOrder(idx){
+    myOrders.splice(idx, 1);
+    localStorage.setItem("adoresMyOrders", JSON.stringify(myOrders));
+    renderAdminOrders();
+    showToast("অর্ডারটি সফলভাবে ডিলিট করা হয়েছে");
 }
 </script>
 </body>
