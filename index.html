@@ -271,12 +271,9 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
             <button onclick="closeAdminLoginModal()" style="background:#e2e8f0; border:none; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer;">✕</button>
         </div>
         <input id="adminPassword" type="password" placeholder="Enter Admin Password" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px; margin-bottom:10px; outline:none;">
-        
-        <!-- FORGOT PASSWORD LINK -->
         <div style="text-align:right; margin-bottom:15px;">
             <a href="javascript:void(0)" onclick="handleForgotPassword()" style="font-size:12px; color:var(--teal); text-decoration:none; font-weight:700;">Forgot Password?</a>
         </div>
-
         <button onclick="adminLogin()" class="admin-submit-btn">Login</button>
     </div>
 </div>
@@ -329,8 +326,6 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 </div>
 
 <!-- ADMIN SUB-MODALS -->
-
-<!-- 1. BATCH COUPON MODAL -->
 <div id="subModal_couponModal" class="admin-sub-modal">
     <div class="admin-modal-box" style="max-width:500px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
@@ -369,7 +364,6 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
     </div>
 </div>
 
-<!-- 2. POPUP MODAL -->
 <div id="subModal_popupModal" class="admin-sub-modal">
     <div class="admin-modal-box">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
@@ -384,7 +378,6 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
     </div>
 </div>
 
-<!-- 3. NOTICE BOARD MODAL -->
 <div id="subModal_noticeModal" class="admin-sub-modal">
     <div class="admin-modal-box">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
@@ -397,7 +390,6 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
     </div>
 </div>
 
-<!-- 4. VACATION MODAL -->
 <div id="subModal_vacationModal" class="admin-sub-modal">
     <div class="admin-modal-box">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
@@ -414,7 +406,6 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
     </div>
 </div>
 
-<!-- 5. ORDERS MODAL -->
 <div id="subModal_ordersModalAdmin" class="admin-sub-modal">
     <div class="admin-modal-box" style="max-width:500px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
@@ -431,7 +422,6 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
     </div>
 </div>
 
-<!-- 6. ADD PRODUCT MODAL -->
 <div id="subModal_addProductModal" class="admin-sub-modal">
     <div class="admin-modal-box" style="max-width:500px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; position:relative;">
@@ -494,7 +484,6 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
     </div>
 </div>
 
-<!-- 7. MANAGE PRODUCTS MODAL -->
 <div id="subModal_manageProductsModal" class="admin-sub-modal">
     <div class="admin-modal-box" style="max-width:500px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
@@ -601,9 +590,10 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
             <button id="modalBuyNowBtn" style="flex:1; padding:10px; border:none; border-radius:10px; background:#f97316; color:white; font-weight:800; cursor:pointer; font-size:13px; box-shadow:0 2px 8px rgba(249,115,22,0.3);">Buy Now</button>
         </div>
 
+        <!-- FIXED VIDEO CONTAINER -->
         <div id="modalVideoContainer" style="margin-bottom:12px; display:none;">
             <a id="modalVideoBtn" href="#" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:12px; background:#ff0000; color:white; border-radius:10px; font-weight:800; font-size:13px; text-decoration:none; box-shadow:0 3px 10px rgba(255,0,0,0.2);">
-                <i class="fa-brands fa-youtube" style="font-size:16px;"></i> Watch New Video
+                <i class="fa-brands fa-youtube" style="font-size:16px;"></i> Watch Product Video
             </a>
         </div>
 
@@ -634,7 +624,6 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
         <h2 style="font-size:20px; font-weight:900; color:var(--text-dark); margin-bottom:4px;">Order Successful!</h2>
         <p id="successPopupText" style="font-size:12px; color:#64748b; margin-bottom:15px; line-height:1.4;"></p>
         
-        <!-- RATING SECTION FOR CUSTOMERS -->
         <div style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:14px; padding:12px; margin-bottom:16px;">
             <div style="font-size:12px; font-weight:800; color:var(--teal); margin-bottom:6px;">অনুগ্রহ করে আমাদের সার্ভিস রেট দিন:</div>
             <div id="userStarRatingBox" style="font-size:22px; color:#cbd5e1; display:flex; justify-content:center; gap:8px; cursor:pointer;">
@@ -858,6 +847,7 @@ function renderProducts(){
     }).join("");
 }
 
+// FIXED VIDEO DISPLAY IN PRODUCT DETAIL MODAL
 function openProductDetail(id){
     const p = products.find(prod => String(prod.id) === String(id));
     if(!p) return;
@@ -882,8 +872,9 @@ function openProductDetail(id){
 
     const vidContainer = document.getElementById("modalVideoContainer");
     const vidBtn = document.getElementById("modalVideoBtn");
-    if(p.videoUrl){
-        vidBtn.href = p.videoUrl;
+    
+    if(p.videoUrl && p.videoUrl.trim() !== ""){
+        vidBtn.href = p.videoUrl.trim();
         vidContainer.style.display = "block";
     } else {
         vidContainer.style.display = "none";
@@ -1034,11 +1025,12 @@ function renderCartView(){
     `;
 }
 
+// FIXED COUPON VALIDATION (CASE INSENSITIVE & TRIMMED)
 function applyBatchCoupon(){
     const inputCode = document.getElementById("cartCouponInput").value.trim().toUpperCase();
     if(!inputCode) return alert("দয়া করে কুপন কোড লিখুন!");
 
-    const found = batchCoupons.find(c => c.code.toUpperCase() === inputCode);
+    const found = batchCoupons.find(c => c.code.trim().toUpperCase() === inputCode);
     if(!found) return alert("ভুল কুপন কোড!");
 
     if(found.isUsed) return alert("এই কুপনটি ইতিমধ্যে একবার ব্যবহার করা হয়েছে (Already Used)!");
@@ -1047,12 +1039,12 @@ function applyBatchCoupon(){
     let expiry = new Date(found.expiryDate);
     if(today > expiry) return alert("এই কুপনটির মেয়াদ শেষ (Expired)!");
 
-    if(found.productId && found.productId !== "ALL"){
+    if(found.productId && found.productId !== "ALL" && found.productId.trim() !== ""){
         let hasProductInCart = cart.some(item => String(item.id) === String(found.productId));
         if(!hasProductInCart){
             let targetProd = products.find(p => String(p.id) === String(found.productId));
             let prodName = targetProd ? targetProd.name : found.productId;
-            return alert(`এই কুপনটি শুধুমাত্র '${prodName}' (ID: ${found.productId}) প্রোডাক্টটির জন্য প্রযোজ্য, যা আপনার কার্তে নেই!`);
+            return alert(`এই কুপনটি শুধুমাত্র '${prodName}' প্রোডাক্টটির জন্য প্রযোজ্য, যা আপনার কার্তে নেই!`);
         }
     }
 
