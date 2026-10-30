@@ -69,7 +69,7 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 .product-card img{width: 100%; height: 100%; object-fit: cover;}
 .color-badge{position: absolute; bottom: 8px; left: 8px; background: rgba(0, 137, 123, 0.85); color: #ffffff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 8px;}
 .product-info{padding: 12px; display: flex; flex-direction: column; flex: 1;}
-.card-rating-row{display: flex; align-items: center; gap: 3px; font-size: 11px; margin-bottom: 4px;}
+.card-rating-row{display: flex; align-items: center; gap: 2px; font-size: 11px; margin-bottom: 4px; color: #fbbf24;}
 .card-rating-num{color: var(--teal); font-weight: 800; font-size: 11px; margin-left: 4px;}
 .product-name{font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;}
 .product-footer-row{display: flex; align-items: center; justify-content: space-between; margin-top: auto;}
@@ -77,7 +77,7 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 .old-price{font-size: 12px; color: #94a3b8; text-decoration: line-through; margin-right: 5px;}
 
 /* BOTTOM NAV */
-.bottom-nav{position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 8px 0; border-top: 1px solid #e2e8f0; z-index: 1000;}
+.bottom-nav{position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-around: space-around; padding: 8px 0; border-top: 1px solid #e2e8f0; z-index: 1000;}
 .nav-item{background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer; flex: 1; text-decoration: none;}
 .nav-item i{font-size: 18px;} .nav-item.active{color: var(--teal);}
 .nav-cart-icon-wrap{position: relative;}
@@ -317,7 +317,7 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
             </div>
         </div>
         <label style="font-size:11px; font-weight:700;">নির্দিষ্ট প্রোডাক্ট আইডি (Product ID - ঐচ্ছিক)</label>
-        <input id="couponProductIdInput" placeholder="প্রোডাক্ট আইডি দিন (খالی রাখলে সব পণ্যে কাজ করবে)">
+        <input id="couponProductIdInput" placeholder="প্রোডাক্ট আইডি দিন (খালি রাখলে সব পণ্যে কাজ করবে)">
         <button onclick="generateCouponBatch()" class="admin-submit-btn" style="margin-top:6px;"><i class="fa-solid fa-wand-magic-sparkles"></i> কুপন ব্যাচ জেনারেট করুন</button>
         <div style="margin-top:14px; border-top:1px solid #cbd5e1; padding-top:10px;">
             <div style="font-size:12px; font-weight:800; color:var(--teal); margin-bottom:6px;">সক্রিয় কুপনসমূহ:</div>
@@ -402,7 +402,7 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 
         <div style="display:flex; gap:10px;">
             <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Price (৳)</label><input id="productPrice" type="number" placeholder="4000"></div>
-            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Discount (৳)</label><input id="productDiscountPrice" type="number" placeholder="3500"></div>
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Discount Price (৳)</label><input id="productDiscountPrice" type="number" placeholder="3500"></div>
         </div>
 
         <div style="display:flex; gap:10px;">
@@ -414,7 +414,7 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 
         <div style="display:flex; gap:10px;">
             <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Color (রং)</label><input id="productColor" placeholder="e.g. White"></div>
-            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Rating</label><input id="productRating" placeholder="5.0" value="5.0"></div>
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Rating (Max 5.0)</label><input id="productRating" type="number" step="0.1" max="5.0" min="1.0" placeholder="5.0" value="5.0"></div>
         </div>
 
         <div style="margin-top:6px;">
@@ -471,11 +471,15 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
         <input id="editProdName">
         <div style="display:flex; gap:10px;">
             <div style="flex:1;"><label style="font-size:12px; font-weight:700;">Price (৳)</label><input id="editProdPrice" type="number"></div>
-            <div style="flex:1;"><label style="font-size:12px; font-weight:700; color:#ef4444;">Discount (৳)</label><input id="editProdDiscount" type="number"></div>
+            <div style="flex:1;"><label style="font-size:12px; font-weight:700; color:#ef4444;">Discount Price (৳)</label><input id="editProdDiscount" type="number"></div>
         </div>
         <div style="display:flex; gap:10px;">
             <div style="flex:1;"><label style="font-size:12px; font-weight:700;">Stock</label><input id="editProdStock" type="number"></div>
+            <div style="flex:1;"><label style="font-size:12px; font-weight:700;">Rating (Max 5.0)</label><input id="editProdRating" type="number" step="0.1" max="5.0" min="1.0"></div>
+        </div>
+        <div style="display:flex; gap:10px;">
             <div style="flex:1;"><label style="font-size:12px; font-weight:700;">Color</label><input id="editProdColor"></div>
+            <div style="flex:1;"><label style="font-size:12px; font-weight:700;">Age</label><input id="editProdAge"></div>
         </div>
         <label style="font-size:12px; font-weight:700;">Image 1 URL</label>
         <input id="editProdImg1">
@@ -561,7 +565,6 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 <script>
 emailjs.init({ publicKey: "P7lqeBS7YKyU3Kpaq" });
 
-// ডেমো প্রোডাক্ট লিস্ট সম্পূর্ণ খালি ([]) করে দেওয়া হয়েছে, যাতে আপনার নতুন দেওয়া প্রোডাক্টগুলোই দেখায়
 let products = JSON.parse(localStorage.getItem("adoresProducts"));
 if(!products){
     products = [];
@@ -647,6 +650,23 @@ function searchProducts(){
     renderProducts();
 }
 
+// ডায়নামিক স্টার জেনারেটর
+function generateStarRatingHtml(rating) {
+    let r = parseFloat(rating) || 5.0;
+    if (r > 5.0) r = 5.0;
+    let starsHtml = '';
+    for (let i = 1; i <= 5; i++) {
+        if (r >= i) {
+            starsHtml += '<i class="fa-solid fa-star"></i>';
+        } else if (r >= i - 0.5) {
+            starsHtml += '<i class="fa-solid fa-star-half-stroke"></i>';
+        } else {
+            starsHtml += '<i class="fa-regular fa-star"></i>';
+        }
+    }
+    return starsHtml;
+}
+
 function renderProducts(){
     const grid = document.getElementById("productsGrid");
     const search = document.getElementById("searchInput").value.trim().toLowerCase();
@@ -664,6 +684,7 @@ function renderProducts(){
             `<span class="old-price">৳${p.price}</span><span class="product-price">৳${p.discountPrice}</span>` : 
             `<span class="product-price">৳${p.price}</span>`;
         let ratingVal = p.rating || "5.0";
+        let stars = generateStarRatingHtml(ratingVal);
 
         return `
             <div class="product-card" onclick="openProductDetail('${p.id}')">
@@ -672,7 +693,7 @@ function renderProducts(){
                     ${p.color ? `<div class="color-badge">${p.color}</div>` : ''}
                 </div>
                 <div class="product-info">
-                    <div class="card-rating-row"><i class="fa-solid fa-star" style="color:#fbbf24;"></i><span class="card-rating-num">${ratingVal}</span></div>
+                    <div class="card-rating-row">${stars}<span class="card-rating-num">${ratingVal}</span></div>
                     <div class="product-name">${p.name}</div>
                     <div style="font-size:11px; color:#10b981; font-weight:700; margin-bottom:4px;">Stock: ${p.stock}</div>
                     <div class="product-footer-row"><div>${priceHtml}</div></div>
@@ -969,13 +990,16 @@ function addProduct(){
     const category = document.getElementById("productCategory").value;
     const color = document.getElementById("productColor").value.trim();
     const rating = document.getElementById("productRating").value.trim() || "5.0";
+    const ageNum = document.getElementById("productAgeNum").value.trim();
+    const ageUnit = document.getElementById("productAgeUnit").value;
+    const age = ageNum ? `${ageNum} ${ageUnit}` : "";
     const desc = document.getElementById("productDesc").value.trim();
     const image = document.getElementById("productImg1").value.trim() || "https://i.postimg.cc/CdyZqRY5/file-000000006ecc71f899e85a5cc31b0405.png";
     const videoUrl = document.getElementById("productVideoUrl").value.trim();
 
     if(!name || price <= 0) return alert("সঠিক নাম ও দাম দিন!");
 
-    products.unshift({ id, name, price, discountPrice, stock, category, color, rating, desc, videoUrl, image });
+    products.unshift({ id, name, price, discountPrice, stock, category, color, rating, age, desc, videoUrl, image });
     localStorage.setItem("adoresProducts", JSON.stringify(products));
     renderProducts();
     renderAdminProducts();
@@ -986,16 +1010,66 @@ function addProduct(){
 function renderAdminProducts(){
     document.getElementById("adminProducts").innerHTML = products.map(p => `
         <div class="admin-product-card">
-            <div style="display:flex; gap:10px; align-items:center;">
+            <div style="display:flex; gap:10px; align-items:center; flex:1;">
                 <img src="${p.image}" style="width:40px; height:40px; object-fit:cover; border-radius:8px;">
                 <div>
                     <div style="font-weight:bold; font-size:13px;">${p.name}</div>
-                    <div style="font-size:11px; color:#64748b;">৳${p.price} | স্টক: ${p.stock}</div>
+                    <div style="font-size:11px; color:#64748b;">৳${p.discountPrice || p.price} | স্টক: ${p.stock} | Rating: ${p.rating || '5.0'}</div>
                 </div>
             </div>
-            <button onclick="deleteProduct('${p.id}')" style="background:#ef4444; color:#fff; border:none; padding:6px 10px; border-radius:6px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+            <div style="display:flex; gap:6px;">
+                <button onclick="openEditModal('${p.id}')" style="background:var(--teal); color:#fff; border:none; padding:6px 10px; border-radius:6px; cursor:pointer;"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button onclick="deleteProduct('${p.id}')" style="background:#ef4444; color:#fff; border:none; padding:6px 10px; border-radius:6px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+            </div>
         </div>
     `).join("");
+}
+
+function openEditModal(id){
+    const p = products.find(prod => String(prod.id) === String(id));
+    if(!p) return;
+    
+    document.getElementById("editProdOriginalId").value = p.id;
+    document.getElementById("editModalPreviewImg").src = p.image;
+    document.getElementById("editProdName").value = p.name;
+    document.getElementById("editProdPrice").value = p.price;
+    document.getElementById("editProdDiscount").value = p.discountPrice || 0;
+    document.getElementById("editProdStock").value = p.stock;
+    document.getElementById("editProdRating").value = p.rating || "5.0";
+    document.getElementById("editProdColor").value = p.color || "";
+    document.getElementById("editProdAge").value = p.age || "";
+    document.getElementById("editProdImg1").value = p.image;
+    document.getElementById("editProdVideo").value = p.videoUrl || "";
+    document.getElementById("editProdDesc").value = p.desc || "";
+
+    document.getElementById("editProductModal").classList.add("show");
+}
+
+function closeEditModal(){
+    document.getElementById("editProductModal").classList.remove("show");
+}
+
+function saveEditProduct(){
+    const id = document.getElementById("editProdOriginalId").value;
+    const p = products.find(prod => String(prod.id) === String(id));
+    if(!p) return;
+
+    p.name = document.getElementById("editProdName").value.trim();
+    p.price = Number(document.getElementById("editProdPrice").value);
+    p.discountPrice = Number(document.getElementById("editProdDiscount").value) || 0;
+    p.stock = Number(document.getElementById("editProdStock").value);
+    p.rating = document.getElementById("editProdRating").value.trim() || "5.0";
+    p.color = document.getElementById("editProdColor").value.trim();
+    p.age = document.getElementById("editProdAge").value.trim();
+    p.image = document.getElementById("editProdImg1").value.trim();
+    p.videoUrl = document.getElementById("editProdVideo").value.trim();
+    p.desc = document.getElementById("editProdDesc").value.trim();
+
+    localStorage.setItem("adoresProducts", JSON.stringify(products));
+    renderProducts();
+    renderAdminProducts();
+    closeEditModal();
+    showToast("পণ্য আপডেট করা হয়েছে!");
 }
 
 function deleteProduct(id){
