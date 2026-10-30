@@ -77,7 +77,7 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 .old-price{font-size: 12px; color: #94a3b8; text-decoration: line-through; margin-right: 5px;}
 
 /* BOTTOM NAV */
-.bottom-nav{position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-around: space-around; padding: 8px 0; border-top: 1px solid #e2e8f0; z-index: 1000;}
+.bottom-nav{position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 8px 0; border-top: 1px solid #e2e8f0; z-index: 1000;}
 .nav-item{background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer; flex: 1; text-decoration: none;}
 .nav-item i{font-size: 18px;} .nav-item.active{color: var(--teal);}
 .nav-cart-icon-wrap{position: relative;}
@@ -650,7 +650,6 @@ function searchProducts(){
     renderProducts();
 }
 
-// ডায়নামিক স্টার জেনারেটর
 function generateStarRatingHtml(rating) {
     let r = parseFloat(rating) || 5.0;
     if (r > 5.0) r = 5.0;
@@ -852,17 +851,40 @@ function proceedToCheckout(){
     if(cart.length === 0) return alert("কার্ট খালি!");
     document.getElementById("checkoutHeaderTitle").innerText = "ORDER FORM";
     
-    let subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
     let districtOptions = `<option value="">জেলা নির্বাচন করুন</option>`;
     allDistricts.forEach(dist => { districtOptions += `<option value="${dist}">${dist}</option>`; });
 
     document.getElementById("cartBodyContainer").innerHTML = `
         <div style="margin-bottom:12px;"><label style="font-size:12px; font-weight:700;">আপনার নাম *</label><input id="customerName" type="text" class="checkout-input"></div>
         <div style="margin-bottom:12px;"><label style="font-size:12px; font-weight:700;">মোবাইল নম্বর *</label><input id="customerPhone" type="tel" class="checkout-input"></div>
-        <div style="margin-bottom:12px;"><label style="font-size:12px; font-weight:700;">জেলা *</label><select id="customerDistrict" class="checkout-input">${districtOptions}</select></div>
+        <div style="margin-bottom:12px;"><label style="font-size:12px; font-weight:700;">জেলা *</label><select id="customerDistrict" class="checkout-input" onchange="updateCheckoutTotal()">${districtOptions}</select></div>
         <div style="margin-bottom:12px;"><label style="font-size:12px; font-weight:700;">সম্পূর্ণ ঠিকানা *</label><textarea id="customerAddress" class="checkout-input" style="height:50px;"></textarea></div>
+        
+        <div style="background:#f8fafc; padding:12px; border-radius:14px; margin-bottom:15px; border:1px solid #e2e8f0; font-size:13px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#64748b;"><span>সাবটোটাল</span><strong id="chkSubtotal">৳0</strong></div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#64748b;"><span>ডেলিভারি চার্জ</span><strong id="chkDelivery">৳0</strong></div>
+            ${appliedCouponData ? `<div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#10b981;"><span>কুপন ডিসকাউন্ট (${appliedCouponData.discountPercent}%)</span><strong id="chkDiscount">-৳0</strong></div>` : ''}
+            <div style="display:flex; justify-content:space-between; margin-top:8px; border-top:1px dashed #cbd5e1; padding-top:8px; font-size:15px; font-weight:900; color:var(--text-dark);"><span>সর্বমোট প্রদেয় (COD)</span><strong id="chkTotal" style="color:var(--teal);">৳0</strong></div>
+        </div>
+
         <button onclick="placeOrderFromCheckout()" class="order-btn">অর্ডার কনফার্ম করুন</button>
     `;
+    updateCheckoutTotal();
+}
+
+function updateCheckoutTotal(){
+    let subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+    let district = document.getElementById("customerDistrict").value || "";
+    let deliveryFee = district ? calculateDeliveryFee(district) : 0;
+    let discountAmount = appliedCouponData ? (subtotal * appliedCouponData.discountPercent) / 100 : 0;
+    let total = (subtotal - discountAmount) + deliveryFee;
+
+    document.getElementById("chkSubtotal").innerText = `৳${subtotal}`;
+    document.getElementById("chkDelivery").innerText = `৳${deliveryFee}`;
+    if(document.getElementById("chkDiscount")) {
+        document.getElementById("chkDiscount").innerText = `-৳${discountAmount}`;
+    }
+    document.getElementById("chkTotal").innerText = `৳${total}`;
 }
 
 function placeOrderFromCheckout(){
@@ -871,7 +893,7 @@ function placeOrderFromCheckout(){
     const address = document.getElementById("customerAddress").value.trim();
     const district = document.getElementById("customerDistrict").value;
 
-    if(!name || !phone || !address || !district) return alert("সব তথ্য পূরণ করুন!");
+    if(!name || !phone || !address || !district) return alert("দয়া করে সমস্ত তথ্য পূরণ করুন!");
 
     let subtotal = 0, itemsText = "";
     cart.forEach(i => {
@@ -882,10 +904,35 @@ function placeOrderFromCheckout(){
         p.stock -= i.qty;
         if(p.stock < 0) p.stock = 0;
     });
+
+    let deliveryFee = calculateDeliveryFee(district);
+    let discountAmount = appliedCouponData ? (subtotal * appliedCouponData.discountPercent) / 100 : 0;
+    let grandTotal = (subtotal - discountAmount) + deliveryFee;
+
+    if(appliedCouponData){
+        appliedCouponData.isUsed = true;
+        localStorage.setItem("adoresBatchCoupons", JSON.stringify(batchCoupons));
+        appliedCouponData = null;
+    }
+
     localStorage.setItem("adoresProducts", JSON.stringify(products));
 
     const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
-    const newOrder = { id: orderId, date: new Date().toLocaleDateString(), name, phone, district, address, itemsText, total: subtotal, status: 'pending' };
+    const newOrder = { 
+        id: orderId, 
+        date: new Date().toLocaleDateString(), 
+        name, 
+        phone, 
+        district, 
+        address, 
+        itemsText, 
+        subtotal,
+        deliveryFee,
+        discountAmount,
+        total: grandTotal, 
+        status: 'pending' 
+    };
+    
     myOrders.unshift(newOrder);
     localStorage.setItem("adoresMyOrders", JSON.stringify(myOrders));
 
@@ -895,16 +942,22 @@ function placeOrderFromCheckout(){
     renderProducts();
     closeCart();
 
-    document.getElementById("successPopupText").innerText = `আপনার অর্ডার #${orderId} সফলভাবে কনফার্ম হয়েছে!`;
+    document.getElementById("successPopupText").innerText = `আপনার অর্ডার #${orderId} সফলভাবে কনফার্ম হয়েছে! মোট প্রদেয়: ৳${grandTotal}`;
     document.getElementById("thankyouModal").classList.add("show");
 }
 
 function closeThankYouModal(){ document.getElementById("thankyouModal").classList.remove("show"); }
+
 function openOrdersModal(){
     const container = document.getElementById("userOrdersList");
     container.innerHTML = myOrders.length === 0 ? `<p style="text-align:center; color:#64748b;">কোনো অর্ডার নেই।</p>` : myOrders.map(o => `
         <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:10px; border-radius:8px; margin-bottom:8px; font-size:12px;">
-            <b>${o.id}</b> - ৳${o.total}<br>${o.itemsText}
+            <b>${o.id}</b> | তারিখ: ${o.date}<br>
+            গ্রাহক: ${o.name} (${o.phone})<br>
+            ঠিকানা: ${o.address}, ${o.district}<br>
+            <hr style="border:0; border-top:1px dashed #ccc; margin:4px 0;">
+            ${o.itemsText}
+            <b>সর্বমোট: ৳${o.total}</b> (ডেলিভারি চার্জসহ)
         </div>
     `).join("");
     document.getElementById("ordersModal").classList.add("show");
@@ -1092,7 +1145,7 @@ function renderAdminOrders(){
     const filtered = myOrders.filter(o => (o.status || 'pending') === currentAdminTab);
     container.innerHTML = filtered.length === 0 ? `<p style="font-size:12px; color:#64748b; text-align:center;">কোনো অর্ডার নেই।</p>` : filtered.map(o => `
         <div style="background:#fff; border:1px solid #cbd5e1; padding:8px; border-radius:8px; margin-bottom:8px; font-size:12px;">
-            <b>${o.id}</b> - ${o.name} (${o.phone})<br>৳${o.total}
+            <b>${o.id}</b> - ${o.name} (${o.phone})<br>৳${o.total} (ডেলিভারি চার্জসহ)
         </div>
     `).join("");
 }
