@@ -29,9 +29,9 @@
 html{scroll-behavior:smooth;}
 body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); color:var(--text-dark); padding-bottom: 70px;}
 
-/* HEADER */
+/* RESPONSIVE LAYOUT CONTAINERS */
 .app-header{background: var(--teal); color: white; padding: 15px 16px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 15px rgba(0, 137, 123, 0.25); position: sticky; top: 0; z-index: 1000;}
-.header-inner{max-width: 600px; margin: auto; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;}
+.header-inner{max-width: 1200px; margin: auto; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;}
 .logo-area{display: flex; align-items: center; gap: 12px; cursor: pointer;}
 .brand-logo-img{width: 44px; height: 44px; border-radius: 50%; object-fit: cover; background: white; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.15);}
 .logo-text-box{display: flex; flex-direction: column;}
@@ -44,48 +44,43 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 .search-icon{position: absolute; left: 16px; color: #94a3b8; font-size: 14px;}
 .search-box input{width: 100%; padding: 12px 16px 12px 42px; background: white; border: none; border-radius: 14px; font-size: 14px; outline: none; box-shadow: 0 2px 8px rgba(0,0,0,0.06);}
 
-/* CONTAINER */
-.container{max-width: 600px; margin: auto; padding: 16px;}
-.hero-image-banner{width: 100%; margin-bottom: 20px; border-radius: 18px; overflow: hidden; box-shadow: 0 6px 18px rgba(0, 137, 123, 0.12); background: #ffffff;}
-.hero-image-banner img{width: 100%; height: auto; display: block; object-fit: contain;}
+/* MAIN CONTAINER (Responsive for Mobile, Tablet, Desktop) */
+.container{max-width: 1200px; margin: auto; padding: 20px;}
+.hero-image-banner{width: 100%; margin-bottom: 20px; border-radius: 18px; overflow: hidden; box-shadow: 0 6px 18px rgba(0, 137, 123, 0.12); background: #ffffff; max-height: 400px;}
+.hero-image-banner img{width: 100%; height: auto; display: block; object-fit: cover;}
 
 /* NOTICE BANNER */
 .notice-card{background: #fff; border-left: 4px solid var(--teal); padding: 12px 16px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); font-size: 13px; font-weight: 600;}
 .vacation-banner{display:none; background:#fee2e2; color:#b91c1c; padding:12px; border-radius:12px; text-align:center; font-weight:800; margin-bottom:15px; border:1px solid #fecaca;}
 
-/* PWA BANNER */
-.pwa-banner{display: none; background: #ffffff; border: 2px solid var(--teal); border-radius: 16px; padding: 12px 16px; margin-bottom: 16px; align-items: center; justify-content: space-between;}
-.pwa-install-btn{background: var(--teal); color: white; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer;}
-
 /* CATEGORIES */
 .category-section{margin-bottom: 20px;}
 .category-header-row, .products-header-row{display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;}
-.category-header-row h3, .products-header-row h3{font-size: 17px; font-weight: 800; color: var(--text-dark);}
+.category-header-row h3, .products-header-row h3{font-size: 18px; font-weight: 800; color: var(--text-dark);}
 .show-all{font-size: 13px; color: var(--teal); font-weight: 700; cursor: pointer; background: #e0f2f1; padding: 4px 10px; border-radius: 12px;}
 .category-chips{display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none;}
 .category-chips::-webkit-scrollbar{display: none;}
 .chip-btn{background: white; border: 1px solid #e2e8f0; color: var(--text-muted); padding: 10px 20px; border-radius: 14px; font-size: 13px; font-weight: 700; white-space: nowrap; cursor: pointer;}
 .chip-btn.active{background: var(--teal); color: white; border-color: var(--teal);}
 
-/* FIXED 1:1 PRODUCT CARDS */
-.products-grid{display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 16px;}
-.product-card{background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; display: flex; flex-direction: column; position: relative; cursor: pointer;}
+/* RESPONSIVE PRODUCTS GRID (Mobile: 2 cols, Tablet: 3 cols, Desktop: 4 cols) */
+.products-grid{display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 16px;}
+@media(min-width: 768px){ .products-grid{grid-template-columns: repeat(3, 1fr);} }
+@media(min-width: 1024px){ .products-grid{grid-template-columns: repeat(4, 1fr);} }
+
+.product-card{background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; display: flex; flex-direction: column; position: relative; cursor: pointer; transition: transform 0.2s;}
+.product-card:hover{transform: translateY(-3px);}
 .product-img-wrap{position: relative; width: 100%; aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc;}
 .product-card img{width: 100%; height: 100%; object-fit: cover;}
-.color-badge{position: absolute; bottom: 8px; left: 8px; background: rgba(0, 137, 123, 0.85); color: #ffffff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 8px;}
-.product-info{padding: 12px; display: flex; flex-direction: column; flex: 1;}
-
-/* STAR RATING DISPLAY */
-.card-rating-row{display: flex; align-items: center; gap: 3px; font-size: 11px; margin-bottom: 4px;}
-.card-rating-num{color: var(--teal); font-weight: 800; font-size: 11px; margin-left: 4px;}
-
-.product-name{font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;}
+.product-info{padding: 14px; display: flex; flex-direction: column; flex: 1;}
+.product-name{font-size: 15px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;}
 .product-footer-row{display: flex; align-items: center; justify-content: space-between; margin-top: auto;}
 .product-price{font-size: 16px; font-weight: 900; color: var(--teal);}
 .old-price{font-size: 12px; color: #94a3b8; text-decoration: line-through; margin-right: 5px;}
 
-/* BOTTOM NAV */
+/* BOTTOM NAV (Mobile Only) */
 .bottom-nav{position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 8px 0; border-top: 1px solid #e2e8f0; z-index: 1000;}
+@media(min-width: 768px){ .bottom-nav{display: none;} }
 .nav-item{background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer; flex: 1; text-decoration: none;}
 .nav-item i{font-size: 18px;} .nav-item.active{color: var(--teal);}
 .nav-cart-icon-wrap{position: relative;}
@@ -102,53 +97,41 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 .cart-header{background: var(--teal); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; color: white;}
 .close-btn{background: rgba(0,0,0,0.2); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer;}
 .cart-body-content{padding: 20px; overflow-y: auto; flex:1;}
-
 .cart-item{display:flex; gap:12px; padding:12px 0; border-bottom:1px solid #f1f5f9; align-items: center;}
 .cart-item img{width:65px; height:65px; object-fit:cover; border-radius:12px;}
 
-.product-modal-card{background: white; padding: 20px; border-radius: 20px; text-align: left; max-width: 420px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative;}
-.thankyou-card, .voucher-box, .support-modal-card{background: white; padding: 25px; border-radius: 20px; text-align: center; max-width: 440px; width: 100%; max-height: 88vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);}
-.edit-modal-card, .admin-modal-box{background: white; padding: 20px; border-radius: 24px; text-align: left; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);}
+.product-modal-card{background: white; padding: 20px; border-radius: 20px; text-align: left; max-width: 450px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative;}
+.thankyou-card, .voucher-box, .support-modal-card{background: white; padding: 25px; border-radius: 20px; text-align: center; max-width: 500px; width: 100%; max-height: 88vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);}
+.edit-modal-card, .admin-modal-box{background: white; padding: 20px; border-radius: 24px; text-align: left; max-width: 550px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);}
 .thankyou-btn, .order-btn{width: 100%; padding: 14px; border: none; border-radius: 12px; background: var(--teal); color: white; font-weight: 800; cursor: pointer; font-size: 15px; box-shadow: 0 4px 12px rgba(0,137,123,0.3); transition: all 0.2s;}
 .order-btn:hover{filter: brightness(1.05); transform: translateY(-1px);}
 
-/* MODERN CHECKOUT FORM INPUT STYLING */
-.checkout-input{width: 100%; padding: 11px 14px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 13px; outline: none; background: #ffffff; transition: all 0.2s; color: var(--text-dark); margin-top: 4px;}
+.checkout-input{width: 100%; padding: 11px 14px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 13px; outline: none; background: #ffffff; color: var(--text-dark); margin-top: 4px;}
 .checkout-input:focus{border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0, 137, 123, 0.12);}
 
-/* SUPPORT MODAL */
-.support-link-btn{display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 12px; font-size: 14px; font-weight: 700; color: white; text-decoration: none; margin-bottom: 10px; width: 100%; justify-content: center; box-shadow: 0 3px 10px rgba(0,0,0,0.1);}
-.phone-btn{background: #0ea5e9;}
-.fb-support-btn{background: #1877f2;}
-.wa-support-btn{background: #25d366;}
-
 /* FULL SCREEN ADMIN DASHBOARD */
-.admin-fullscreen-overlay{display:none; position:fixed; inset:0; background:#f8fafc; z-index:3000; overflow-y:auto; padding:16px;}
+.admin-fullscreen-overlay{display:none; position:fixed; inset:0; background:#f8fafc; z-index:3000; overflow-y:auto; padding:20px;}
 .admin-fullscreen-overlay.show{display:block;}
+.admin-card{max-width:1200px; margin:auto; background:transparent; padding:0; position: relative;}
+.admin-header-box{background:linear-gradient(135deg, #00897b, #004d40); color:white; padding:22px 24px; border-radius: 20px; display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; box-shadow: 0 6px 20px rgba(0, 137, 123, 0.25);}
+.admin-menu-list{display:grid; grid-template-columns: repeat(1, 1fr); gap:14px; padding-bottom:40px;}
+@media(min-width: 768px){ .admin-menu-list{grid-template-columns: repeat(2, 1fr);} }
+@media(min-width: 1024px){ .admin-menu-list{grid-template-columns: repeat(3, 1fr);} }
 
-.admin-card{max-width:100%; margin:auto; background:transparent; padding:0; position: relative;}
-.admin-header-box{background:linear-gradient(135deg, #00897b, #004d40); color:white; padding:22px 20px; border-radius: 20px; display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; box-shadow: 0 6px 20px rgba(0, 137, 123, 0.25);}
-
-.admin-menu-list{display:flex; flex-direction:column; gap:14px; padding-bottom:40px;}
 .admin-menu-btn{background: #ffffff; border: 1px solid #e2e8f0; color: var(--text-dark); padding: 18px 20px; border-radius: 16px; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s; box-shadow: 0 3px 10px rgba(0,0,0,0.03);}
 .admin-menu-btn:hover{background: #e0f2f1; border-color: var(--teal); color: var(--teal); transform: translateY(-1px);}
-.admin-menu-btn i.fa-chevron-right{font-size: 13px; color: #94a3b8;}
 
 .admin-modal-box input, .admin-modal-box select, .admin-modal-box textarea, .edit-modal-card input, .edit-modal-card select, .edit-modal-card textarea{width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 13px; outline: none; margin-top: 4px; margin-bottom: 10px;}
 .admin-submit-btn{width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--teal); color: white; font-weight: 800; cursor: pointer; font-size: 14px;}
 .admin-product-card{display: flex; align-items: center; justify-content: space-between; padding: 10px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 8px; gap: 10px;}
-.admin-order-tabs{display: flex; gap: 6px; margin-top: 10px; margin-bottom: 10px;}
-.order-tab-btn{flex: 1; padding: 8px 4px; font-size: 11px; font-weight: 700; border: 1px solid #cbd5e1; background: #f1f5f9; color: var(--text-dark); border-radius: 8px; cursor: pointer; text-align: center;}
+.admin-order-tabs{display: flex; gap: 4px; overflow-x: auto; margin-top: 10px; margin-bottom: 10px; padding-bottom: 4px;}
+.order-tab-btn{padding: 6px 12px; font-size: 11px; font-weight: 700; border: 1px solid #cbd5e1; background: #f1f5f9; color: var(--text-dark); border-radius: 8px; cursor: pointer; white-space: nowrap;}
 .order-tab-btn.active{background: var(--teal); color: white; border-color: var(--teal);}
 
-.inner-box-border{background: #e0f2f1; border: 1.5px solid var(--teal); padding: 12px; border-radius: 12px; margin-bottom: 12px;}
-
-/* WELCOME POPUP */
 .welcome-popup{display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:5000; align-items:center; justify-content:center; padding:20px;}
 .welcome-popup.show{display:flex;}
 .welcome-popup-content{background:#fff; border-radius:20px; max-width:400px; width:100%; padding:15px; text-align:center; position:relative;}
 
-/* TOAST */
 #toastNotification{position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:#1e293b; color:#fff; padding:10px 20px; border-radius:30px; font-size:13px; font-weight:700; z-index:9999; display:none; box-shadow:0 4px 12px rgba(0,0,0,0.2);}
 </style>
 </head>
@@ -162,8 +145,8 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
     <div class="welcome-popup-content">
         <button onclick="closeWelcomePopup()" style="position:absolute; top:10px; right:10px; background:#e2e8f0; border:none; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer; z-index:10;">✕</button>
         <div onclick="handlePopupClick()" style="cursor:pointer;">
-            <img id="welcomePopupImg" src="" alt="Welcome Banner" style="width:100%; border-radius:12px; max-height:300px; object-fit:cover;">
-            <button style="margin-top:12px; width:100%; padding:12px; background:var(--teal); color:white; border:none; border-radius:10px; font-weight:800; font-size:14px; cursor:pointer; box-shadow:0 4px 12px rgba(0,137,123,0.3);">এখনই কিনুন</button>
+            <img id="welcomePopupImg" src="" alt="Welcome Banner" style="width:100%; border-radius:12px; max-height:280px; object-fit:cover;">
+            <button style="margin-top:12px; width:100%; padding:12px; background:var(--teal); color:white; border:none; border-radius:10px; font-weight:800; font-size:14px; cursor:pointer;">এখনই কিনুন</button>
         </div>
     </div>
 </div>
@@ -178,7 +161,9 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
             <span class="logo-sub">Loved by pets, trusted by owners</span>
         </div>
     </div>
-    <div class="header-right-badges">
+    <div style="display:flex; align-items:center; gap:15px;">
+        <button onclick="openCart()" style="display:none; background:rgba(255,255,255,0.2); border:none; color:#fff; padding:8px 14px; border-radius:12px; font-weight:bold; cursor:pointer;" class="desktop-cart-btn"><i class="fa-solid fa-cart-shopping"></i> Cart (<span id="desktopCartCount">0</span>)</button>
+        <button onclick="openOrdersModal()" style="background:rgba(255,255,255,0.2); border:none; color:#fff; padding:8px 14px; border-radius:12px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-receipt"></i> My Orders</button>
         <span class="live-badge" onclick="handleSecretClick()"><span class="live-dot" style="width:7px; height:7px; background:#4ade80; border-radius:50%;"></span> Live Site</span>
     </div>
 </div>
@@ -187,17 +172,12 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
     <input id="searchInput" type="text" placeholder="Search food, toys, grooming..." oninput="searchProducts()">
 </div>
 </header>
+<style>
+@media(min-width: 768px){ .desktop-cart-btn{display:inline-block !important;} }
+</style>
 
-<!-- MAIN -->
+<!-- MAIN CONTAINER -->
 <main class="container">
-<div id="pwaBanner" class="pwa-banner">
-    <div style="display:flex; align-items:center; gap:10px;">
-        <i class="fa-solid fa-mobile-screen-button" style="font-size:20px; color:var(--teal);"></i>
-        <span style="font-size:13px; font-weight:700;">ADORE'S PET অ্যাপ ইনস্টল করুন</span>
-    </div>
-    <button id="pwaInstallBtn" class="pwa-install-btn">Install</button>
-</div>
-
 <div id="vacationNoticeBanner" class="vacation-banner">
     ⚠️ আমাদের শপটি বর্তমানে সাময়িকভাবে বন্ধ রয়েছে। আপনি অর্ডার করতে পারেন, তবে ডেলিভারি একটু দেরীতে হতে পারে।
 </div>
@@ -229,7 +209,7 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 </section>
 </main>
 
-<!-- BOTTOM NAVIGATION -->
+<!-- BOTTOM NAVIGATION (Mobile Only) -->
 <nav class="bottom-nav">
     <button class="nav-item active" onclick="goHome()">
         <i class="fa-solid fa-store"></i>
@@ -247,7 +227,7 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
         <span>My Orders</span>
     </button>
     <button class="nav-item" onclick="openSupportModal()">
-        <i class="fa-solid fa-headset" style="font-size:20px; color:var(--teal);"></i>
+        <i class="fa-solid fa-headset" style="font-size:18px; color:var(--teal);"></i>
         <span>Support</span>
     </button>
 </nav>
@@ -257,24 +237,9 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
     <div class="support-modal-card">
         <h3 style="color:var(--teal); margin-bottom:15px; font-size:18px;">Customer Support</h3>
         <p style="font-size:12px; color:#64748b; margin-bottom:20px;">যেকোনো প্রয়োজনে আমাদের সাথে সরাসরি যোগাযোগ করুন:</p>
-        <a href="tel:01681578599" class="support-link-btn phone-btn"><i class="fa-solid fa-phone"></i> কল করুন: 01681-578599</a>
-        <a href="https://www.facebook.com/share/1dPRm7hNg7/" target="_blank" class="support-link-btn fb-support-btn"><i class="fa-brands fa-facebook-f"></i> Facebook Profile / Page</a>
-        <a href="https://wa.me/8801681578599" target="_blank" class="support-link-btn wa-support-btn"><i class="fa-brands fa-whatsapp"></i> WhatsApp Chat</a>
-        <button onclick="closeSupportModal()" class="thankyou-btn" style="background:#64748b; margin-top:10px;">বন্ধ করুন</button>
-    </div>
-</div>
-
-<!-- RESET PASSWORD MODAL -->
-<div id="resetPasswordModal" class="reset-password-modal">
-    <div class="admin-modal-card" style="background:#fff; padding:20px; border-radius:16px; max-width:360px; width:100%;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-            <h2 style="font-size:18px; color:var(--teal);"><i class="fa-solid fa-key"></i> Reset Password</h2>
-            <button onclick="closeResetPasswordModal()" style="background:#e2e8f0; border:none; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer;">✕</button>
-        </div>
-        <p style="font-size:12px; color:#64748b; margin-bottom:12px;">আপনার অ্যাডমিন অ্যাকাউন্টের জন্য নতুন পাসওয়ার্ড দিন:</p>
-        <input id="newAdminPassword" type="password" placeholder="New Password" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px; margin-bottom:10px; outline:none;">
-        <input id="confirmAdminPassword" type="password" placeholder="Confirm New Password" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px; margin-bottom:15px; outline:none;">
-        <button onclick="saveNewPassword()" class="admin-submit-btn">Update Password</button>
+        <a href="tel:01681578599" style="display:flex; align-items:center; justify-content:center; gap:10px; padding:12px; background:#0ea5e9; color:#fff; border-radius:10px; text-decoration:none; font-weight:bold; margin-bottom:10px;"><i class="fa-solid fa-phone"></i> 01681-578599</a>
+        <a href="https://wa.me/8801681578599" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:10px; padding:12px; background:#25d366; color:#fff; border-radius:10px; text-decoration:none; font-weight:bold; margin-bottom:15px;"><i class="fa-brands fa-whatsapp"></i> WhatsApp Chat</a>
+        <button onclick="closeSupportModal()" class="thankyou-btn" style="background:#64748b;">বন্ধ করুন</button>
     </div>
 </div>
 
@@ -286,10 +251,7 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
             <button onclick="closeAdminLoginModal()" style="background:#e2e8f0; border:none; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer;">✕</button>
         </div>
         <input id="adminEmail" type="email" placeholder="Admin Email" value="itsrohimonly@gmail.com" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px; margin-bottom:10px; outline:none;">
-        <input id="adminPassword" type="password" placeholder="Enter Admin Password" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px; margin-bottom:10px; outline:none;">
-        <div style="text-align:right; margin-bottom:15px;">
-            <a href="javascript:void(0)" onclick="handleForgotPassword()" style="font-size:12px; color:var(--teal); text-decoration:none; font-weight:700;">Forgot Password?</a>
-        </div>
+        <input id="adminPassword" type="password" placeholder="Enter Admin Password" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px; margin-bottom:15px; outline:none;">
         <button onclick="adminLogin()" class="admin-submit-btn">Login</button>
     </div>
 </div>
@@ -310,7 +272,7 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 
         <div class="admin-menu-list">
             <button class="admin-menu-btn" onclick="openAdminModal('couponModal')">
-                <span><i class="fa-solid fa-ticket" style="color:var(--teal); margin-right:10px; font-size:18px;"></i> কুপন ম্যানেজমেন্ট</span>
+                <span><i class="fa-solid fa-ticket" style="color:var(--teal); margin-right:10px; font-size:18px;"></i> ইউনিক ব্যাচ কুপন জেনারেটর</span>
                 <i class="fa-solid fa-chevron-right"></i>
             </button>
             <button class="admin-menu-btn" onclick="openAdminModal('popupModal')">
@@ -326,7 +288,7 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
                 <i class="fa-solid fa-chevron-right"></i>
             </button>
             <button class="admin-menu-btn" onclick="openAdminModal('ordersModalAdmin')">
-                <span><i class="fa-solid fa-receipt" style="color:var(--teal); margin-right:10px; font-size:18px;"></i> কাস্টমার অর্ডারসমূহ</span>
+                <span><i class="fa-solid fa-receipt" style="color:var(--teal); margin-right:10px; font-size:18px;"></i> কাস্টমার অর্ডারসমূহ (৭ স্ট্যাটাস)</span>
                 <i class="fa-solid fa-chevron-right"></i>
             </button>
             <button class="admin-menu-btn" onclick="openAdminModal('addProductModal')">
@@ -342,32 +304,32 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 </div>
 
 <!-- ADMIN SUB-MODALS -->
+<!-- 1. Coupon Generator Modal -->
 <div id="subModal_couponModal" class="admin-sub-modal">
     <div class="admin-modal-box" style="max-width:500px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-            <h3 style="font-size:18px; color:var(--teal); font-weight:900;"><i class="fa-solid fa-ticket"></i> কুপন ম্যানেজমেন্ট</h3>
+            <h3 style="font-size:18px; color:var(--teal); font-weight:900;"><i class="fa-solid fa-ticket"></i> ইউনিক ব্যাচ কুপন জেনারেটর</h3>
             <button onclick="closeAdminModal('couponModal')" style="background:#e2e8f0; border:none; width:32px; height:32px; border-radius:50%; font-weight:bold; cursor:pointer;">✕</button>
         </div>
-        
-        <label style="font-size:11px; font-weight:700;">কুপন কোড (যেমন: ADORE10)</label><input id="couponCodeInput" placeholder="ADORE10">
         <div style="display:flex; gap:10px;">
-            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">ডিসকাউন্টের ধরন</label>
-                <select id="couponTypeInput"><option value="percentage">Percentage (%)</option><option value="fixed">Fixed Amount</option></select>
-            </div>
-            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">পরিমাণ (Value)</label><input id="couponValueInput" type="number" placeholder="10"></div>
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">প্রিফিক্স (যেমন: ADORE)</label><input id="couponPrefix" placeholder="ADORE"></div>
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">পরিমাণ (Qty)</label><input id="couponQty" type="number" placeholder="10"></div>
         </div>
-        <label style="font-size:11px; font-weight:700;">নির্দিষ্ট প্রোডাক্ট কোড (Product Code - ঐচ্ছিক)</label>
-        <input id="couponProdCodeInput" placeholder="খালি রাখলে সব পণ্যে কাজ করবে">
-
-        <button onclick="createCoupon()" class="admin-submit-btn" style="margin-top:6px;"><i class="fa-solid fa-plus"></i> নতুন কুপন তৈরি করুন</button>
-        
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">ডিসকাউন্ট হার (%)</label><input id="couponDiscountRate" type="number" placeholder="10"></div>
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">মেয়াদ (Validity)</label><select id="couponValidity"><option value="30">১ মাস</option><option value="90">৩ মাস</option><option value="180">৬ মাস</option></select></div>
+        </div>
+        <label style="font-size:11px; font-weight:700;">নির্দিষ্ট প্রোডাক্ট কোড (Optional)</label>
+        <input id="couponProdCode" placeholder="নির্দিষ্ট প্রোডাক্ট কোড দিন">
+        <button onclick="generateBatchCoupons()" class="admin-submit-btn" style="margin-top:8px;">কুপন ব্যাচ জেনারেট করুন</button>
         <div style="margin-top:14px; border-top:1px solid #cbd5e1; padding-top:10px;">
-            <div style="font-size:12px; font-weight:800; color:var(--teal); margin-bottom:6px;">ডাটাবেসের কুপনসমূহ:</div>
-            <div id="adminCouponsListContainer" style="max-height:180px; overflow-y:auto;"></div>
+            <div style="font-size:12px; font-weight:800; color:var(--teal); margin-bottom:6px;">সক্রিয় কুপনসমূহ:</div>
+            <div id="adminCouponsList" style="max-height:160px; overflow-y:auto;"></div>
         </div>
     </div>
 </div>
 
+<!-- 2. Welcome Popup Modal -->
 <div id="subModal_popupModal" class="admin-sub-modal">
     <div class="admin-modal-box">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
@@ -377,23 +339,25 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
         <label style="font-size:11px; font-weight:700;">পপআপ ছবির লিংক (Image URL)</label>
         <input id="settingPopupImg" placeholder="https://...">
         <label style="font-size:11px; font-weight:700;">যে প্রোডাক্টে নিয়ে যাবে তার Product Code</label>
-        <input id="settingPopupProductId" placeholder="প্রোডাক্ট কোড দিন">
+        <input id="settingPopupProdCode" placeholder="প্রোডাক্ট কোড দিন">
         <button onclick="saveSiteSettings()" class="admin-submit-btn" style="margin-top:8px;">পপআপ ব্যানার সেভ করুন</button>
     </div>
 </div>
 
+<!-- 3. Notice Board Modal -->
 <div id="subModal_noticeModal" class="admin-sub-modal">
     <div class="admin-modal-box">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
             <h3 style="font-size:18px; color:var(--teal); font-weight:900;"><i class="fa-solid fa-bullhorn"></i> নোটিশ বোর্ড</h3>
             <button onclick="closeAdminModal('noticeModal')" style="background:#e2e8f0; border:none; width:32px; height:32px; border-radius:50%; font-weight:bold; cursor:pointer;">✕</button>
         </div>
-        <label style="font-size:11px; font-weight:700;">সাধারণ নোটিশ টেক্সট</label>
-        <textarea id="settingNotice" placeholder="যেমন: আজ সকল পণ্যে বিশেষ ছাড়!" style="height:80px;"></textarea>
+        <label style="font-size:11px; font-weight:700;">নোটিশ টেক্সট</label>
+        <textarea id="settingNotice" placeholder="নোটিশ লিখুন..." style="height:80px;"></textarea>
         <button onclick="saveSiteSettings()" class="admin-submit-btn" style="margin-top:8px;">নোটিশ সেভ করুন</button>
     </div>
 </div>
 
+<!-- 4. Vacation Mode Modal -->
 <div id="subModal_vacationModal" class="admin-sub-modal">
     <div class="admin-modal-box">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
@@ -402,17 +366,18 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; background:#f8fafc; padding:14px; border-radius:12px; border:1px solid #e2e8f0;">
             <div>
-                <strong style="font-size:13px; color:var(--text-dark);">ভ্যাকেশন মোড</strong>
-                <p style="font-size:11px; color:#64748b;">সাময়িকভাবে শপ বন্ধ রাখতে চালু করুন।</p>
+                <strong style="font-size:13px;">ভ্যাকেশন মোড (Vacation Mode)</strong>
+                <p style="font-size:11px; color:#64748b;">চালু করলে ওয়েবসাইটে নতুন অর্ডার নেওয়া বন্ধ থাকবে।</p>
             </div>
-            <input type="checkbox" id="vacationCheckbox" onchange="toggleVacation()" style="width:22px; height:22px; cursor:pointer; margin:0;">
+            <input type="checkbox" id="vacationCheckbox" onchange="toggleVacation()" style="width:22px; height:22px; cursor:pointer;">
         </div>
     </div>
 </div>
 
+<!-- 5. Customer Orders Management (7 Status Tabs) -->
 <div id="subModal_ordersModalAdmin" class="admin-sub-modal">
-    <div class="admin-modal-box" style="max-width:550px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+    <div class="admin-modal-box" style="max-width:650px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
             <h3 style="font-size:18px; color:var(--teal); font-weight:900;"><i class="fa-solid fa-receipt"></i> কাস্টমার অর্ডারসমূহ</h3>
             <button onclick="closeAdminModal('ordersModalAdmin')" style="background:#e2e8f0; border:none; width:32px; height:32px; border-radius:50%; font-weight:bold; cursor:pointer;">✕</button>
         </div>
@@ -425,65 +390,55 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
             <button class="order-tab-btn" id="tabCompleted" onclick="switchOrderTab('Completed')">Completed</button>
             <button class="order-tab-btn" id="tabCancelled" onclick="switchOrderTab('Cancelled')">Cancelled</button>
         </div>
-        <div id="adminOrdersListContainer" style="max-height:320px; overflow-y:auto; margin-top:10px;"></div>
+        <div id="adminOrdersContainer" style="max-height:350px; overflow-y:auto; margin-top:10px;"></div>
     </div>
 </div>
 
+<!-- 6. Add Product Modal -->
 <div id="subModal_addProductModal" class="admin-sub-modal">
-    <div class="admin-modal-box" style="max-width:500px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; position:relative;">
-            <h3 style="font-size:18px; color:var(--teal); font-weight:900; width:100%; text-align:center;"><i class="fa-solid fa-plus-circle"></i> নতুন পণ্য অ্যাড করুন</h3>
-            <button onclick="closeAdminModal('addProductModal')" style="background:#e2e8f0; border:none; width:32px; height:32px; border-radius:50%; font-weight:bold; cursor:pointer; position:absolute; right:0;">✕</button>
+    <div class="admin-modal-box" style="max-width:550px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <h3 style="font-size:18px; color:var(--teal); font-weight:900;">নতুন পণ্য অ্যাড করুন</h3>
+            <button onclick="closeAdminModal('addProductModal')" style="background:#e2e8f0; border:none; width:32px; height:32px; border-radius:50%; font-weight:bold; cursor:pointer;">✕</button>
         </div>
-        
-        <label style="font-size:11px; font-weight:700;">Product Code (প্রোডাক্ট কোড)</label>
-        <div style="display:flex; gap:6px; align-items:center; width:100%; margin-bottom:10px;">
-            <input id="newProdCode" readonly style="flex:1; background:#f1f5f9; font-weight:bold; margin:0; padding:10px 12px; border:1px solid #cbd5e1; border-radius:10px;">
-            <button onclick="generateNewProdCode()" type="button" style="background:var(--teal); color:white; border:none; padding:10px 14px; border-radius:10px; cursor:pointer;"><i class="fa-solid fa-rotate"></i></button>
+        <label style="font-size:11px; font-weight:700;">Product ID / Code</label>
+        <div style="display:flex; gap:6px; margin-bottom:8px;">
+            <input id="newProdCode" readonly style="flex:1; background:#f1f5f9; font-weight:bold; margin:0;">
+            <button onclick="generateProdCode()" type="button" style="background:var(--teal); color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer;"><i class="fa-solid fa-rotate"></i></button>
         </div>
-
-        <label style="font-size:11px; font-weight:700;">Product Name</label>
-        <input id="productName" placeholder="e.g. Netherland Dwarf Rabbit">
-
+        <label style="font-size:11px; font-weight:700;">Product Name</label><input id="newProdName" placeholder="Product Name">
         <div style="display:flex; gap:10px;">
-            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Regular Price (৳)</label><input id="productPrice" type="number" placeholder="4000"></div>
-            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Sale Price (৳)</label><input id="productSalePrice" type="number" placeholder="3500"></div>
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Regular Price (৳)</label><input id="newProdPrice" type="number" placeholder="4000"></div>
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Sale Price (৳)</label><input id="newProdSalePrice" type="number" placeholder="3500"></div>
         </div>
-
         <div style="display:flex; gap:10px;">
-            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Stock</label><input id="productStock" type="number" placeholder="10"></div>
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Stock</label><input id="newProdStock" type="number" placeholder="10"></div>
             <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Category</label>
-                <select id="productCategory">
-                    <option value="Rabbit">Rabbit</option>
-                    <option value="Hamster">Hamster</option>
-                    <option value="Pet Food">Pet Food</option>
-                    <option value="Accessories">Accessories</option>
-                </select>
+                <select id="newProdCat"><option value="Rabbit">Rabbit</option><option value="Hamster">Hamster</option><option value="Pet Food">Pet Food</option><option value="Accessories">Accessories</option></select>
             </div>
         </div>
-
-        <label style="font-size:11px; font-weight:700; margin-top:4px; display:block;">Description</label>
-        <textarea id="productDesc" placeholder="Description..." style="height:50px;"></textarea>
-
-        <div class="inner-box-border">
-            <label style="font-size:12px; font-weight:800; color:var(--teal);"><i class="fa-solid fa-image"></i> Main Image URL</label>
-            <input id="productImgUrl" placeholder="https://...">
-
-            <label style="font-size:12px; font-weight:800; color:var(--teal);"><i class="fa-solid fa-images"></i> Additional Images (Comma separated)</label>
-            <input id="productImages" placeholder="https://img1.com, https://img2.com">
-
-            <label style="font-size:12px; font-weight:800; color:#ef4444; margin-top:6px; display:block;"><i class="fa-solid fa-video"></i> YouTube Video URL</label>
-            <input id="productVideoUrl" placeholder="https://youtube.com/...">
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Color</label><input id="newProdColor" placeholder="White"></div>
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Rating</label><input id="newProdRating" placeholder="5.0" value="5.0"></div>
         </div>
-
-        <button onclick="addNewProduct()" class="admin-submit-btn">Add Product</button>
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Age</label><input id="newProdAge" placeholder="2"></div>
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Unit</label><select id="newProdUnit"><option value="Month">Month</option><option value="Year">Year</option><option value="Days">Days</option></select></div>
+        </div>
+        <label style="font-size:11px; font-weight:700;">Main Image URL</label><input id="newProdImg1" placeholder="https://...">
+        <label style="font-size:11px; font-weight:700;">Additional Image 2 URL</label><input id="newProdImg2" placeholder="https://...">
+        <label style="font-size:11px; font-weight:700;">Additional Image 3 URL</label><input id="newProdImg3" placeholder="https://...">
+        <label style="font-size:11px; font-weight:700;">YouTube Video URL</label><input id="newProdVideo" placeholder="https://...">
+        <label style="font-size:11px; font-weight:700;">Full Description</label><textarea id="newProdDesc" style="height:50px;"></textarea>
+        <button onclick="addNewProduct()" class="admin-submit-btn" style="margin-top:8px;">পণ্য যুক্ত করুন</button>
     </div>
 </div>
 
+<!-- 7. Manage Products Modal -->
 <div id="subModal_manageProductsModal" class="admin-sub-modal">
-    <div class="admin-modal-box" style="max-width:500px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-            <h3 style="font-size:18px; color:var(--teal); font-weight:900;"><i class="fa-solid fa-boxes-stacked"></i> প্রোডাক্ট ম্যানেজমেন্ট</h3>
+    <div class="admin-modal-box" style="max-width:550px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <h3 style="font-size:18px; color:var(--teal); font-weight:900;">প্রোডাক্ট ম্যানেজমেন্ট ও এডিট</h3>
             <button onclick="closeAdminModal('manageProductsModal')" style="background:#e2e8f0; border:none; width:32px; height:32px; border-radius:50%; font-weight:bold; cursor:pointer;">✕</button>
         </div>
         <div id="adminProductsList" style="max-height:350px; overflow-y:auto;"></div>
@@ -493,46 +448,24 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 <!-- EDIT PRODUCT MODAL -->
 <div id="editProductModal" class="edit-product-modal">
     <div class="edit-modal-card">
-        <div style="display:flex; justify-content:center; align-items:center; margin-bottom:15px; border-bottom:1px solid #e2e8f0; padding-bottom:12px; position:relative;">
-            <h3 style="color:var(--teal); font-size:20px; font-weight:900; margin:0;">Edit Product</h3>
-            <button onclick="closeEditModal()" style="background:#e2e8f0; border:none; width:32px; height:32px; border-radius:50%; font-weight:bold; cursor:pointer; position:absolute; right:0;">✕</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <h3 style="font-size:18px; color:var(--teal); font-weight:900;">Edit Product</h3>
+            <button onclick="closeEditModal()" style="background:#e2e8f0; border:none; width:32px; height:32px; border-radius:50%; font-weight:bold; cursor:pointer;">✕</button>
         </div>
-
         <input type="hidden" id="editProdId">
-        <label style="font-size:12px; font-weight:700;">Product Code</label>
-        <input id="editProdCodeInput" readonly style="background:#f1f5f9;">
-
-        <label style="font-size:12px; font-weight:700;">Product Name</label>
-        <input id="editProdName">
-
+        <label style="font-size:11px; font-weight:700;">Product Code</label><input id="editProdCode" readonly style="background:#f1f5f9;">
+        <label style="font-size:11px; font-weight:700;">Product Name</label><input id="editProdName">
         <div style="display:flex; gap:10px;">
-            <div style="flex:1;"><label style="font-size:12px; font-weight:700;">Regular Price (৳)</label><input id="editProdPrice" type="number"></div>
-            <div style="flex:1;"><label style="font-size:12px; font-weight:700; color:#ef4444;">Sale Price (৳)</label><input id="editProdSalePrice" type="number"></div>
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Price (৳)</label><input id="editProdPrice" type="number"></div>
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Sale Price (৳)</label><input id="editProdSalePrice" type="number"></div>
         </div>
-
         <div style="display:flex; gap:10px;">
-            <div style="flex:1;"><label style="font-size:12px; font-weight:700;">Stock</label><input id="editProdStock" type="number"></div>
-            <div style="flex:1;"><label style="font-size:12px; font-weight:700;">Active Status</label>
-                <select id="editProdActive"><option value="true">Active</option><option value="false">Inactive</option></select>
-            </div>
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Stock</label><input id="editProdStock" type="number"></div>
+            <div style="flex:1;"><label style="font-size:11px; font-weight:700;">Status</label><select id="editProdActive"><option value="true">Active</option><option value="false">Inactive</option></select></div>
         </div>
-
-        <label style="font-size:12px; font-weight:700;">Main Image URL</label>
-        <input id="editProdImgUrl">
-
-        <label style="font-size:12px; font-weight:700;">Additional Images</label>
-        <input id="editProdImages">
-
-        <label style="font-size:12px; font-weight:700;">YouTube Video URL</label>
-        <input id="editProdVideo">
-
-        <label style="font-size:12px; font-weight:700;">Description</label>
-        <textarea id="editProdDesc" style="height:55px;"></textarea>
-
-        <div style="display:flex; gap:10px; margin-top:12px;">
-            <button onclick="saveEditProduct()" class="admin-submit-btn" style="flex:1;">Save Changes</button>
-            <button onclick="closeEditModal()" class="admin-submit-btn" style="flex:1; background:#64748b;">Cancel</button>
-        </div>
+        <label style="font-size:11px; font-weight:700;">Main Image URL</label><input id="editProdImg1">
+        <label style="font-size:11px; font-weight:700;">Description</label><textarea id="editProdDesc" style="height:50px;"></textarea>
+        <button onclick="saveEditProduct()" class="admin-submit-btn" style="margin-top:8px;">পরিবর্তন সেভ করুন</button>
     </div>
 </div>
 
@@ -540,35 +473,23 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 <div id="productDetailModal" class="product-modal" onclick="handleModalBackdropClick(event)">
     <div class="product-modal-card">
         <button onclick="closeProductModal()" style="position:absolute; top:12px; right:12px; background:#f1f5f9; border:none; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer; z-index:10;">✕</button>
-        
         <div style="position:relative; width:100%; aspect-ratio:1/1; margin-bottom:12px; background:#000; border-radius:14px; overflow:hidden;">
             <img id="modalProdImg" src="" alt="" style="width:100%; height:100%; object-fit:cover;">
         </div>
-        
         <div id="modalThumbnails" style="display:flex; gap:6px; margin-bottom:12px; overflow-x:auto;"></div>
-
         <h3 id="modalProdName" style="font-size:16px; font-weight:800; color:var(--text-dark); margin-bottom:4px;"></h3>
-        
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
             <div id="modalProdPrice" style="font-size:18px; font-weight:900; color:var(--teal);"></div>
             <div id="modalProdStock" style="font-size:11px; color:#10b981; font-weight:700; background:#ecfdf5; padding:4px 8px; border-radius:8px;"></div>
         </div>
-
         <div style="display:flex; gap:10px; margin-bottom:12px;">
-            <button id="modalAddToCartBtn" style="flex:1; padding:10px; border:none; border-radius:10px; background:var(--teal); color:white; font-weight:800; cursor:pointer; font-size:13px; box-shadow:0 2px 8px rgba(0,137,123,0.3);">Add to Cart</button>
-            <button id="modalBuyNowBtn" style="flex:1; padding:10px; border:none; border-radius:10px; background:#f97316; color:white; font-weight:800; cursor:pointer; font-size:13px; box-shadow:0 2px 8px rgba(249,115,22,0.3);">Buy Now</button>
+            <button id="modalAddToCartBtn" style="flex:1; padding:10px; border:none; border-radius:10px; background:var(--teal); color:white; font-weight:800; cursor:pointer;">Add to Cart</button>
+            <button id="modalBuyNowBtn" style="flex:1; padding:10px; border:none; border-radius:10px; background:#f97316; color:white; font-weight:800; cursor:pointer;">Buy Now</button>
         </div>
-
         <div id="modalVideoContainer" style="margin-bottom:12px; display:none;">
-            <a id="modalVideoBtn" href="#" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:12px; background:#ff0000; color:white; border-radius:10px; font-weight:800; font-size:13px; text-decoration:none;">
-                <i class="fa-brands fa-youtube" style="font-size:16px;"></i> Watch Product Video
-            </a>
+            <a id="modalVideoBtn" href="#" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:12px; background:#ff0000; color:white; border-radius:10px; font-weight:800; text-decoration:none;"><i class="fa-brands fa-youtube"></i> Watch Video</a>
         </div>
-
-        <div style="margin-bottom:10px;">
-            <div style="font-size:11px; color:#64748b; margin-bottom:3px; font-weight:700;">পণ্যের বিবরণ:</div>
-            <p id="modalProdDesc" style="font-size:12px; color:#334155; line-height:1.4; background:#f8fafc; padding:8px; border-radius:8px; border:1px solid #e2e8f0; max-height:80px; overflow-y:auto;"></p>
-        </div>
+        <p id="modalProdDesc" style="font-size:12px; color:#334155; line-height:1.4; background:#f8fafc; padding:8px; border-radius:8px; max-height:80px; overflow-y:auto;"></p>
     </div>
 </div>
 
@@ -579,29 +500,45 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
         <h2 id="checkoutHeaderTitle" style="font-size: 18px; font-weight: 900; letter-spacing: 1px;">MY CART</h2>
         <button class="close-btn" onclick="closeCart()" style="position: absolute; right: 20px;">✕</button>
     </div>
-    <div class="cart-body-content" id="cartBodyContainer"></div>
+    <div class="cart-body-content" id="cartBodyContent"></div>
 </div>
 </div>
 
 <!-- SUCCESS POPUP -->
 <div id="thankyouModal" class="thankyou-overlay">
     <div class="thankyou-card" style="text-align:center; padding:25px 20px;">
-        <div style="width:65px; height:65px; background:#ecfdf5; color:#10b981; font-size:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 12px auto;">
-            <i class="fa-solid fa-check"></i>
-        </div>
-        <h2 style="font-size:20px; font-weight:900; color:var(--text-dark); margin-bottom:4px;">Order Successful!</h2>
-        <p id="successPopupText" style="font-size:12px; color:#64748b; margin-bottom:15px; line-height:1.4;"></p>
+        <div style="width:65px; height:65px; background:#ecfdf5; color:#10b981; font-size:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 12px auto;"><i class="fa-solid fa-check"></i></div>
+        <h2 style="font-size:20px; font-weight:900; margin-bottom:4px;">Order Successful!</h2>
+        <p id="successPopupText" style="font-size:12px; color:#64748b; margin-bottom:15px;"></p>
         <button onclick="openOrdersModalFromSuccess()" class="thankyou-btn" style="margin-bottom:8px;">Track My Order</button>
-        <button onclick="closeThankYouModal()" class="thankyou-btn" style="background:#e2e8f0; color:var(--text-dark); box-shadow:none;">Go Back</button>
+        <button onclick="closeThankYouModal()" class="thankyou-btn" style="background:#e2e8f0; color:var(--text-dark);">Go Back</button>
     </div>
 </div>
 
 <!-- MY ORDERS MODAL -->
 <div id="ordersModal" class="thankyou-overlay" onclick="handleOrdersBackdropClick(event)">
-    <div class="thankyou-card" style="text-align:left;">
+    <div class="thankyou-card" style="text-align:left; max-width:550px;">
         <h2 style="font-size:18px; margin-bottom:15px; color:var(--teal); text-align:center;">My Orders</h2>
-        <div id="userOrdersList" style="max-height:300px; overflow-y:auto; margin-bottom:15px;"></div>
+        <div id="userOrdersList" style="max-height:350px; overflow-y:auto; margin-bottom:15px;"></div>
         <button onclick="closeOrdersModal()" class="thankyou-btn">বন্ধ করুন</button>
+    </div>
+</div>
+
+<!-- VOUCHER / INVOICE MODAL -->
+<div id="voucherModal" class="thankyou-overlay" onclick="handleVoucherBackdropClick(event)">
+    <div class="voucher-box" style="background:#fff; padding:20px; border-radius:16px; max-width:500px; width:100%; text-align:left;">
+        <div style="text-align:center; border-bottom:2px dashed #cbd5e1; padding-bottom:12px; margin-bottom:12px;">
+            <h3 style="color:var(--teal); font-weight:900;">ADORE'S PET</h3>
+            <p style="font-size:11px; color:#64748b;">Official Order Voucher & Cash Memo</p>
+        </div>
+        <div id="voucherDetailsContent" style="font-size:12px; margin-bottom:12px; line-height:1.5;"></div>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12px;">
+            <thead><tr style="background:#f1f5f9;"><th style="border:1px solid #cbd5e1; padding:6px;">Product</th><th style="border:1px solid #cbd5e1; padding:6px;">Qty</th><th style="border:1px solid #cbd5e1; padding:6px;">Price</th></tr></thead>
+            <tbody id="voucherTableBody"></tbody>
+        </table>
+        <div id="voucherTotalsBox" style="font-size:12px; text-align:right; margin-bottom:15px; line-height:1.5;"></div>
+        <button onclick="window.print()" class="thankyou-btn" style="margin-bottom:8px;"><i class="fa-solid fa-print"></i> প্রিন্ট করুন</button>
+        <button onclick="closeVoucherModal()" class="thankyou-btn" style="background:#64748b;">বন্ধ করুন</button>
     </div>
 </div>
 
@@ -615,7 +552,7 @@ emailjs.init({ publicKey: "P7lqeBS7YKyU3Kpaq" });
 
 let products = [];
 let cart = JSON.parse(localStorage.getItem("adoresCart")) || [];
-let siteSettings = { popupImg: "", popupProductId: "", notice: "", vacation: false };
+let siteSettings = { popupImg: "", popupProdCode: "", notice: "", vacation: false };
 let couponsList = [];
 let appliedCouponData = null;
 let currentCategory = "";
@@ -643,50 +580,7 @@ window.addEventListener('DOMContentLoaded', () => {
     fetchSiteSettings();
     fetchCoupons();
     updateCartBadge();
-    checkPasswordRecoveryFlow();
 });
-
-// PASSWORD RECOVERY EVENT LISTENER
-supabaseClient.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'PASSWORD_RECOVERY') {
-        document.getElementById("resetPasswordModal").classList.add("show");
-    }
-});
-
-function checkPasswordRecoveryFlow() {
-    const hash = window.location.hash;
-    if (hash && (hash.includes("type=recovery") || hash.includes("access_token="))) {
-        document.getElementById("resetPasswordModal").classList.add("show");
-    }
-}
-
-function closeResetPasswordModal() {
-    document.getElementById("resetPasswordModal").classList.remove("show");
-}
-
-async function saveNewPassword() {
-    const newPassword = document.getElementById("newAdminPassword").value;
-    const confirmPassword = document.getElementById("confirmAdminPassword").value;
-
-    if (!newPassword || newPassword.length < 6) {
-        return alert("পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে!");
-    }
-    if (newPassword !== confirmPassword) {
-        return alert("পাসওয়ার্ড দুটি মিলছে না!");
-    }
-
-    try {
-        const { data, error } = await supabaseClient.auth.updateUser({ password: newPassword });
-        if (error) throw error;
-
-        alert("পাসওয়ার্ড সফলভাবে আপডেট করা হয়েছে! এবার নতুন পাসওয়ার্ড দিয়ে লগইন করুন।");
-        closeResetPasswordModal();
-        window.location.hash = ""; // Clear hash token
-        document.getElementById("adminLoginModal").classList.add("show");
-    } catch (err) {
-        alert("পাসওয়ার্ড রিসেট ব্যর্থ হয়েছে: " + err.message);
-    }
-}
 
 function showToast(msg){
     const t = document.getElementById("toastNotification");
@@ -695,29 +589,28 @@ function showToast(msg){
     setTimeout(() => { t.style.display = "none"; }, 2500);
 }
 
-// SUPABASE DATA FETCHING
+// FAST DATA FETCHING & OPTIMIZATION
 async function fetchProducts(){
     try {
-        const { data, error } = await supabaseClient.from('products').select('*').eq('is_active', true).order('sort_order', { ascending: true, nullsLast: true });
+        const { data, error } = await supabaseClient.from('products').select('*').eq('is_active', true);
         if(error) throw error;
         products = data || [];
         renderProducts();
-    } catch(err){
-        console.error("Error fetching products:", err);
-    }
+    } catch(err){ console.error(err); }
 }
 
 async function fetchSiteSettings(){
     try {
         const { data, error } = await supabaseClient.from('site_settings').select('*');
-        if(!error && data && data.length > 0){
+        if(!error && data){
             data.forEach(s => {
                 if(s.key === 'vacation') siteSettings.vacation = s.value === 'true' || s.value === true;
                 if(s.key === 'notice') siteSettings.notice = s.value;
                 if(s.key === 'popup_img') siteSettings.popupImg = s.value;
-                if(s.key === 'popup_product_id') siteSettings.popupProductId = s.value;
+                if(s.key === 'popup_product_id') siteSettings.popupProdCode = s.value;
             });
             applySiteSettings();
+            checkWelcomePopup();
         }
     } catch(err){ console.error(err); }
 }
@@ -737,7 +630,6 @@ function applySiteSettings(){
         document.getElementById("vacationNoticeBanner").style.display = "none";
         document.getElementById("vacationCheckbox").checked = false;
     }
-
     const noticeBox = document.getElementById("announcementBox");
     if(siteSettings.notice){
         noticeBox.innerText = siteSettings.notice;
@@ -755,12 +647,9 @@ function checkWelcomePopup(){
     }
 }
 function closeWelcomePopup(){ document.getElementById("welcomePopupModal").classList.remove("show"); }
-
 function handlePopupClick(){
     closeWelcomePopup();
-    if(siteSettings.popupProductId){
-        openProductDetail(siteSettings.popupProductId);
-    }
+    if(siteSettings.popupProdCode) openProductDetail(siteSettings.popupProdCode);
 }
 
 function openSupportModal(){ document.getElementById("supportModal").classList.add("show"); }
@@ -802,16 +691,13 @@ function renderProducts(){
         let priceHtml = salePrice > 0 && salePrice < price ? 
             `<span class="old-price">৳${price}</span><span class="product-price">৳${salePrice}</span>` : 
             `<span class="product-price">৳${price}</span>`;
-        
         let imgUrl = p.image_url || 'https://via.placeholder.com/400x400?text=Pet';
         let stockText = p.stock > 0 ? `Stock: ${p.stock}` : `<span style="color:#ef4444;">Out of Stock</span>`;
         let code = p.product_code || p.id;
 
         return `
             <div class="product-card" onclick="openProductDetail('${code}')">
-                <div class="product-img-wrap">
-                    <img src="${imgUrl}" alt="" onerror="this.src='https://via.placeholder.com/400x400?text=Pet'">
-                </div>
+                <div class="product-img-wrap"><img src="${imgUrl}" alt=""></div>
                 <div class="product-info">
                     <div class="product-name">${p.name}</div>
                     <div style="font-size:11px; color:#10b981; font-weight:700; margin-bottom:4px;">${stockText}</div>
@@ -836,48 +722,33 @@ function openProductDetail(code){
         else if(typeof p.images === 'string') images = images.concat(p.images.split(',').map(s=>s.trim()));
     }
     images = images.filter(Boolean);
-    
-    let thumbHtml = images.map(img => `<img src="${img}" onclick="document.getElementById('modalProdImg').src='${img}'" style="width:50px; height:50px; object-fit:cover; border-radius:8px; cursor:pointer; border:1px solid #cbd5e1;">`).join("");
-    document.getElementById("modalThumbnails").innerHTML = thumbHtml;
+    document.getElementById("modalThumbnails").innerHTML = images.map(img => `<img src="${img}" onclick="document.getElementById('modalProdImg').src='${img}'" style="width:50px; height:50px; object-fit:cover; border-radius:8px; cursor:pointer; border:1px solid #cbd5e1;">`).join("");
 
     let price = p.price || 0;
     let salePrice = p.sale_price || 0;
     let activePrice = salePrice > 0 && salePrice < price ? salePrice : price;
     
-    let priceHtml = salePrice > 0 && salePrice < price ? 
-        `<span class="old-price" style="font-size:14px;">৳${price}</span> ৳${salePrice}` : 
-        `৳${price}`;
-    document.getElementById("modalProdPrice").innerHTML = priceHtml;
-    document.getElementById("modalProdDesc").innerText = p.description || "কোনো বিবরণ দেওয়া নেই।";
+    document.getElementById("modalProdPrice").innerHTML = salePrice > 0 && salePrice < price ? `<span class="old-price" style="font-size:14px;">৳${price}</span> ৳${salePrice}` : `৳${price}`;
+    document.getElementById("modalProdDesc").innerText = p.description || "কোনো বিবরণ নেই।";
     
     const vidContainer = document.getElementById("modalVideoContainer");
     const vidBtn = document.getElementById("modalVideoBtn");
-    if(p.video_url && p.video_url.trim() !== ""){
-        vidBtn.href = p.video_url.trim();
-        vidContainer.style.display = "block";
-    } else {
-        vidContainer.style.display = "none";
-    }
+    if(p.video_url && p.video_url.trim() !== ""){ vidBtn.href = p.video_url.trim(); vidContainer.style.display = "block"; } else { vidContainer.style.display = "none"; }
     
     const addBtn = document.getElementById("modalAddToCartBtn");
     const buyBtn = document.getElementById("modalBuyNowBtn");
-    
-    addBtn.innerText = p.stock > 0 ? "Add to Cart" : "Out of Stock";
-    addBtn.disabled = p.stock <= 0;
+    addBtn.innerText = p.stock > 0 ? "Add to Cart" : "Out of Stock"; addBtn.disabled = p.stock <= 0;
     addBtn.onclick = function(){ addToCart(p.product_code || p.id, activePrice); closeProductModal(); };
-
-    buyBtn.innerText = p.stock > 0 ? "Buy Now" : "Out of Stock";
-    buyBtn.disabled = p.stock <= 0;
+    buyBtn.innerText = p.stock > 0 ? "Buy Now" : "Out of Stock"; buyBtn.disabled = p.stock <= 0;
     buyBtn.onclick = function(){ addToCart(p.product_code || p.id, activePrice); closeProductModal(); openCart(); };
 
-    history.pushState({modal: true}, "");
     document.getElementById("productDetailModal").classList.add("show");
 }
-
 function closeProductModal(){ document.getElementById("productDetailModal").classList.remove("show"); }
-function handleModalBackdropClick(event){ if(event.target.id === 'productDetailModal') closeProductModal(); }
-function handleCartBackdropClick(event){ if(event.target.id === 'cartOverlay') closeCart(); }
-function handleOrdersBackdropClick(event){ if(event.target.id === 'ordersModal') closeOrdersModal(); }
+function handleModalBackdropClick(e){ if(e.target.id === 'productDetailModal') closeProductModal(); }
+function handleCartBackdropClick(e){ if(e.target.id === 'cartOverlay') closeCart(); }
+function handleOrdersBackdropClick(e){ if(e.target.id === 'ordersModal') closeOrdersModal(); }
+function handleVoucherBackdropClick(e){ if(e.target.id === 'voucherModal') closeVoucherModal(); }
 
 function addToCart(code, activePrice){
     const p = products.find(prod => String(prod.product_code) === String(code) || String(prod.id) === String(code));
@@ -886,9 +757,7 @@ function addToCart(code, activePrice){
     if(item){
         if(item.qty >= p.stock) return alert("স্টক লিমিট শেষ!");
         item.qty++;
-    } else {
-        cart.push({ code: code, price: activePrice, qty: 1 });
-    }
+    } else { cart.push({ code: code, price: activePrice, qty: 1 }); }
     localStorage.setItem("adoresCart", JSON.stringify(cart));
     updateCartBadge();
     showToast("প্রডাক্টটি কার্টে যোগ করা হয়েছে!");
@@ -896,14 +765,13 @@ function addToCart(code, activePrice){
 
 function updateCartBadge(){
     const count = cart.reduce((s, i) => s + i.qty, 0);
-    const b = document.getElementById("cartCount");
-    b.innerText = count;
-    b.style.display = count > 0 ? "flex" : "none";
+    document.getElementById("cartCount").innerText = count;
+    document.getElementById("cartCount").style.display = count > 0 ? "flex" : "none";
+    document.getElementById("desktopCartCount").innerText = count;
 }
 
 function openCart(){
     document.getElementById("checkoutHeaderTitle").innerText = "MY CART";
-    history.pushState({modal: true}, "");
     document.getElementById("cartOverlay").classList.add("show");
     renderCartView();
 }
@@ -911,9 +779,7 @@ function closeCart(){ document.getElementById("cartOverlay").classList.remove("s
 
 // EXACT DELIVERY CHARGE CALCULATION RULES
 function calculateDeliveryFee(district){
-    let hasRabbit = false;
-    let hasHamster = false;
-
+    let hasRabbit = false, hasHamster = false;
     cart.forEach(i => {
         let p = products.find(prod => String(prod.product_code) === String(i.code) || String(prod.id) === String(i.code));
         if(p && p.category){
@@ -922,21 +788,16 @@ function calculateDeliveryFee(district){
             else if(cat === 'hamster') hasHamster = true;
         }
     });
-
     let isDhakaArea = (district.includes('Dhaka') || district.includes('Gazipur') || district.includes('Narayanganj') || district.includes('ঢাকা') || district.includes('গাজীপুর') || district.includes('নারায়ণগঞ্জ'));
 
-    if(hasRabbit){
-        return isDhakaArea ? 400 : 500;
-    } else if(hasHamster){
-        return isDhakaArea ? 300 : 450;
-    } else {
-        return isDhakaArea ? 80 : 130;
-    }
+    if(hasRabbit) return isDhakaArea ? 400 : 500;
+    else if(hasHamster) return isDhakaArea ? 300 : 450;
+    else return isDhakaArea ? 80 : 130;
 }
 
 function renderCartView(){
     document.getElementById("checkoutHeaderTitle").innerText = "MY CART";
-    const container = document.getElementById("cartBodyContainer");
+    const container = document.getElementById("cartBodyContent");
     let subtotal = 0;
     if(cart.length === 0){
         container.innerHTML = `<p style="text-align:center; color:#64748b; padding:40px;">কার্ট খালি রয়েছে।</p>`;
@@ -964,29 +825,20 @@ function renderCartView(){
         `;
     }).join("");
 
-    let discountAmount = 0;
-    if(appliedCouponData){
-        if(appliedCouponData.discount_type === 'percentage'){
-            discountAmount = (subtotal * appliedCouponData.discount_value) / 100;
-        } else {
-            discountAmount = appliedCouponData.discount_value;
-        }
-    }
+    let discountAmount = appliedCouponData ? (appliedCouponData.discount_type === 'percentage' ? (subtotal * appliedCouponData.discount_value) / 100 : appliedCouponData.discount_value) : 0;
     let finalPayable = subtotal - discountAmount;
 
     container.innerHTML = `
         <div style="flex:1; overflow-y:auto; max-height:220px; margin-bottom:12px;">${itemsHtml}</div>
-        
         <div style="display:flex; gap:6px; margin-bottom:12px;">
             <input id="cartCouponInput" placeholder="কুপন কোড দিন" style="flex:1; padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; font-size:12px; margin:0;">
             <button onclick="applyCoupon()" style="background:var(--teal); color:white; border:none; padding:8px 12px; border-radius:8px; font-weight:bold; font-size:12px; cursor:pointer;">Apply</button>
         </div>
         ${appliedCouponData ? `<div style="font-size:11px; color:#10b981; font-weight:bold; margin-bottom:10px;">✅ কুপন '${appliedCouponData.code}' সফলভাবে যুক্ত হয়েছে!</div>` : ''}
-
         <div style="background:#f8fafc; padding:12px; border-radius:14px; margin-bottom:15px; border:1px solid #e2e8f0; font-size:13px;">
             <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#64748b;"><span>পণ্যের মূল্য</span><strong>৳${subtotal}</strong></div>
             ${appliedCouponData ? `<div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#10b981;"><span>ডিসকাউন্ট</span><strong>- ৳${discountAmount}</strong></div>` : ''}
-            <div style="display:flex; justify-content:space-between; margin-top:8px; border-top:1px dashed #cbd5e1; padding-top:8px; font-size:15px; font-weight:900; color:var(--text-dark);"><span>সর্বমোট প্রদেয়</span><strong style="color:var(--teal);">৳${finalPayable}</strong></div>
+            <div style="display:flex; justify-content:space-between; margin-top:8px; border-top:1px dashed #cbd5e1; padding-top:8px; font-size:15px; font-weight:900;"><span>সর্বমোট প্রদেয়</span><strong style="color:var(--teal);">৳${finalPayable}</strong></div>
         </div>
         <button onclick="proceedToCheckout()" class="order-btn">Checkout</button>
     `;
@@ -995,12 +847,8 @@ function renderCartView(){
 function applyCoupon(){
     const inputCode = document.getElementById("cartCouponInput").value.trim().toUpperCase();
     if(!inputCode) return alert("দয়া করে কুপন কোড লিখুন!");
-
     const found = couponsList.find(c => c.code.trim().toUpperCase() === inputCode);
     if(!found) return alert("ভুল কুপন কোড!");
-
-    if(found.expires_at && new Date() > new Date(found.expires_at)) return alert("এই কুপনটির মেয়াদ শেষ!");
-
     appliedCouponData = found;
     renderCartView();
     showToast("কুপন সফলভাবে অ্যাপ্লাই করা হয়েছে!");
@@ -1026,6 +874,7 @@ function removeFromCart(code){
 }
 
 function proceedToCheckout(){
+    if(siteSettings.vacation) return alert("দুঃখিত! আমাদের শপটি বর্তমানে ভ্যাকেশন মোডে বন্ধ রয়েছে।");
     if(cart.length === 0) return alert("কার্ট খালি!");
     document.getElementById("checkoutHeaderTitle").innerText = "ORDER FORM";
     
@@ -1033,7 +882,7 @@ function proceedToCheckout(){
     let discountAmount = appliedCouponData ? (appliedCouponData.discount_type === 'percentage' ? (subtotal * appliedCouponData.discount_value) / 100 : appliedCouponData.discount_value) : 0;
     let productTotalAfterDiscount = subtotal - discountAmount;
 
-    let hasRabbitOrHamster = cart.some(i => {
+    let hasPet = cart.some(i => {
         let p = products.find(prod => String(prod.product_code) === String(i.code) || String(prod.id) === String(i.code));
         return p && p.category && (p.category.toLowerCase() === 'rabbit' || p.category.toLowerCase() === 'hamster');
     });
@@ -1041,60 +890,26 @@ function proceedToCheckout(){
     let districtOptions = `<option value="">৬৪ টি জেলা থেকে বেছে নিন</option>`;
     allDistricts.forEach(dist => { districtOptions += `<option value="${dist}">${dist}</option>`; });
 
-    const container = document.getElementById("cartBodyContainer");
-    container.innerHTML = `
-        <div style="margin-bottom:12px;">
-            <label style="font-size:12px; font-weight:700; color:#475569; display:block; margin-bottom:2px;">আপনার নাম (Full Name) *</label>
-            <input id="customerName" type="text" placeholder="যেমন: রহিম শিকদার" class="checkout-input">
-        </div>
-        <div style="margin-bottom:12px;">
-            <label style="font-size:12px; font-weight:700; color:#475569; display:block; margin-bottom:2px;">মোবাইল নম্বর (Phone Number) *</label>
-            <input id="customerPhone" type="tel" placeholder="যেমন: 017xxxxxxxx" class="checkout-input">
-        </div>
-        <div style="margin-bottom:12px;">
-            <label style="font-size:12px; font-weight:700; color:#475569; display:block; margin-bottom:2px;">ইমেইল (Optional)</label>
-            <input id="customerEmail" type="email" placeholder="email@gmail.com" class="checkout-input">
-        </div>
-        <div style="margin-bottom:12px;">
-            <label style="font-size:12px; font-weight:700; color:#475569; display:block; margin-bottom:2px;">জেলা নির্বাচন করুন *</label>
-            <select id="customerDistrict" onchange="onDistrictChange()" class="checkout-input">${districtOptions}</select>
-        </div>
-        <div style="margin-bottom:12px;">
-            <label style="font-size:12px; font-weight:700; color:#475569; display:block; margin-bottom:2px;">থানা / এলাকা লিখুন *</label>
-            <input id="customerThana" type="text" placeholder="যেমন: মিরের বাজার" class="checkout-input">
-        </div>
-        <div style="margin-bottom:12px;">
-            <label style="font-size:12px; font-weight:700; color:#475569; display:block; margin-bottom:2px;">বিস্তারিত ঠিকানা *</label>
-            <textarea id="customerAddress" placeholder="বাসা ও রোড নম্বর..." class="checkout-input" style="height:50px; resize:none;"></textarea>
-        </div>
-        <div style="margin-bottom:12px;">
-            <label style="font-size:12px; font-weight:700; color:#475569; display:block; margin-bottom:2px;">অর্ডার নোট (ঐচ্ছিক)</label>
-            <input id="customerNote" type="text" placeholder="বিশেষ কোনো নির্দেশনা..." class="checkout-input">
-        </div>
-
-        ${hasRabbitOrHamster ? `
-            <div style="background:#e0f2f1; border:1.5px dashed var(--teal); border-radius:14px; padding:14px; margin-bottom:14px; text-align:center;">
-                <div style="font-size:12px; font-weight:800; color:var(--teal); margin-bottom:4px;"><i class="fa-solid fa-wallet"></i> bKash / Nagad Personal Number:</div>
-                <div style="font-size:17px; font-weight:900; color:#004d40; margin-bottom:8px;">01681578599</div>
-                <div id="advanceAmountDisplay" style="display:none; background:#ffffff; color:#047857; font-size:13px; font-weight:900; padding:8px; border-radius:10px; border:1px solid #10b981; margin-bottom:8px;">
-                    পেট আইটেমের মূল্যের ওপর ৫০% অগ্রিম প্রদেয়: ৳<span id="advance50Val">0</span>
-                </div>
-                <div style="font-size:11px; color:#b91c1c; font-weight:700;">
-                    খরগোশ বা হ্যামস্টারের ক্ষেত্রে মোট পেট মূল্যের ৫০% অ্যাডভান্স সেন্ড মানি করুন এবং TrxID দিন।
-                </div>
+    document.getElementById("cartBodyContent").innerHTML = `
+        <div style="margin-bottom:10px;"><label style="font-size:12px; font-weight:700;">আপনার নাম *</label><input id="customerName" placeholder="রহিম শিকদার" class="checkout-input"></div>
+        <div style="margin-bottom:10px;"><label style="font-size:12px; font-weight:700;">মোবাইল নম্বর *</label><input id="customerPhone" type="tel" placeholder="017xxxxxxxx" class="checkout-input"></div>
+        <div style="margin-bottom:10px;"><label style="font-size:12px; font-weight:700;">জেলা নির্বাচন করুন *</label><select id="customerDistrict" onchange="onDistrictChange()" class="checkout-input">${districtOptions}</select></div>
+        <div style="margin-bottom:10px;"><label style="font-size:12px; font-weight:700;">থানা / এলাকা *</label><input id="customerThana" placeholder="মিরের বাজার" class="checkout-input"></div>
+        <div style="margin-bottom:10px;"><label style="font-size:12px; font-weight:700;">বিস্তারিত ঠিকানা *</label><textarea id="customerAddress" placeholder="বাসা ও রোড নম্বর..." class="checkout-input" style="height:45px;"></textarea></div>
+        ${hasPet ? `
+            <div style="background:#e0f2f1; border:1.5px dashed var(--teal); border-radius:14px; padding:12px; margin-bottom:12px; text-align:center;">
+                <div style="font-size:12px; font-weight:800; color:var(--teal);">bKash / Nagad Personal Number: <b>01681578599</b></div>
+                <div id="advanceAmountDisplay" style="display:none; color:#047857; font-size:12px; font-weight:900; margin-top:6px;">৫০% অগ্রিম প্রদেয়: ৳<span id="advance50Val">0</span></div>
+                <div style="font-size:10px; color:#b91c1c; margin-top:4px;">খরগোশ বা হ্যামস্টারের জন্য ৫০% অগ্রিম সেন্ড মানি করে TrxID দিন।</div>
             </div>
-            <div style="margin-bottom:12px;">
-                <label style="font-size:12px; font-weight:700; color:#475569; display:block; margin-bottom:2px;">ট্রানজেকশন আইডি (TrxID) *</label>
-                <input id="customerTrxId" type="text" placeholder="যেমন: 9J87H6G5F4" class="checkout-input">
-            </div>
+            <div style="margin-bottom:10px;"><label style="font-size:12px; font-weight:700;">ট্রানজেকশন আইডি (TrxID) *</label><input id="customerTrxId" placeholder="9J87H6G5F4" class="checkout-input"></div>
         ` : ''}
-
-        <div id="checkoutSummaryBox" style="display:none; background:#f8fafc; padding:12px 14px; border-radius:12px; margin-bottom:14px; border:1px solid #e2e8f0; font-size:13px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#64748b;"><span>পণ্যের মূল্য:</span><strong>৳${subtotal}</strong></div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:6px; color:#64748b;"><span>ডেলিভারি চার্জ:</span><strong id="checkoutDeliveryText">৳0</strong></div>
-            <div style="display:flex; justify-content:space-between; border-top:1px dashed #cbd5e1; padding-top:6px; font-size:15px; font-weight:900; color:var(--teal);"><span>সর্বমোট প্রদেয়:</span><strong id="checkoutTotalText">৳${productTotalAfterDiscount}</strong></div>
+        <div id="checkoutSummaryBox" style="display:none; background:#f8fafc; padding:10px; border-radius:10px; margin-bottom:12px; font-size:12px;">
+            <div style="display:flex; justify-content:space-between; color:#64748b;"><span>পণ্যের মূল্য:</span><strong>৳${subtotal}</strong></div>
+            <div style="display:flex; justify-content:space-between; color:#64748b; margin-top:4px;"><span>ডেলিভারি চার্জ:</span><strong id="checkoutDeliveryText">৳0</strong></div>
+            <div style="display:flex; justify-content:space-between; border-top:1px dashed #cbd5e1; padding-top:4px; margin-top:4px; font-size:14px; font-weight:900; color:var(--teal);"><span>সর্বমোট প্রদেয়:</span><strong id="checkoutTotalText">৳${productTotalAfterDiscount}</strong></div>
         </div>
-        <button onclick="placeOrder()" class="order-btn"><i class="fa-solid fa-check"></i> অর্ডার কনফার্ম করুন</button>
+        <button onclick="placeOrder()" class="order-btn">অর্ডার কনফার্ম করুন</button>
     `;
 }
 
@@ -1102,17 +917,11 @@ function onDistrictChange(){
     const dist = document.getElementById("customerDistrict").value;
     const summaryBox = document.getElementById("checkoutSummaryBox");
     const advDisplay = document.getElementById("advanceAmountDisplay");
-    
-    if(!dist){ 
-        summaryBox.style.display = "none"; 
-        if(advDisplay) advDisplay.style.display = "none";
-        return; 
-    }
+    if(!dist){ summaryBox.style.display = "none"; if(advDisplay) advDisplay.style.display = "none"; return; }
 
     let subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
     let discountAmount = appliedCouponData ? (appliedCouponData.discount_type === 'percentage' ? (subtotal * appliedCouponData.discount_value) / 100 : appliedCouponData.discount_value) : 0;
     let productTotalAfterDiscount = subtotal - discountAmount;
-    
     let delivery = calculateDeliveryFee(dist);
     let total = productTotalAfterDiscount + delivery;
 
@@ -1124,57 +933,50 @@ function onDistrictChange(){
         let petTotalOnly = 0;
         cart.forEach(i => {
             let p = products.find(prod => String(prod.product_code) === String(i.code) || String(prod.id) === String(i.code));
-            if(p && p.category && (p.category.toLowerCase() === 'rabbit' || p.category.toLowerCase() === 'hamster')){
-                petTotalOnly += (i.price * i.qty);
-            }
+            if(p && p.category && (p.category.toLowerCase() === 'rabbit' || p.category.toLowerCase() === 'hamster')) petTotalOnly += (i.price * i.qty);
         });
-        let halfAdvance = Math.round(petTotalOnly / 2);
-        document.getElementById("advance50Val").innerText = halfAdvance;
+        document.getElementById("advance50Val").innerText = Math.round(petTotalOnly / 2);
         advDisplay.style.display = "block";
     }
 }
 
-// PLACING ORDER USING SUPABASE RPC
+// ORDER PLACEMENT & NOTIFICATIONS (Gmail & WhatsApp)
 async function placeOrder(){
     const name = document.getElementById("customerName").value.trim();
     const phone = document.getElementById("customerPhone").value.trim();
-    const email = document.getElementById("customerEmail") ? document.getElementById("customerEmail").value.trim() : "";
     const district = document.getElementById("customerDistrict").value;
     const thana = document.getElementById("customerThana").value.trim();
     const address = document.getElementById("customerAddress").value.trim();
-    const note = document.getElementById("customerNote") ? document.getElementById("customerNote").value.trim() : "";
-    
     const trxIdEl = document.getElementById("customerTrxId");
     let trxId = trxIdEl ? trxIdEl.value.trim() : "N/A";
 
-    if(!name || !phone || !district || !thana || !address) return alert("দয়া করে সমস্ত প্রয়োজনীয় তথ্য পূরণ করুন!");
-
-    let hasRabbitOrHamster = cart.some(i => {
+    if(!name || !phone || !district || !thana || !address) return alert("দয়া করে সমস্ত তথ্য পূরণ করুন!");
+    let hasPet = cart.some(i => {
         let p = products.find(prod => String(prod.product_code) === String(i.code) || String(prod.id) === String(i.code));
         return p && p.category && (p.category.toLowerCase() === 'rabbit' || p.category.toLowerCase() === 'hamster');
     });
+    if(hasPet && !trxId) return alert("খরগোশ বা হ্যামস্টারের জন্য TrxID দেওয়া বাধ্যতামূলক!");
 
-    if(hasRabbitOrHamster && (!trxId || trxId === "N/A")){
-        alert("খরগোশ বা হ্যামস্টারের জন্য অবশ্যই TrxID দিতে হবে!");
-        return;
-    }
-
-    let fullAddress = `${address}, ${thana}, ${district} ${note ? ' (Note: ' + note + ')' : ''}`;
+    let fullAddress = `${address}, ${thana}, ${district}`;
     let itemsPayload = cart.map(i => ({ product_code: i.code, quantity: i.qty, price: i.price }));
+    let subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+    let delivery = calculateDeliveryFee(district);
+    let total = subtotal + delivery;
+    let advanceAmount = hasPet ? Math.round(subtotal / 2) : 0;
+    let dueAmount = total - advanceAmount;
 
     try {
         const { data, error } = await supabaseClient.rpc('place_adores_order', {
             p_customer_name: name,
             p_phone: phone,
-            p_email: email || null,
+            p_email: null,
             p_address: fullAddress,
             p_district: district,
-            p_payment_method: hasRabbitOrHamster ? "bKash/Nagad" : "Cash on Delivery",
+            p_payment_method: hasPet ? "bKash/Nagad" : "Cash on Delivery",
             p_payment_trxid: trxId,
             p_items: itemsPayload,
             p_coupon_code: appliedCouponData ? appliedCouponData.code : null
         });
-
         if(error) throw error;
 
         let itemsText = cart.map(i => {
@@ -1182,30 +984,30 @@ async function placeOrder(){
             return `• ${p ? p.name : i.code} (${i.qty}টি) - ৳${i.price * i.qty}`;
         }).join("\n");
 
-        let subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-        let delivery = calculateDeliveryFee(district);
-        let total = subtotal + delivery;
+        // Send Gmail Notification
+        emailjs.send("service_5am5end", "template_45wz8f9", {
+            customer_name: name, customer_phone: phone, district, address: fullAddress, trxId, products: itemsText, total, advance_amount: advanceAmount, due_amount: dueAmount
+        }).catch(()=>{});
 
-        emailjs.send("service_5am5end", "template_45wz8f9", { customer_name: name, customer_phone: phone, district, address: fullAddress, trxId, products: itemsText, total }).catch(()=>{});
+        // WhatsApp Notification
+        let waText = encodeURIComponent(`🛒 *New Order - ADORE'S PET*\nName: ${name}\nPhone: ${phone}\nDistrict: ${district}\nAddress: ${fullAddress}\nTrxID: ${trxId}\n\n${itemsText}\n\nTotal: ৳${total}\nAdvance: ৳${advanceAmount}\nDue: ৳${dueAmount}`);
+        window.open(`https://wa.me/8801681578599?text=${waText}`, '_blank');
 
-        cart = [];
-        appliedCouponData = null;
+        cart = []; appliedCouponData = null;
         localStorage.setItem("adoresCart", JSON.stringify(cart));
-        updateCartBadge();
-        closeCart();
+        updateCartBadge(); closeCart();
 
-        document.getElementById("successPopupText").innerHTML = `আপনার অর্ডার সফলভাবে কনফার্ম হয়েছে!<br>ধন্যবাদ আমাদের সাথে থাকার জন্য।`;
+        document.getElementById("successPopupText").innerHTML = `আপনার অর্ডার সফলভাবে কনফার্ম হয়েছে!`;
         document.getElementById("thankyouModal").classList.add("show");
-
     } catch(err){
-        console.error(err);
-        alert("অর্ডার প্লেস করতে সমস্যা হয়েছে: " + (err.message || JSON.stringify(err)));
+        alert("অর্ডার প্লেস করতে সমস্যা হয়েছে: " + err.message);
     }
 }
 
 function closeThankYouModal(){ document.getElementById("thankyouModal").classList.remove("show"); }
 function openOrdersModalFromSuccess(){ closeThankYouModal(); openOrdersModal(); }
 
+// CUSTOMER MY ORDERS & VOUCHER & CANCELLATION (Pending Only)
 async function openOrdersModal(){
     const container = document.getElementById("userOrdersList");
     container.innerHTML = `<p style="text-align:center; padding:20px;">লোড হচ্ছে...</p>`;
@@ -1214,83 +1016,74 @@ async function openOrdersModal(){
     try {
         const { data, error } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false }).limit(10);
         if(error) throw error;
+        if(!data || data.length === 0){ container.innerHTML = `<p style="color:#64748b; text-align:center;">কোনো অর্ডার নেই।</p>`; return; }
 
-        if(!data || data.length === 0){
-            container.innerHTML = `<p style="color:#64748b; text-align:center; padding:20px;">কোনো অর্ডার পাওয়া যায়নি।</p>`;
-            return;
-        }
-
-        container.innerHTML = data.map(o => `
-            <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:10px; margin-bottom:10px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                    <b style="color:var(--teal);">Order ID: #${o.id}</b>
-                    <span style="background:#e0f2f1; color:var(--teal); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:bold;">${o.status || 'Pending'}</span>
+        container.innerHTML = data.map((o, idx) => {
+            let canCancel = o.status === 'Pending';
+            let cancelMsg = o.status === 'Cancelled' && o.cancel_reason ? `<br><span style="color:red; font-size:11px;">কারণ: ${o.cancel_reason}</span>` : '';
+            return `
+                <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:10px; margin-bottom:10px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                        <b style="color:var(--teal);">Order ID: #${o.id}</b>
+                        <span style="background:#e0f2f1; color:var(--teal); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:bold;">${o.status || 'Pending'}</span>
+                    </div>
+                    <div style="font-size:12px; color:#64748b;">
+                        টাকা: ৳${o.total_amount || o.total} | TrxID: ${o.payment_trxid || 'N/A'}${cancelMsg}
+                    </div>
+                    <div style="display:flex; gap:6px; margin-top:8px;">
+                        <button onclick='openVoucherModal(${JSON.stringify(o)})' style="background:var(--teal); color:#fff; border:none; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;"><i class="fa-solid fa-receipt"></i> ভাউচার</button>
+                        ${canCancel ? `<button onclick="cancelCustomerOrder('${o.id}')" style="background:#ef4444; color:#fff; border:none; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">অর্ডার বাতিল করুন</button>` : ''}
+                    </div>
                 </div>
-                <div style="font-size:12px; color:#64748b;">
-                    নাম: ${o.customer_name || o.name}<br>
-                    মোবাইল: ${o.phone}<br>
-                    টাকা: ৳${o.total_amount || o.total} | TrxID: ${o.payment_trxid || 'N/A'}
-                </div>
-            </div>
-        `).join("");
-    } catch(err){
-        container.innerHTML = `<p style="color:red; text-align:center;">অর্ডার লোড করতে সমস্যা হয়েছে।</p>`;
-    }
+            `;
+        }).join("");
+    } catch(err){ container.innerHTML = `<p style="color:red; text-align:center;">অর্ডার লোড করতে সমস্যা হয়েছে।</p>`; }
 }
 function closeOrdersModal(){ document.getElementById("ordersModal").classList.remove("show"); }
 
+async function cancelCustomerOrder(orderId){
+    if(!confirm("আপনি কি নিশ্চিতভাবে এই অর্ডারটি বাতিল করতে চান?")) return;
+    try {
+        const { error } = await supabaseClient.from('orders').update({ status: 'Cancelled', cancel_reason: 'Customer cancelled during Pending status.' }).eq('id', orderId).eq('status', 'Pending');
+        if(error) throw error;
+        showToast("অর্ডারটি বাতিল করা হয়েছে।");
+        openOrdersModal();
+    } catch(err){ alert("বাতিল করা যায়নি: " + err.message); }
+}
+
+function openVoucherModal(o){
+    document.getElementById("voucherDetailsContent").innerHTML = `<b>Order ID:</b> #${o.id}<br><b>Name:</b> ${o.customer_name || o.name}<br><b>Phone:</b> ${o.phone}<br><b>Address:</b> ${o.address}<br><b>Status:</b> ${o.status}`;
+    document.getElementById("voucherTableBody").innerHTML = `<tr><td style="border:1px solid #cbd5e1; padding:6px;">Order Items</td><td style="border:1px solid #cbd5e1; padding:6px;">1</td><td style="border:1px solid #cbd5e1; padding:6px;">৳${o.total_amount || o.total}</td></tr>`;
+    document.getElementById("voucherTotalsBox").innerHTML = `<b>Total: ৳${o.total_amount || o.total}</b>`;
+    document.getElementById("voucherModal").classList.add("show");
+}
+function closeVoucherModal(){ document.getElementById("voucherModal").classList.remove("show"); }
+
 // ADMIN AUTHENTICATION & DASHBOARD
-let secretCount = 0;
-let secretTimer = null;
+let secretCount = 0; let secretTimer = null;
 function handleSecretClick(){
-    secretCount++;
-    clearTimeout(secretTimer);
-    if(secretCount === 3){
-        secretCount = 0;
-        document.getElementById("adminLoginModal").classList.add("show");
-    } else {
-        secretTimer = setTimeout(() => { secretCount = 0; }, 1000);
-    }
+    secretCount++; clearTimeout(secretTimer);
+    if(secretCount === 3){ secretCount = 0; document.getElementById("adminLoginModal").classList.add("show"); }
+    else { secretTimer = setTimeout(() => { secretCount = 0; }, 1000); }
 }
 function closeAdminLoginModal(){ document.getElementById("adminLoginModal").classList.remove("show"); }
-
-async function handleForgotPassword(){
-    const email = document.getElementById("adminEmail").value.trim();
-    if(!email) return alert("অনুগ্রহ করে আপনার অ্যাডমিন ইমেইল এড্রেসটি দিন!");
-    
-    try {
-        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.href
-        });
-        if(error) throw error;
-        alert("আপনার ইমেইলে পাসওয়ার্ড রিসেট করার লিংক পাঠানো হয়েছে! অনুগ্রহ করে ইমেইলটি চেক করুন।");
-    } catch(err){
-        alert("পাসওয়ার্ড রিসেট ইমেইল পাঠানো ব্যর্থ হয়েছে: " + err.message);
-    }
-}
 
 async function adminLogin(){
     const email = document.getElementById("adminEmail").value.trim();
     const password = document.getElementById("adminPassword").value;
-    
     try {
-        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
         if(error) throw error;
-        
         document.getElementById("adminLoginModal").classList.remove("show");
         document.getElementById("adminFullscreenPanel").classList.add("show");
-        
         document.getElementById("settingPopupImg").value = siteSettings.popupImg || "";
-        document.getElementById("settingPopupProductId").value = siteSettings.popupProductId || "";
+        document.getElementById("settingPopupProdCode").value = siteSettings.popupProdCode || "";
         document.getElementById("settingNotice").value = siteSettings.notice || "";
-        
-        generateNewProdCode();
+        generateProdCode();
         renderAdminProducts();
         renderAdminCoupons();
         renderAdminOrders();
-    } catch(err){
-        alert("লগইন ব্যর্থ হয়েছে: " + err.message);
-    }
+    } catch(err){ alert("লগইন ব্যর্থ হয়েছে: " + err.message); }
 }
 
 function closeAdminFullscreen(){ document.getElementById("adminFullscreenPanel").classList.remove("show"); }
@@ -1299,51 +1092,73 @@ async function logoutAdmin(){
     document.getElementById("adminFullscreenPanel").classList.remove("show");
     showToast("লগআউট সফল হয়েছে");
 }
-
 function openAdminModal(name){ document.getElementById("subModal_" + name).classList.add("show"); }
 function closeAdminModal(name){ document.getElementById("subModal_" + name).classList.remove("show"); }
 
-function generateNewProdCode(){
+function generateProdCode(){
     document.getElementById("newProdCode").value = 'PRD-' + Math.floor(1000 + Math.random() * 9000);
 }
 
-async function addNewProduct(){
-    const product_code = document.getElementById("newProdCode").value;
-    const name = document.getElementById("productName").value.trim();
-    const price = Number(document.getElementById("productPrice").value);
-    const sale_price = Number(document.getElementById("productSalePrice").value) || 0;
-    const stock = Number(document.getElementById("productStock").value);
-    const category = document.getElementById("productCategory").value;
-    const description = document.getElementById("productDesc").value.trim();
-    const image_url = document.getElementById("productImgUrl").value.trim();
-    const images = document.getElementById("productImages").value.trim();
-    const video_url = document.getElementById("productVideoUrl").value.trim();
-
-    if(!name || isNaN(price)) return alert("সঠিক নাম ও দাম দিন!");
+// UNIQUE BATCH COUPON GENERATOR
+async function generateBatchCoupons(){
+    const prefix = document.getElementById("couponPrefix").value.trim().toUpperCase() || "ADORE";
+    const qty = parseInt(document.getElementById("couponQty").value) || 5;
+    const discountRate = parseFloat(document.getElementById("couponDiscountRate").value) || 10;
+    const prodCode = document.getElementById("couponProdCode").value.trim();
 
     try {
-        const { error } = await supabaseClient.from('products').insert([{
-            product_code, name, price, sale_price, stock, category, description, image_url, images, video_url, is_active: true
-        }]);
+        for(let i=0; i<qty; i++){
+            let code = `${prefix}-${Math.floor(100 + Math.random() * 900)}`;
+            await supabaseClient.from('coupons').insert([{
+                code, discount_type: 'percentage', discount_value: discountRate, product_code: prodCode || null, is_active: true
+            }]);
+        }
+        showToast(`${qty}টি ইউনিক কুপন তৈরি হয়েছে!`);
+        renderAdminCoupons();
+    } catch(err){ alert(err.message); }
+}
+
+async function renderAdminCoupons(){
+    const container = document.getElementById("adminCouponsList");
+    const { data } = await supabaseClient.from('coupons').select('*');
+    if(!data || data.length === 0){ container.innerHTML = `<p style="font-size:11px; color:#64748b;">কোনো কুপন নেই।</p>`; return; }
+    container.innerHTML = data.map(c => `
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:6px; border-radius:6px; margin-bottom:4px; font-size:11px;">
+            <div><b>${c.code}</b> (${c.discount_value}%)</div>
+            <button onclick="deleteCoupon('${c.id}')" style="background:#ef4444; color:#fff; border:none; padding:2px 6px; border-radius:4px; cursor:pointer;">ডিলিট</button>
+        </div>
+    `).join("");
+}
+async function deleteCoupon(id){ await supabaseClient.from('coupons').delete().eq('id', id); renderAdminCoupons(); showToast("ডিলিট হয়েছে"); }
+
+// PRODUCT MANAGEMENT (Add & Edit)
+async function addNewProduct(){
+    const product_code = document.getElementById("newProdCode").value;
+    const name = document.getElementById("newProdName").value.trim();
+    const price = Number(document.getElementById("newProdPrice").value);
+    const sale_price = Number(document.getElementById("newProdSalePrice").value) || 0;
+    const stock = Number(document.getElementById("newProdStock").value);
+    const category = document.getElementById("newProdCat").value;
+    const description = document.getElementById("newProdDesc").value.trim();
+    const image_url = document.getElementById("newProdImg1").value.trim();
+    const video_url = document.getElementById("newProdVideo").value.trim();
+
+    if(!name || isNaN(price)) return alert("সঠিক নাম ও দাম দিন!");
+    try {
+        const { error } = await supabaseClient.from('products').insert([{ product_code, name, price, sale_price, stock, category, description, image_url, video_url, is_active: true }]);
         if(error) throw error;
-        
         showToast("পণ্য সফলভাবে যুক্ত হয়েছে!");
         closeAdminModal('addProductModal');
         fetchProducts();
         renderAdminProducts();
-    } catch(err){
-        alert("Product Add Failed: " + err.message);
-    }
+    } catch(err){ alert(err.message); }
 }
 
 async function renderAdminProducts(){
     const container = document.getElementById("adminProductsList");
     container.innerHTML = products.map(p => `
         <div class="admin-product-card">
-            <div>
-                <b style="font-size:13px;">${p.name}</b><br>
-                <span style="font-size:11px; color:#64748b;">Code: ${p.product_code || p.id} | ৳${p.price} | স্টক: ${p.stock}</span>
-            </div>
+            <div><b style="font-size:13px;">${p.name}</b><br><span style="font-size:11px; color:#64748b;">Code: ${p.product_code || p.id} | ৳${p.price} | স্টক: ${p.stock}</span></div>
             <div style="display:flex; gap:6px;">
                 <button onclick="openEditModal('${p.id}')" style="background:#2563eb; color:#fff; border:none; padding:6px 10px; border-radius:6px; cursor:pointer;"><i class="fa-solid fa-pen"></i></button>
                 <button onclick="deleteProduct('${p.id}')" style="background:#ef4444; color:#fff; border:none; padding:6px 10px; border-radius:6px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
@@ -1356,15 +1171,13 @@ function openEditModal(id){
     const p = products.find(prod => String(prod.id) === String(id));
     if(!p) return;
     document.getElementById("editProdId").value = p.id;
-    document.getElementById("editProdCodeInput").value = p.product_code || p.id;
+    document.getElementById("editProdCode").value = p.product_code || p.id;
     document.getElementById("editProdName").value = p.name;
     document.getElementById("editProdPrice").value = p.price;
     document.getElementById("editProdSalePrice").value = p.sale_price || "";
     document.getElementById("editProdStock").value = p.stock;
     document.getElementById("editProdActive").value = p.is_active ? "true" : "false";
-    document.getElementById("editProdImgUrl").value = p.image_url || "";
-    document.getElementById("editProdImages").value = p.images || "";
-    document.getElementById("editProdVideo").value = p.video_url || "";
+    document.getElementById("editProdImg1").value = p.image_url || "";
     document.getElementById("editProdDesc").value = p.description || "";
     document.getElementById("editProductModal").classList.add("show");
 }
@@ -1377,110 +1190,45 @@ async function saveEditProduct(){
     const sale_price = Number(document.getElementById("editProdSalePrice").value) || 0;
     const stock = Number(document.getElementById("editProdStock").value);
     const is_active = document.getElementById("editProdActive").value === "true";
-    const image_url = document.getElementById("editProdImgUrl").value.trim();
-    const images = document.getElementById("editProdImages").value.trim();
-    const video_url = document.getElementById("editProdVideo").value.trim();
+    const image_url = document.getElementById("editProdImg1").value.trim();
     const description = document.getElementById("editProdDesc").value.trim();
 
     try {
-        const { error } = await supabaseClient.from('products').update({
-            name, price, sale_price, stock, is_active, image_url, images, video_url, description
-        }).eq('id', id);
-
+        const { error } = await supabaseClient.from('products').update({ name, price, sale_price, stock, is_active, image_url, description }).eq('id', id);
         if(error) throw error;
-        closeEditModal();
-        fetchProducts();
-        renderAdminProducts();
-        showToast("সফলভাবে আপডেট হয়েছে!");
-    } catch(err){
-        alert("Update failed: " + err.message);
-    }
+        closeEditModal(); fetchProducts(); renderAdminProducts(); showToast("সফলভাবে আপডেট হয়েছে!");
+    } catch(err){ alert(err.message); }
 }
 
 async function deleteProduct(id){
     if(!confirm("নিশ্চিতভাবে ডিলিট করতে চান?")) return;
-    try {
-        await supabaseClient.from('products').delete().eq('id', id);
-        fetchProducts();
-        renderAdminProducts();
-        showToast("ডিলিট সম্পন্ন হয়েছে");
-    } catch(err){ alert(err.message); }
+    await supabaseClient.from('products').delete().eq('id', id);
+    fetchProducts(); renderAdminProducts(); showToast("ডিলিট সম্পন্ন হয়েছে");
 }
 
-async function createCoupon(){
-    const code = document.getElementById("couponCodeInput").value.trim();
-    const discount_type = document.getElementById("couponTypeInput").value;
-    const discount_value = Number(document.getElementById("couponValueInput").value);
-    const product_code = document.getElementById("couponProdCodeInput").value.trim();
-
-    if(!code || isNaN(discount_value)) return alert("সঠিক তথ্য দিন!");
-
-    try {
-        const { error } = await supabaseClient.from('coupons').insert([{
-            code, discount_type, discount_value, product_code: product_code || null, is_active: true
-        }]);
-        if(error) throw error;
-        fetchCoupons();
-        renderAdminCoupons();
-        showToast("কুপন তৈরি হয়েছে!");
-        document.getElementById("couponCodeInput").value = "";
-        document.getElementById("couponValueInput").value = "";
-    } catch(err){ alert(err.message); }
-}
-
-async function renderAdminCoupons(){
-    const container = document.getElementById("adminCouponsListContainer");
-    try {
-        const { data } = await supabaseClient.from('coupons').select('*');
-        if(!data || data.length === 0){
-            container.innerHTML = `<p style="font-size:11px; color:#64748b;">কোনো কুপন নেই।</p>`;
-            return;
-        }
-        container.innerHTML = data.map(c => `
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:6px; border-radius:6px; margin-bottom:4px; font-size:11px;">
-                <div><b>${c.code}</b> (${c.discount_value}${c.discount_type==='percentage'?'%':'৳'})</div>
-                <button onclick="deleteCoupon('${c.id}')" style="background:#ef4444; color:#fff; border:none; padding:2px 6px; border-radius:4px; cursor:pointer;">ডিলিট</button>
-            </div>
-        `).join("");
-    } catch(err){ console.error(err); }
-}
-
-async function deleteCoupon(id){
-    await supabaseClient.from('coupons').delete().eq('id', id);
-    renderAdminCoupons();
-    fetchCoupons();
-    showToast("কুপন মুছে ফেলা হয়েছে");
-}
-
+// SITE SETTINGS (Popup, Notice, Vacation)
 async function saveSiteSettings(){
     const popupImg = document.getElementById("settingPopupImg").value.trim();
-    const popupProdId = document.getElementById("settingPopupProductId").value.trim();
+    const popupProdCode = document.getElementById("settingPopupProdCode").value.trim();
     const notice = document.getElementById("settingNotice").value.trim();
 
-    try {
-        await supabaseClient.from('site_settings').upsert([
-            { key: 'popup_img', value: popupImg },
-            { key: 'popup_product_id', value: popupProdId },
-            { key: 'notice', value: notice }
-        ], { onConflict: 'key' });
+    await supabaseClient.from('site_settings').upsert([
+        { key: 'popup_img', value: popupImg },
+        { key: 'popup_product_id', value: popupProdCode },
+        { key: 'notice', value: notice }
+    ], { onConflict: 'key' });
 
-        fetchSiteSettings();
-        showToast("সেটিংস সেভ হয়েছে!");
-        closeAdminModal('popupModal');
-        closeAdminModal('noticeModal');
-    } catch(err){ alert(err.message); }
+    fetchSiteSettings(); showToast("সেটিংস সেভ হয়েছে!");
+    closeAdminModal('popupModal'); closeAdminModal('noticeModal');
 }
 
 async function toggleVacation(){
     const vacation = document.getElementById("vacationCheckbox").checked;
-    try {
-        await supabaseClient.from('site_settings').upsert([{ key: 'vacation', value: String(vacation) }], { onConflict: 'key' });
-        siteSettings.vacation = vacation;
-        applySiteSettings();
-        showToast("শপ মোড আপডেট হয়েছে");
-    } catch(err){ alert(err.message); }
+    await supabaseClient.from('site_settings').upsert([{ key: 'vacation', value: String(vacation) }], { onConflict: 'key' });
+    siteSettings.vacation = vacation; applySiteSettings(); showToast("শপ মোড আপডেট হয়েছে");
 }
 
+// ADMIN ORDERS MANAGEMENT (7 Status Tabs)
 function switchOrderTab(tab){
     currentAdminTab = tab;
     document.querySelectorAll(".order-tab-btn").forEach(b => b.classList.remove("active"));
@@ -1489,46 +1237,38 @@ function switchOrderTab(tab){
 }
 
 async function renderAdminOrders(){
-    const container = document.getElementById("adminOrdersListContainer");
-    try {
-        const { data, error } = await supabaseClient.from('orders').select('*').eq('status', currentAdminTab).order('created_at', { ascending: false });
-        if(error) throw error;
+    const container = document.getElementById("adminOrdersContainer");
+    const { data, error } = await supabaseClient.from('orders').select('*').eq('status', currentAdminTab).order('created_at', { ascending: false });
+    if(error || !data || data.length === 0){ container.innerHTML = `<p style="font-size:12px; color:#64748b; text-align:center; padding:10px;">এই ট্যাবে কোনো অর্ডার নেই।</p>`; return; }
 
-        if(!data || data.length === 0){
-            container.innerHTML = `<p style="font-size:12px; color:#64748b; text-align:center; padding:10px;">এই ট্যাবে কোনো অর্ডার নেই।</p>`;
-            return;
-        }
-
-        container.innerHTML = data.map(o => `
-            <div style="background:#fff; border:1px solid #cbd5e1; padding:8px; border-radius:8px; margin-bottom:8px; font-size:12px;">
-                <b>ID: #${o.id}</b> - ${o.customer_name || o.name} (${o.phone})<br>
-                ৳${o.total_amount || o.total} | TrxID: ${o.payment_trxid || 'N/A'}<br>
-                <div style="margin-top:6px; display:flex; gap:4px; flex-wrap:wrap;">
-                    <select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:4px; border-radius:4px; font-size:11px;">
-                        <option value="">স্ট্যাটাস পরিবর্তন করুন</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Confirmed">Confirmed</option>
-                        <option value="Processing">Processing</option>
-                        <option value="Packed">Packed</option>
-                        <option value="Shipped">Shipped</option>
-                        <option value="Completed">Completed</option>
-                        <option value="Cancelled">Cancelled</option>
-                    </select>
-                </div>
+    container.innerHTML = data.map(o => `
+        <div style="background:#fff; border:1px solid #cbd5e1; padding:10px; border-radius:8px; margin-bottom:8px; font-size:12px;">
+            <b>ID: #${o.id}</b> - ${o.customer_name || o.name} (${o.phone})<br>
+            ৳${o.total_amount || o.total} | TrxID: ${o.payment_trxid || 'N/A'}<br>
+            <div style="margin-top:6px; display:flex; gap:6px; align-items:center;">
+                <select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:4px; border-radius:4px; font-size:11px;">
+                    <option value="">স্ট্যাটাস পরিবর্তন করুন</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Packed">Packed</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+                <button onclick='openVoucherModal(${JSON.stringify(o)})' style="background:var(--teal); color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">ভাউচার</button>
             </div>
-        `).join("");
-    } catch(err){
-        container.innerHTML = `<p style="color:red; font-size:12px;">অর্ডার লোড করতে সমস্যা হয়েছে।</p>`;
-    }
+        </div>
+    `).join("");
 }
 
 async function updateOrderStatus(id, newStatus){
     if(!newStatus) return;
+    const cancelReason = newStatus === 'Cancelled' ? prompt("অর্ডার বাতিলের কারণ লিখুন:", "Product বর্তমানে Stock-এ নেই।") : null;
     try {
-        const { error } = await supabaseClient.from('orders').update({ status: newStatus }).eq('id', id);
+        const { error } = await supabaseClient.from('orders').update({ status: newStatus, cancel_reason: cancelReason }).eq('id', id);
         if(error) throw error;
-        renderAdminOrders();
-        showToast("স্ট্যাটাস আপডেট হয়েছে!");
+        renderAdminOrders(); showToast("স্ট্যাটাস আপডেট হয়েছে!");
     } catch(err){ alert(err.message); }
 }
 </script>
