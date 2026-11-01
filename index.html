@@ -1467,6 +1467,15 @@ function renderCartView(){
         return;
     }
 
+    let hasPetInCart = cart.some(i => {
+        let p = products.find(prod => String(prod.product_code) === String(i.code) || String(prod.id) === String(i.code));
+        if(p && p.category){
+            let cat = p.category.toLowerCase();
+            return cat === 'rabbit' || cat === 'hamster';
+        }
+        return false;
+    });
+
     let itemsHtml = cart.map(i => {
         const p = products.find(prod => String(prod.product_code) === String(i.code) || String(prod.id) === String(i.code));
         if(!p) return "";
@@ -1491,6 +1500,13 @@ function renderCartView(){
     let discountAmount = appliedCouponData ? (appliedCouponData.discount_type === 'percentage' ? (subtotal * appliedCouponData.discount_value) / 100 : appliedCouponData.discount_value) : 0;
     let finalPayable = subtotal - discountAmount;
 
+    let deliveryNoticeHtml = hasPetInCart ? `
+        <!-- Delivery Notice Box for Cart Only (Pets Only) -->
+        <div style="background:#e0f2f1; color:var(--teal-dark); padding:10px 12px; border-radius:12px; margin-bottom:12px; font-size:11px; font-weight:800; border:1px solid #b2dfdb; text-align:center; line-height:1.5;">
+            🚚 ঢাকার ভেতরে উবার ও রাইডারের মাধ্যমে এবং ঢাকার বাহিরে সরাসরি বাসের মাধ্যমে হ্যামস্টার বা খরগোশ পাঠানো হয় (দূরত্ব অনুযায়ী ভাড়া কম-বেশি হতে পারে)।
+        </div>
+    ` : '';
+
     container.innerHTML = `
         <div style="flex:1; overflow-y:auto; max-height:220px; margin-bottom:12px;">${itemsHtml}</div>
         <div style="display:flex; gap:6px; margin-bottom:12px;">
@@ -1499,10 +1515,7 @@ function renderCartView(){
         </div>
         ${appliedCouponData ? `<div style="font-size:11px; color:#10b981; font-weight:bold; margin-bottom:10px;">✅ কুপন '${appliedCouponData.code}' সফলভাবে যুক্ত হয়েছে!</div>` : ''}
         
-        <!-- Delivery Notice Box for Cart Only -->
-        <div style="background:#e0f2f1; color:var(--teal-dark); padding:10px 12px; border-radius:12px; margin-bottom:12px; font-size:11px; font-weight:800; border:1px solid #b2dfdb; text-align:center; line-height:1.5;">
-            🚚 ঢাকার ভেতরে উবার ও রাইডারের মাধ্যমে হ্যামস্টার বা খরগোশ পাঠানো হয়। আর ঢাকার বাহিরে সরাসরি বাসের মাধ্যমে ডেলিভারি করা হয়।
-        </div>
+        ${deliveryNoticeHtml}
 
         <div style="background:#f8fafc; padding:12px; border-radius:14px; margin-bottom:15px; border:1px solid #e2e8f0; font-size:13px;">
             <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#64748b;"><span>পণ্যের মূল্য</span><strong>৳${subtotal}</strong></div>
@@ -1665,14 +1678,23 @@ function updateCheckoutCalculations(){
     const advDisplay = document.getElementById("advanceAmountDisplay");
     const deliveryNotice = document.getElementById("deliveryModeNotice");
 
+    let hasPet = cart.some(i => {
+        let p = products.find(prod => String(prod.product_code) === String(i.code) || String(prod.id) === String(i.code));
+        return p && p.category && (p.category.toLowerCase() === 'rabbit' || p.category.toLowerCase() === 'hamster');
+    });
+
     let isDhakaArea = (selectedDistrictVal.includes('Dhaka') || selectedDistrictVal.includes('Gazipur') || selectedDistrictVal.includes('Narayanganj') || selectedDistrictVal.includes('ঢাকা') || selectedDistrictVal.includes('গাজীপুর') || selectedDistrictVal.includes('নারায়ণগঞ্জ'));
 
-    if(isDhakaArea){
-        deliveryNotice.innerHTML = `🛵 ঢাকার ভেতরে উবার/বাইক রাইডারের মাধ্যমে হোম ডেলিভারি করা হয়।`;
+    if(hasPet){
+        if(isDhakaArea){
+            deliveryNotice.innerHTML = `🛵 ঢাকার ভেতরে উবার/বাইক রাইডারের মাধ্যমে হোম ডেলিভারি করা হয় (দূরত্ব অনুযায়ী ভাড়া কম-বেশি হতে পারে)।`;
+        } else {
+            deliveryNotice.innerHTML = `🚌 ঢাকার বাইরে বাসের মাধ্যমে কাউন্টার পর্যন্ত ডেলিভারি করা হয় (দূরত্ব অনুযায়ী ভাড়া কম-বেশি হতে পারে)।`;
+        }
+        deliveryNotice.style.display = "block";
     } else {
-        deliveryNotice.innerHTML = `🚌 ঢাকার বাইরে বাসের মাধ্যমে কাউন্টার পর্যন্ত ডেলিভারি করা হয়।`;
+        deliveryNotice.style.display = "none";
     }
-    deliveryNotice.style.display = "block";
 
     let subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
     let discountAmount = appliedCouponData ? (appliedCouponData.discount_type === 'percentage' ? (subtotal * appliedCouponData.discount_value) / 100 : appliedCouponData.discount_value) : 0;
