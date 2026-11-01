@@ -593,7 +593,7 @@ const allDistricts = [
     "Jessore (যশোর)", "Jhalokati (ঝালকাঠি)", "Jhenaidah (ঝিনাইদহ)", "Joypurhat (জয়পুরহাট)", "Khagrachhari (খাগড়াছড়ি)", 
     "Kishoreganj (কিশোরগঞ্জ)", "Kurigram (কুড়িগ্রাম)", "Kushtia (কুষ্টিয়া)", "Lakshmipur (লক্ষ্মীপুর)", 
     "Lalmonirhat (লালমনিরহাট)", "Madaripur (মাদারীপুর)", "Magura (মাগুরা)", "Manikganj (মানিকগঞ্জ)", 
-    "Meherpur (মেهرpur)", "Moulvibazar (মৌলভীবাজার)", "Munshiganj (মুন্সীগঞ্জ)", "Naogaon (নওগাঁ)", 
+    "Meherpur (মেহেরপুর)", "Moulvibazar (মৌলভীবাজার)", "Munshiganj (মুন্সীগঞ্জ)", "Naogaon (নওগাঁ)", 
     "Narail (নড়াইল)", "Natore (নাটোর)", "Netrokona (নেত্রকোণা)", "Nilphamari (নীলফামারী)", "Noakhali (নোয়াখালী)", 
     "Pabna (পাবনা)", "Panchagarh (পঞ্চগড়)", "Patuakhali (পটুয়াখালী)", "Pirojpur (পিরোজপুর)", "Rajbari (রাজবাড়ী)", 
     "Rangamati (রাঙ্গামাটি)", "Satkhira (সাতক্ষীরা)", "Shariatpur (শরীয়তপুর)", "Sherpur (শেরপুর)", 
@@ -1225,19 +1225,19 @@ async function renderAdminProducts(){
 }
 
 function openEditModal(id){
-    const p = products.find(prod => String(prod.id) === String(id));
+    const p = products.find(prod => String(prod.id) === String(id) || String(prod.product_code) === String(id));
     if(!p) return;
     document.getElementById("editProdId").value = p.id;
     document.getElementById("editProdCode").value = p.product_code || p.id;
-    document.getElementById("editProdName").value = p.name;
-    document.getElementById("editProdPrice").value = p.price;
+    document.getElementById("editProdName").value = p.name || "";
+    document.getElementById("editProdPrice").value = p.price || 0;
     document.getElementById("editProdSalePrice").value = p.sale_price || "";
-    document.getElementById("editProdStock").value = p.stock;
+    document.getElementById("editProdStock").value = p.stock || 0;
     document.getElementById("editProdColor").value = p.color || "";
     document.getElementById("editProdRating").value = p.numeric_rating || p.rating || "5.0";
     document.getElementById("editProdAge").value = p.age || "";
     document.getElementById("editProdUnit").value = p.unit || "Month";
-    document.getElementById("editProdActive").value = p.is_active ? "true" : "false";
+    document.getElementById("editProdActive").value = (p.is_active !== false) ? "true" : "false";
     document.getElementById("editProdImg1").value = p.image_url || "";
     document.getElementById("editProdVideo").value = p.video_url || "";
     document.getElementById("editProdDesc").value = p.description || "";
@@ -1265,7 +1265,10 @@ async function saveEditProduct(){
             name, price, sale_price, stock, color, numeric_rating, age, unit, is_active, image_url, video_url, description 
         }).eq('id', id);
         if(error) throw error;
-        closeEditModal(); fetchProducts(); renderAdminProducts(); showToast("সফলভাবে আপডেট হয়েছে!");
+        closeEditModal(); 
+        await fetchProducts(); 
+        renderAdminProducts(); 
+        showToast("সফলভাবে আপডেট হয়েছে!");
     } catch(err){ showAlert("ডাটাবেজ এরর", err.message); }
 }
 
