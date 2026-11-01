@@ -868,7 +868,6 @@ let categoriesList = [
     { name: "Accessories", img: "", icon: "fa-solid fa-folder" }
 ];
 
-// কার্ট খালি থাকলে বা অবৈধ ডেটা থাকলে তা রিমুভ করে একদম শূন্য নিশ্চিত করার জন্য
 let cart = JSON.parse(localStorage.getItem("adoresCart")) || [];
 if(!Array.isArray(cart) || cart.length === 0){
     cart = [];
@@ -1811,9 +1810,12 @@ async function openOrdersModal(){
             let adminMessage = o.status !== 'Pending' && o.status !== 'pending' ? `<div style="background:#e0f2f1; color:var(--teal-dark); padding:6px 10px; border-radius:6px; font-size:11px; margin-top:6px; font-weight:bold;">📢 স্ট্যাটাস আপডেট: আপনার অর্ডারটি বর্তমানে '${o.status}' অবস্থায় রয়েছে।</div>` : '';
             return `
                 <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:10px; margin-bottom:10px;">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
                         <b style="color:var(--teal);">Order: #${o.order_number || o.id}</b>
-                        <span style="background:#e0f2f1; color:var(--teal); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:bold;">${o.status || 'Pending'}</span>
+                        <div style="display:flex; gap:6px; align-items:center;">
+                            <span style="background:#e0f2f1; color:var(--teal); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:bold;">${o.status || 'Pending'}</span>
+                            <button onclick="deleteOrderPermanently('${o.id}')" style="background:#ef4444; color:#fff; border:none; padding:2px 6px; border-radius:4px; font-size:10px; cursor:pointer;" title="সরাসরি ডিলিট"><i class="fa-solid fa-trash"></i></button>
+                        </div>
                     </div>
                     <div style="font-size:12px; color:#64748b;">
                         টাকা: ৳${o.total} | TrxID: ${o.payment_trxid || 'N/A'}${cancelMsg}
@@ -1821,7 +1823,7 @@ async function openOrdersModal(){
                     ${adminMessage}
                     <div style="display:flex; gap:6px; margin-top:8px;">
                         <button onclick='openVoucherModal(${JSON.stringify(o)})' style="background:var(--teal); color:#fff; border:none; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;"><i class="fa-solid fa-receipt"></i> ভাউচার</button>
-                        ${canCancel ? `<button onclick="cancelCustomerOrder('${o.id}')" style="background:#ef4444; color:#fff; border:none; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">অর্ডার বাতিল করুন</button>` : ''}
+                        ${canCancel ? `<button onclick="cancelCustomerOrder('${o.id}')" style="background:#f97316; color:#fff; border:none; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">অর্ডার বাতিল করুন</button>` : ''}
                     </div>
                 </div>
             `;
@@ -1833,13 +1835,25 @@ async function openOrdersModal(){
 function closeOrdersModal(){ document.getElementById("ordersModal").classList.remove("show"); }
 
 async function cancelCustomerOrder(orderId){
-    if(!confirm("আপনি কি নিশ্চিতভাবে এই অর্ডারটি বাতিল করতে চান?")) return;
+    const cancelReason = prompt("অর্ডার বাতিলের কারণ লিখুন:", "Product বর্তমানে Stock-এ নেই।");
+    if(cancelReason === null) return;
     try {
-        const { error } = await supabaseClient.from('orders').update({ status: 'Cancelled', cancel_reason: 'Customer cancelled during Pending status.' }).eq('id', orderId);
+        const { error } = await supabaseClient.from('orders').update({ status: 'Cancelled', cancel_reason: cancelReason || 'Customer cancelled.' }).eq('id', orderId);
         if(error) throw error;
         showToast("অর্ডারটি বাতিল করা হয়েছে।");
         openOrdersModal();
     } catch(err){ showAlert("ত্রুটি", "বাতিল করা যায়নি: " + err.message); }
+}
+
+async function deleteOrderPermanently(orderId){
+    if(!confirm("নিশ্চিতভাবে এই অর্ডারটি ডিলিট করতে চান?")) return;
+    try {
+        const { error } = await supabaseClient.from('orders').delete().eq('id', orderId);
+        if(error) throw error;
+        showToast("অর্ডারটি সফলভাবে ডিলিট করা হয়েছে।");
+        openOrdersModal();
+        renderAdminOrders();
+    } catch(err){ showAlert("ত্রুটি", "ডিলিট করা যায়নি: " + err.message); }
 }
 
 function openVoucherModal(o){
@@ -2090,10 +2104,13 @@ async function renderAdminOrders(){
 
     container.innerHTML = data.map(o => `
         <div style="background:#fff; border:1px solid #cbd5e1; padding:10px; border-radius:8px; margin-bottom:8px; font-size:12px;">
-            <b>ID: #${o.order_number || o.id}</b> - ${o.customer_name} (${o.phone})<br>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <b>ID: #${o.order_number || o.id}</b> - ${o.customer_name} (${o.phone})
+                <button onclick="deleteOrderPermanently('${o.id}')" style="background:#ef4444; color:#fff; border:none; padding:2px 6px; border-radius:4px; font-size:10px; cursor:pointer;" title="ডিলিট"><i class="fa-solid fa-trash"></i></button>
+            </div>
             ৳${o.total} | TrxID: ${o.payment_trxid || 'N/A'}<br>
             <div style="margin-top:6px; display:flex; gap:6px; align-items:center;">
-                <select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:4px; border-radius:4px; font-size:11px;">
+                <select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:4px; border-radius:4px; font-size:11px; flex:1;">
                     <option value="">স্ট্যাটাস পরিবর্তন করুন</option>
                     <option value="Pending">Pending</option>
                     <option value="Confirmed">Confirmed</option>
@@ -2112,6 +2129,7 @@ async function renderAdminOrders(){
 async function updateOrderStatus(id, newStatus){
     if(!newStatus) return;
     const cancelReason = newStatus === 'Cancelled' ? prompt("অর্ডার বাতিলের কারণ লিখুন:", "Product বর্তমানে Stock-এ নেই।") : null;
+    if(newStatus === 'Cancelled' && cancelReason === null) return;
     try {
         const { error } = await supabaseClient.from('orders').update({ status: newStatus, cancel_reason: cancelReason }).eq('id', id);
         if(error) throw error;
