@@ -6,7 +6,12 @@
 <title>ADORE'S PET</title>
 
 <!-- PWA Manifest -->
-<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkFET1JFUyBQRVQiLAogICJzaG9ydF9uYW1lIjogIkFET1JFUyBQRVQiLAogICJzdGFydF91cmwiOiAiLi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmNGY2ZjgiLAogICJ0aGVtZV9jb2xvciI6ICIjMDA4OTdiIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiaHR0cHM6Ly9pLnBvc3RpbWcuY2MvVHlLd2Y3S1MvMjAyNjEwMDgtMTkxOTQ1LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIgogICAgfQogIF19">
+<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkFET1JFUyBQRVQiLAogICJzaG9ydF9uYW1lIjogIkFET1JFUyBQRVQiLAogICJzdGFydF91cmwiOiAiLi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmNGY2ZjgiLAogICJ0aGVtZV9jb2xvciI6ICIjMDA4OTdiIiwKICAiaWNvbnMiOiBbCiAgIC {
+      "src": "https://i.postimg.cc/TyKwf7KS/20261008-191945.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]}">
 <meta name="theme-color" content="#00897b">
 
 <!-- FontAwesome & EmailJS & Supabase SDK -->
@@ -90,8 +95,8 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 .nav-cart-badge{position: absolute; top: -6px; right: -10px; background: #ef4444; color: white; font-size: 9px; font-weight: 900; width: 16px; height: 16px; border-radius: 50%; display: none; align-items: center; justify-content: center;}
 
 /* OVERLAYS & MODALS */
-.cart-overlay, .thankyou-overlay, .voucher-modal, .product-modal, .support-modal, .admin-popup-modal{display:none; position:fixed; inset:0; background:rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index:2000; align-items:center; justify-content:center; padding:15px;}
-.cart-overlay.show, .thankyou-overlay.show, .voucher-modal.show, .product-modal.show, .support-modal.show, .admin-popup-modal.show{display:flex;}
+.cart-overlay, .thankyou-overlay, .voucher-modal, .product-modal, .support-modal, .admin-popup-modal, .custom-popup{display:none; position:fixed; inset:0; background:rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index:2000; align-items:center; justify-content:center; padding:15px;}
+.cart-overlay.show, .thankyou-overlay.show, .voucher-modal.show, .product-modal.show, .support-modal.show, .admin-popup-modal.show, .custom-popup.show{display:flex;}
 
 .edit-product-modal, .admin-sub-modal{display:none; position:fixed; inset:0; background:rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index:4000; align-items:center; justify-content:center; padding:15px;}
 .edit-product-modal.show, .admin-sub-modal.show{display:flex;}
@@ -104,7 +109,7 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 .cart-item img{width:65px; height:65px; object-fit:cover; border-radius:12px;}
 
 .product-modal-card{background: white; padding: 20px; border-radius: 20px; text-align: left; max-width: 450px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative;}
-.thankyou-card, .voucher-box, .support-modal-card{background: white; padding: 25px; border-radius: 20px; text-align: center; max-width: 500px; width: 100%; max-height: 88vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);}
+.thankyou-card, .voucher-box, .support-modal-card, .custom-popup-box{background: white; padding: 25px; border-radius: 20px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.2);}
 .edit-modal-card, .admin-modal-box{background: white; padding: 20px; border-radius: 24px; text-align: left; max-width: 550px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);}
 .thankyou-btn, .order-btn{width: 100%; padding: 14px; border: none; border-radius: 12px; background: var(--teal); color: white; font-weight: 800; cursor: pointer; font-size: 15px; box-shadow: 0 4px 12px rgba(0,137,123,0.3); transition: all 0.2s;}
 .order-btn:hover{filter: brightness(1.05); transform: translateY(-1px);}
@@ -143,6 +148,16 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 
 <div id="toastNotification">সফলভাবে আপডেট হয়েছে!</div>
 
+<!-- CUSTOM BEAUTIFUL POPUP MODAL -->
+<div id="customPopupModal" class="custom-popup">
+    <div class="custom-popup-box">
+        <div id="customPopupIcon" style="font-size:35px; color:var(--teal); margin-bottom:10px;"><i class="fa-solid fa-circle-info"></i></div>
+        <h3 id="customPopupTitle" style="font-size:18px; font-weight:900; margin-bottom:8px; color:var(--text-dark);">সতর্কবার্তা</h3>
+        <p id="customPopupMessage" style="font-size:13px; color:#64748b; margin-bottom:20px; line-height:1.4;"></p>
+        <button onclick="closeCustomPopup()" class="thankyou-btn">ঠিক আছে</button>
+    </div>
+</div>
+
 <!-- WELCOME POPUP MODAL -->
 <div id="welcomePopupModal" class="welcome-popup">
     <div class="welcome-popup-content">
@@ -165,7 +180,6 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
         </div>
     </div>
     <div style="display:flex; align-items:center; gap:15px;">
-        <button onclick="openOrdersModal()" style="background:rgba(255,255,255,0.2); border:none; color:#fff; padding:8px 14px; border-radius:12px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-receipt"></i> My Orders</button>
         <span class="live-badge" onclick="handleSecretClick()"><span class="live-dot" style="width:7px; height:7px; background:#4ade80; border-radius:50%;"></span> Live Site</span>
     </div>
 </div>
@@ -501,11 +515,6 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
             <a id="modalVideoBtn" href="#" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:12px; background:#ff0000; color:white; border-radius:10px; font-weight:800; text-decoration:none;"><i class="fa-brands fa-youtube"></i> Watch Video</a>
         </div>
         <p id="modalProdDesc" style="font-size:12px; color:#334155; line-height:1.4; background:#f8fafc; padding:10px; border-radius:8px; max-height:80px; overflow-y:auto; margin-bottom:10px;"></p>
-        
-        <!-- Location notice line -->
-        <div style="font-size:12px; color:#475569; background:#f1f5f9; padding:8px 12px; border-radius:8px; text-align:center;">
-            জি, খরগোশটি এখনো available আছে। 😊 আপনি কি নিতে আগ্রহী? আপনার লোকেশন কোথায়?
-        </div>
     </div>
 </div>
 
@@ -584,7 +593,7 @@ const allDistricts = [
     "Jessore (যশোর)", "Jhalokati (ঝালকাঠি)", "Jhenaidah (ঝিনাইদহ)", "Joypurhat (জয়পুরহাট)", "Khagrachhari (খাগড়াছড়ি)", 
     "Kishoreganj (কিশোরগঞ্জ)", "Kurigram (কুড়িগ্রাম)", "Kushtia (কুষ্টিয়া)", "Lakshmipur (লক্ষ্মীপুর)", 
     "Lalmonirhat (লালমনিরহাট)", "Madaripur (মাদারীপুর)", "Magura (মাগুরা)", "Manikganj (মানিকগঞ্জ)", 
-    "Meherpur (মেহেরপুর)", "Moulvibazar (মৌলভীবাজার)", "Munshiganj (মুন্সীগঞ্জ)", "Naogaon (নওগাঁ)", 
+    "Meherpur (মেهرpur)", "Moulvibazar (মৌলভীবাজার)", "Munshiganj (মুন্সীগঞ্জ)", "Naogaon (নওগাঁ)", 
     "Narail (নড়াইল)", "Natore (নাটোর)", "Netrokona (নেত্রকোণা)", "Nilphamari (নীলফামারী)", "Noakhali (নোয়াখালী)", 
     "Pabna (পাবনা)", "Panchagarh (পঞ্চগড়)", "Patuakhali (পটুয়াখালী)", "Pirojpur (পিরোজপুর)", "Rajbari (রাজবাড়ী)", 
     "Rangamati (রাঙ্গামাটি)", "Satkhira (সাতক্ষীরা)", "Shariatpur (শরীয়তপুর)", "Sherpur (শেরপুর)", 
@@ -605,7 +614,17 @@ function showToast(msg){
     setTimeout(() => { t.style.display = "none"; }, 2500);
 }
 
-// HELPER FUNCTION: STAR RATING GENERATOR
+// CUSTOM BEAUTIFUL ALERT POPUP
+function showAlert(title, msg){
+    document.getElementById("customPopupTitle").innerText = title;
+    document.getElementById("customPopupMessage").innerText = msg;
+    document.getElementById("customPopupModal").classList.add("show");
+}
+function closeCustomPopup(){
+    document.getElementById("customPopupModal").classList.remove("show");
+}
+
+// STAR RATING GENERATOR
 function renderStars(ratingVal){
     let num = parseFloat(ratingVal) || 5;
     let starsHtml = '';
@@ -725,7 +744,7 @@ function renderProducts(){
         let imgUrl = p.image_url || 'https://via.placeholder.com/400x400?text=Pet';
         let stockText = p.stock > 0 ? `Stock: ${p.stock}` : `<span style="color:#ef4444;">Out of Stock</span>`;
         let code = p.product_code || p.id;
-        let ratingHtml = renderStars(p.rating || 5);
+        let ratingHtml = renderStars(p.numeric_rating || p.rating || 5);
 
         return `
             <div class="product-card" onclick="openProductDetail('${code}')">
@@ -749,7 +768,7 @@ function openProductDetail(code){
     document.getElementById("modalProdName").innerText = p.name;
     document.getElementById("modalProdStock").innerText = p.stock > 0 ? `Stock: ${p.stock}` : `Out of Stock`;
     
-    // AGE, UNIT & COLOR META DISPLAY
+    // AGE & COLOR META
     let metaText = [];
     if(p.age){
         let unitText = p.unit || 'Month';
@@ -788,10 +807,10 @@ function handleVoucherBackdropClick(e){ if(e.target.id === 'voucherModal') close
 
 function addToCart(code, activePrice){
     const p = products.find(prod => String(prod.product_code) === String(code) || String(prod.id) === String(code));
-    if(!p || p.stock <= 0) return alert("স্টক শেষ!");
+    if(!p || p.stock <= 0) return showAlert("সতর্কতা", "স্টক শেষ!");
     const item = cart.find(i => String(i.code) === String(code));
     if(item){
-        if(item.qty >= p.stock) return alert("স্টক লিমিট শেষ!");
+        if(item.qty >= p.stock) return showAlert("সতর্কতা", "স্টক লিমিট শেষ!");
         item.qty++;
     } else { cart.push({ code: code, price: activePrice, qty: 1 }); }
     localStorage.setItem("adoresCart", JSON.stringify(cart));
@@ -801,8 +820,9 @@ function addToCart(code, activePrice){
 
 function updateCartBadge(){
     const count = cart.reduce((s, i) => s + i.qty, 0);
-    document.getElementById("cartCount").innerText = count;
-    document.getElementById("cartCount").style.display = count > 0 ? "flex" : "none";
+    const badge = document.getElementById("cartCount");
+    badge.innerText = count;
+    badge.style.display = count > 0 ? "flex" : "none";
 }
 
 function openCart(){
@@ -881,9 +901,9 @@ function renderCartView(){
 
 function applyCoupon(){
     const inputCode = document.getElementById("cartCouponInput").value.trim().toUpperCase();
-    if(!inputCode) return alert("দয়া করে কুপন কোড লিখুন!");
+    if(!inputCode) return showAlert("সতর্কতা", "দয়া করে কুপন কোড লিখুন!");
     const found = couponsList.find(c => c.code.trim().toUpperCase() === inputCode);
-    if(!found) return alert("ভুল কুপন কোড!");
+    if(!found) return showAlert("ভুল", "ভুল কুপন কোড!");
     appliedCouponData = found;
     renderCartView();
     showToast("কুপন সফলভাবে অ্যাপ্লাই করা হয়েছে!");
@@ -909,8 +929,8 @@ function removeFromCart(code){
 }
 
 function proceedToCheckout(){
-    if(siteSettings.vacation) return alert("দুঃখিত! আমাদের শপটি বর্তমানে ভ্যাকেশন মোডে বন্ধ রয়েছে।");
-    if(cart.length === 0) return alert("কার্ট খালি!");
+    if(siteSettings.vacation) return showAlert("বন্ধ", "দুঃখিত! আমাদের শপটি বর্তমানে ভ্যাকেশন মোডে বন্ধ রয়েছে।");
+    if(cart.length === 0) return showAlert("সতর্কতা", "কার্ট খালি!");
     document.getElementById("checkoutHeaderTitle").innerText = "ORDER FORM";
     
     let subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
@@ -985,12 +1005,12 @@ async function placeOrder(){
     const trxIdEl = document.getElementById("customerTrxId");
     let trxId = trxIdEl ? trxIdEl.value.trim() : null;
 
-    if(!name || !phone || !district || !thana || !address) return alert("দয়া করে সমস্ত তথ্য পূরণ করুন!");
+    if(!name || !phone || !district || !thana || !address) return showAlert("সতর্কতা", "দয়া করে সমস্ত তথ্য পূরণ করুন!");
     let hasPet = cart.some(i => {
         let p = products.find(prod => String(prod.product_code) === String(i.code) || String(prod.id) === String(i.code));
         return p && p.category && (p.category.toLowerCase() === 'rabbit' || p.category.toLowerCase() === 'hamster');
     });
-    if(hasPet && (!trxId || trxId === "")) return alert("খরগোশ বা হ্যামস্টারের জন্য TrxID দেওয়া বাধ্যতামূলক!");
+    if(hasPet && (!trxId || trxId === "")) return showAlert("সতর্কতা", "খরগোশ বা হ্যামস্টারের জন্য TrxID দেওয়া বাধ্যতামূলক!");
 
     let fullAddress = `${address}, ${thana}, ${district}`;
     let itemsPayload = cart.map(i => ({ product_code: i.code, quantity: i.qty }));
@@ -1031,7 +1051,7 @@ async function placeOrder(){
         document.getElementById("successPopupText").innerHTML = `আপনার অর্ডার সফলভাবে কনফার্ম হয়েছে!<br>Order ID: <b># ${data.order_number}</b>`;
         document.getElementById("thankyouModal").classList.add("show");
     } catch(err){
-        alert("অর্ডার প্লেস করতে সমস্যা হয়েছে: " + err.message);
+        showAlert("ত্রুটি", "অর্ডার প্লেস করতে সমস্যা হয়েছে: " + err.message);
     }
 }
 
@@ -1078,7 +1098,7 @@ async function cancelCustomerOrder(orderId){
         if(error) throw error;
         showToast("অর্ডারটি বাতিল করা হয়েছে।");
         openOrdersModal();
-    } catch(err){ alert("বাতিল করা যায়নি: " + err.message); }
+    } catch(err){ showAlert("ত্রুটি", "বাতিল করা যায়নি: " + err.message); }
 }
 
 function openVoucherModal(o){
@@ -1113,7 +1133,7 @@ async function adminLogin(){
         renderAdminProducts();
         renderAdminCoupons();
         renderAdminOrders();
-    } catch(err){ alert("লগইন ব্যর্থ হয়েছে: " + err.message); }
+    } catch(err){ showAlert("লগইন ব্যর্থ", err.message); }
 }
 
 function closeAdminFullscreen(){ document.getElementById("adminFullscreenPanel").classList.remove("show"); }
@@ -1145,7 +1165,7 @@ async function generateBatchCoupons(){
         }
         showToast(`${qty}টি ইউনিক কুপন তৈরি হয়েছে!`);
         renderAdminCoupons();
-    } catch(err){ alert(err.message); }
+    } catch(err){ showAlert("ত্রুটি", err.message); }
 }
 
 async function renderAdminCoupons(){
@@ -1161,7 +1181,7 @@ async function renderAdminCoupons(){
 }
 async function deleteCoupon(id){ await supabaseClient.from('coupons').delete().eq('id', id); renderAdminCoupons(); showToast("ডিলিট হয়েছে"); }
 
-// PRODUCTS MANAGEMENT (WITH AGE, UNIT, COLOR, RATING)
+// PRODUCTS MANAGEMENT (FIXED MAPPING FOR AGE, UNIT, COLOR, RATING)
 async function addNewProduct(){
     const product_code = document.getElementById("newProdCode").value;
     const name = document.getElementById("newProdName").value.trim();
@@ -1170,17 +1190,17 @@ async function addNewProduct(){
     const stock = Number(document.getElementById("newProdStock").value);
     const category = document.getElementById("newProdCat").value;
     const color = document.getElementById("newProdColor").value.trim();
-    const rating = parseFloat(document.getElementById("newProdRating").value) || 5.0;
+    const numeric_rating = parseFloat(document.getElementById("newProdRating").value) || 5.0;
     const age = document.getElementById("newProdAge").value.trim();
     const unit = document.getElementById("newProdUnit").value;
     const description = document.getElementById("newProdDesc").value.trim();
     const image_url = document.getElementById("newProdImg1").value.trim();
     const video_url = document.getElementById("newProdVideo").value.trim();
 
-    if(!name || isNaN(price)) return alert("সঠিক নাম ও দাম দিন!");
+    if(!name || isNaN(price)) return showAlert("সতর্কতা", "সঠিক নাম ও দাম দিন!");
     try {
         const { error } = await supabaseClient.from('products').insert([{ 
-            product_code, name, price, sale_price, stock, category, color, rating, age, unit, description, 
+            product_code, name, price, sale_price, stock, category, color, numeric_rating, age, unit, description, 
             image_url, video_url, is_active: true 
         }]);
         if(error) throw error;
@@ -1188,7 +1208,7 @@ async function addNewProduct(){
         closeAdminModal('addProductModal');
         fetchProducts();
         renderAdminProducts();
-    } catch(err){ alert(err.message); }
+    } catch(err){ showAlert("ডাটাবেজ এরর", err.message); }
 }
 
 async function renderAdminProducts(){
@@ -1214,7 +1234,7 @@ function openEditModal(id){
     document.getElementById("editProdSalePrice").value = p.sale_price || "";
     document.getElementById("editProdStock").value = p.stock;
     document.getElementById("editProdColor").value = p.color || "";
-    document.getElementById("editProdRating").value = p.rating || "5.0";
+    document.getElementById("editProdRating").value = p.numeric_rating || p.rating || "5.0";
     document.getElementById("editProdAge").value = p.age || "";
     document.getElementById("editProdUnit").value = p.unit || "Month";
     document.getElementById("editProdActive").value = p.is_active ? "true" : "false";
@@ -1232,7 +1252,7 @@ async function saveEditProduct(){
     const sale_price = Number(document.getElementById("editProdSalePrice").value) || 0;
     const stock = Number(document.getElementById("editProdStock").value);
     const color = document.getElementById("editProdColor").value.trim();
-    const rating = parseFloat(document.getElementById("editProdRating").value) || 5.0;
+    const numeric_rating = parseFloat(document.getElementById("editProdRating").value) || 5.0;
     const age = document.getElementById("editProdAge").value.trim();
     const unit = document.getElementById("editProdUnit").value;
     const is_active = document.getElementById("editProdActive").value === "true";
@@ -1242,11 +1262,11 @@ async function saveEditProduct(){
 
     try {
         const { error } = await supabaseClient.from('products').update({ 
-            name, price, sale_price, stock, color, rating, age, unit, is_active, image_url, video_url, description 
+            name, price, sale_price, stock, color, numeric_rating, age, unit, is_active, image_url, video_url, description 
         }).eq('id', id);
         if(error) throw error;
         closeEditModal(); fetchProducts(); renderAdminProducts(); showToast("সফলভাবে আপডেট হয়েছে!");
-    } catch(err){ alert(err.message); }
+    } catch(err){ showAlert("ডাটাবেজ এরর", err.message); }
 }
 
 async function deleteProduct(id){
@@ -1318,7 +1338,7 @@ async function updateOrderStatus(id, newStatus){
         const { error } = await supabaseClient.from('orders').update({ status: newStatus, cancel_reason: cancelReason }).eq('id', id);
         if(error) throw error;
         renderAdminOrders(); showToast("স্ট্যাটাস আপডেট হয়েছে!");
-    } catch(err){ alert(err.message); }
+    } catch(err){ showAlert("ত্রুটি", err.message); }
 }
 </script>
 </body>
