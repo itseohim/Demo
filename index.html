@@ -32,87 +32,126 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); color:var(--text-dark); padding-bottom: 70px;}
+body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); color:var(--text-dark); padding-bottom: 90px;}
 
-.app-header{background: var(--teal); color: white; padding: 15px 16px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 15px rgba(0, 137, 123, 0.25); position: sticky; top: 0; z-index: 1000;}
-.header-inner{max-width: 1200px; margin: auto; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;}
+.app-header{background: var(--teal); color: white; padding: 18px 16px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 20px rgba(0, 137, 123, 0.25); position: sticky; top: 0; z-index: 1000;}
+.header-inner{max-width: 1200px; margin: auto; display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;}
 .logo-area{display: flex; align-items: center; gap: 12px; cursor: pointer;}
-.brand-logo-img{width: 44px; height: 44px; border-radius: 50%; object-fit: cover; background: white; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.15);}
+.brand-logo-img{width: 46px; height: 46px; border-radius: 50%; object-fit: cover; background: white; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.15);}
 .logo-text-box{display: flex; flex-direction: column;}
 .logo-text{font-size: 20px; font-weight: 900; color: #fff;}
 .logo-sub{font-size: 11px; color: #e0f2f1;}
-.live-badge{background: rgba(255, 255, 255, 0.2); padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;}
+.live-badge{background: rgba(255, 255, 255, 0.2); padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;}
 
 .search-box{max-width: 600px; margin: auto; position: relative; display: flex; align-items: center;}
 .search-icon{position: absolute; left: 16px; color: #94a3b8; font-size: 14px;}
-.search-box input{width: 100%; padding: 12px 16px 12px 42px; background: white; border: none; border-radius: 14px; font-size: 14px; outline: none; box-shadow: 0 2px 8px rgba(0,0,0,0.06);}
+.search-box input{width: 100%; padding: 13px 16px 13px 42px; background: white; border: none; border-radius: 14px; font-size: 14px; outline: none; box-shadow: 0 2px 8px rgba(0,0,0,0.06);}
 
-.container{max-width: 1200px; margin: auto; padding: 20px;}
-.hero-image-banner{width: 100%; margin-bottom: 20px; border-radius: 18px; overflow: hidden; box-shadow: 0 6px 18px rgba(0, 137, 123, 0.12); background: #ffffff; max-height: 400px; cursor: pointer;}
+.container{max-width: 1200px; margin: auto; padding: 24px 16px;}
+.hero-image-banner{width: 100%; margin-bottom: 24px; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(0, 137, 123, 0.12); background: #ffffff; max-height: 400px; cursor: pointer;}
 .hero-image-banner img{width: 100%; height: auto; display: block; object-fit: cover;}
 
-.notice-card{background: #fff; border-left: 4px solid var(--teal); padding: 12px 16px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); font-size: 13px; font-weight: 600;}
-.vacation-banner{display:none; background:#fee2e2; color:#b91c1c; padding:12px; border-radius:12px; text-align:center; font-weight:800; margin-bottom:15px; border:1px solid #fecaca;}
+.notice-card{background: #fff; border-left: 4px solid var(--teal); padding: 14px 18px; border-radius: 14px; margin-bottom: 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.03); font-size: 13px; font-weight: 600;}
+.vacation-banner{display:none; background:#fee2e2; color:#b91c1c; padding:14px; border-radius:14px; text-align:center; font-weight:800; margin-bottom:20px; border:1px solid #fecaca;}
 
-.category-section{margin-bottom: 20px;}
-.category-header-row, .products-header-row{display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;}
-.category-header-row h3, .products-header-row h3{font-size: 18px; font-weight: 800; color: var(--text-dark);}
-.show-all{font-size: 13px; color: var(--teal); font-weight: 700; cursor: pointer; background: #e0f2f1; padding: 4px 10px; border-radius: 12px;}
-.category-chips{display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none;}
-.category-chips::-webkit-scrollbar{display: none;}
-.chip-btn{background: white; border: 1px solid #e2e8f0; color: var(--text-muted); padding: 10px 20px; border-radius: 14px; font-size: 13px; font-weight: 700; white-space: nowrap; cursor: pointer;}
-.chip-btn.active{background: var(--teal); color: white; border-color: var(--teal);}
+/* Category Search-bar Style Box System */
+.category-section{margin-bottom: 24px;}
+.category-search-bar-box{background: #ffffff; border-radius: 16px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 3px 12px rgba(0,0,0,0.05); cursor: pointer; border: 1.5px solid #e2e8f0; transition: border-color 0.2s;}
+.category-search-bar-box:hover{border-color: var(--teal);}
+.category-bar-left{display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 800; color: var(--text-dark);}
+.category-bar-right{background: #e0f2f1; color: var(--teal); padding: 6px 14px; border-radius: 12px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px;}
 
-.products-grid{display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 16px;}
-@media(min-width: 768px){ .products-grid{grid-template-columns: repeat(3, 1fr);} }
-@media(min-width: 1024px){ .products-grid{grid-template-columns: repeat(4, 1fr);} }
+/* Category Popup Modal */
+.category-popup-overlay{display:none; position:fixed; inset:0; background:rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index:3500; align-items:center; justify-content:center; padding:15px;}
+.category-popup-overlay.show{display:flex;}
+.category-popup-card{background: #ffffff; width: 100%; max-width: 420px; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: scaleUp 0.2s ease;}
+@keyframes scaleUp{from{transform:scale(0.95); opacity:0;} to{transform:scale(1); opacity:1;}}
 
-.product-card{background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; display: flex; flex-direction: column; position: relative; cursor: pointer; transition: transform 0.2s;}
+/* Showing All Full-Width Button */
+.category-all-btn{background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 14px 18px; font-size: 14px; font-weight: 800; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 14px; transition: all 0.1s;}
+.category-all-btn:hover{background: #e0f2f1; color: var(--teal); border-color: var(--teal);}
+
+/* 3-Column Grid for Categories */
+.category-popup-grid{display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-height: 280px; overflow-y: auto;}
+.category-popup-grid-item{background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; aspect-ratio: 1 / 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 8px; font-size: 12px; font-weight: 800; color: var(--text-dark); cursor: pointer; text-align: center; transition: all 0.1s;}
+.category-popup-grid-item:hover{background: #e0f2f1; color: var(--teal); border-color: var(--teal); transform: translateY(-2px);}
+.category-popup-grid-item img{width: 28px; height: 28px; object-fit: cover; border-radius: 6px;}
+.category-popup-grid-item i{font-size: 24px; color: var(--teal);}
+
+.products-grid{display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-bottom: 20px;}
+@media(min-width: 768px){ .products-grid{grid-template-columns: repeat(3, 1fr); gap: 20px;} }
+@media(min-width: 1024px){ .products-grid{grid-template-columns: repeat(4, 1fr); gap: 24px;} }
+
+.product-card{background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; display: flex; flex-direction: column; position: relative; cursor: pointer; transition: transform 0.15s;}
 .product-card:hover{transform: translateY(-3px);}
 .product-img-wrap{position: relative; width: 100%; aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc;}
 .product-card img{width: 100%; height: 100%; object-fit: cover;}
-.product-info{padding: 14px; display: flex; flex-direction: column; flex: 1;}
-.product-name{font-size: 15px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;}
+.product-info{padding: 16px; display: flex; flex-direction: column; flex: 1;}
+.product-name{font-size: 15px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;}
 .product-footer-row{display: flex; align-items: center; justify-content: space-between; margin-top: auto;}
 .product-price{font-size: 16px; font-weight: 900; color: var(--teal);}
 .old-price{font-size: 12px; color: #94a3b8; text-decoration: line-through; margin-right: 5px;}
-.star-rating{color: #f59e0b; font-size: 11px; margin-bottom: 4px; display: flex; align-items: center; gap: 2px;}
+.star-rating{color: #f59e0b; font-size: 11px; margin-bottom: 6px; display: flex; align-items: center; gap: 2px;}
 
-.bottom-nav{position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 8px 0; border-top: 1px solid #e2e8f0; z-index: 1000;}
+/* Full-Screen Product Detail Page */
+.product-detail-fullscreen{display:none; position:fixed; inset:0; background:#f8fafc; z-index:2500; overflow-y:auto; padding:0; padding-bottom: 90px;}
+.product-detail-fullscreen.show{display:block;}
+.product-detail-content-box{width:100%; min-height:100vh; background:#ffffff; padding:20px; position:relative;}
+
+/* Daraz Style Sticky Bottom Action Bar */
+.daraz-action-bar{position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; display: flex; align-items: center; padding: 12px 16px; border-top: 1px solid #e2e8f0; z-index: 3000; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); gap: 10px;}
+.daraz-action-bar a, .daraz-action-bar button{flex: 1; min-width: 0; height: 46px; padding: 0 10px; border-radius: 12px; font-size: 13px; font-weight: 800; text-align: center; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: transform 0.1s; white-space: nowrap;}
+.daraz-action-bar a:active, .daraz-action-bar button:active{transform: scale(0.97);}
+.btn-watch-video{background: #ef4444; color: #fff; box-shadow: 0 4px 12px rgba(239,68,68,0.3);}
+.btn-add-cart{background: #0ea5e9; color: #fff; box-shadow: 0 4px 12px rgba(14,165,233,0.3);}
+.btn-buy-now{background: #f97316; color: #fff; box-shadow: 0 4px 12px rgba(249,115,22,0.3);}
+
+.rolling-products-container{display: flex; gap: 14px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none;}
+.rolling-products-container::-webkit-scrollbar{display: none;}
+.rolling-products-container .product-card{min-width: 160px; max-width: 160px; flex-shrink: 0;}
+
+.bottom-nav{position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #e2e8f0; z-index: 1000;}
 @media(min-width: 768px){ .bottom-nav{display: none;} }
 .nav-item{background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer; flex: 1; text-decoration: none;}
 .nav-item i{font-size: 18px;} .nav-item.active{color: var(--teal);}
 .nav-cart-icon-wrap{position: relative;}
 .nav-cart-badge{position: absolute; top: -6px; right: -10px; background: #ef4444; color: white; font-size: 9px; font-weight: 900; width: 16px; height: 16px; border-radius: 50%; display: none; align-items: center; justify-content: center;}
 
-.cart-overlay, .thankyou-overlay, .voucher-modal, .product-modal, .support-modal, .admin-popup-modal, .custom-popup{display:none; position:fixed; inset:0; background:rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index:2000; align-items:center; justify-content:center; padding:15px;}
-.cart-overlay.show, .thankyou-overlay.show, .voucher-modal.show, .product-modal.show, .support-modal.show, .admin-popup-modal.show, .custom-popup.show{display:flex;}
+.cart-overlay, .thankyou-overlay, .voucher-modal, .support-modal, .admin-popup-modal, .custom-popup{display:none; position:fixed; inset:0; background:rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index:2000; align-items:center; justify-content:center; padding:15px;}
+.cart-overlay.show, .thankyou-overlay.show, .voucher-modal.show, .support-modal.show, .admin-popup-modal.show, .custom-popup.show{display:flex;}
+
+.review-popup-modal{display:none; position:fixed; inset:0; background:rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index:99999; align-items:center; justify-content:center; padding:15px;}
+.review-popup-modal.show{display:flex;}
 
 .edit-product-modal, .admin-sub-modal{display:none; position:fixed; inset:0; background:rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index:4000; align-items:center; justify-content:center; padding:15px;}
 .edit-product-modal.show, .admin-sub-modal.show{display:flex;}
 
+/* Fixed High Z-Index for Edit Category Modal to prevent hiding issue */
+#editCategoryModal {
+    z-index: 6000 !important;
+}
+
 .cart-box{position:absolute; right:0; top:0; width:100%; max-width:440px; height:100%; background:white; display:flex; flex-direction:column; box-shadow: -5px 0 25px rgba(0,0,0,0.15);}
 .cart-header{background: var(--teal); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; color: white;}
-.close-btn{background: rgba(0,0,0,0.2); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer;}
+.close-btn{background: rgba(0,0,0,0.1); border: none; color: var(--text-dark); width: 38px; height: 38px; border-radius: 50%; font-weight:bold; cursor: pointer; display:flex; align-items:center; justify-content:center; transition: background 0.2s;}
+.close-btn:hover{background: rgba(0,0,0,0.2);}
 .cart-body-content{padding: 20px; overflow-y: auto; flex:1;}
 .cart-item{display:flex; gap:12px; padding:12px 0; border-bottom:1px solid #f1f5f9; align-items: center;}
 .cart-item img{width:65px; height:65px; object-fit:cover; border-radius:12px;}
 
-.product-modal-card{background: white; padding: 20px; border-radius: 20px; text-align: left; max-width: 450px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative;}
-.thankyou-card, .voucher-box, .support-modal-card, .custom-popup-box{background: white; padding: 25px; border-radius: 20px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.2);}
+.thankyou-card, .voucher-box, .support-modal-card, .custom-popup-box, .review-modal-card{background: white; padding: 25px; border-radius: 20px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.2);}
 .edit-modal-card, .admin-modal-box{background: white; padding: 20px; border-radius: 24px; text-align: left; max-width: 550px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);}
 .thankyou-btn, .order-btn{width: 100%; padding: 14px; border: none; border-radius: 12px; background: var(--teal); color: white; font-weight: 800; cursor: pointer; font-size: 15px; box-shadow: 0 4px 12px rgba(0,137,123,0.3); transition: all 0.2s;}
 .order-btn:hover{filter: brightness(1.05); transform: translateY(-1px);}
 
-.checkout-input{width: 100%; padding: 11px 14px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 13px; outline: none; background: #ffffff; color: var(--text-dark); margin-top: 4px;}
+.checkout-input{width: 100%; padding: 11px 14px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 13px; outline: none; background: #ffffff; color: var(--text-dark); margin-top: 4px; resize: none;}
 .checkout-input:focus{border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0, 137, 123, 0.12);}
 
-/* Full-Screen Admin Panel (No Side Gaps) */
+/* Full-Screen Admin Panel */
 .admin-fullscreen-overlay{display:none; position:fixed; inset:0; background:#f8fafc; z-index:3000; overflow-y:auto; padding:0;}
 .admin-fullscreen-overlay.show{display:block;}
 .admin-card{width:100%; min-height:100vh; background:#f8fafc; padding:15px; position: relative;}
 
-/* Admin Header (Exact Match with Perfect Logout Button Placement) */
 .admin-app-header{background: var(--teal); color: white; padding: 15px 16px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 15px rgba(0, 137, 123, 0.25); margin-bottom: 20px;}
 .admin-header-inner{max-width: 1200px; margin: auto; display: flex; align-items: center; justify-content: space-between;}
 .admin-logo-area{display: flex; align-items: center; gap: 12px;}
@@ -125,7 +164,6 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 .admin-header-btn.logout{background: #ef4444; border: none; color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3); transition: all 0.2s;}
 .admin-header-btn.logout:hover{background: #dc2626; transform: translateY(-1px);}
 
-/* Admin Group Cards Layout */
 .admin-group-container{display:flex; flex-direction:column; gap:15px; padding-bottom:40px; max-width:800px; margin:auto;}
 .admin-group-box{background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; padding:16px; box-shadow:0 4px 15px rgba(0,0,0,0.03); display:flex; flex-direction:column; gap:10px;}
 .admin-group-title{font-size:15px; font-weight:900; color:var(--teal); border-bottom:2px solid #e0f2f1; padding-bottom:8px; display:flex; align-items:center; gap:8px;}
@@ -173,6 +211,47 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
     </div>
 </div>
 
+<!-- Category Popup Modal -->
+<div id="categoryPopupModal" class="category-popup-overlay">
+    <div class="category-popup-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:14px;">
+            <h3 style="font-size:16px; font-weight:900; color:var(--teal);"><i class="fa-solid fa-folder-open"></i> ক্যাটাগরি সিলেক্ট করুন</h3>
+            <button onclick="closeCategoryPopup()" style="background:#e2e8f0; border:none; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer;">✕</button>
+        </div>
+        
+        <!-- Showing All Full-Width Button -->
+        <button class="category-all-btn" onclick="selectCategory('')">
+            <span style="display:flex; align-items:center; gap:10px;"><i class="fa-solid fa-border-all" style="color:var(--teal);"></i> Showing All</span>
+            <i class="fa-solid fa-chevron-right" style="font-size:11px; color:#94a3b8;"></i>
+        </button>
+
+        <!-- 3-Column Square Grid for Categories -->
+        <div class="category-popup-grid" id="categoryPopupList"></div>
+    </div>
+</div>
+
+<!-- Edit Category Modal -->
+<div id="editCategoryModal" class="admin-sub-modal">
+    <div class="admin-modal-box" style="max-width:400px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <h3 style="font-size:18px; color:var(--teal); font-weight:900;"><i class="fa-solid fa-pen-to-square"></i> Edit Category</h3>
+            <button onclick="closeEditCategoryModal()" style="background:#e2e8f0; border:none; width:32px; height:32px; border-radius:50%; font-weight:bold; cursor:pointer;">✕</button>
+        </div>
+        <input type="hidden" id="editCatIndex">
+        <label style="font-size:11px; font-weight:700;">Category Name *</label>
+        <input id="editCatName" placeholder="Category Name">
+        
+        <label style="font-size:11px; font-weight:700; margin-top:8px; display:block;">Category Image (Image URL - Optional)</label>
+        <input id="editCatImg" placeholder="https://..." oninput="previewImage(this.value, 'editCatImgPreview')">
+        <div id="editCatImgPreview" style="margin-bottom:6px;"></div>
+
+        <label style="font-size:11px; font-weight:700; margin-top:8px; display:block;">Or FontAwesome Icon (e.g. fa-solid fa-rabbit)</label>
+        <input id="editCatIcon" placeholder="fa-solid fa-rabbit">
+
+        <button onclick="saveEditedCategory()" class="admin-submit-btn" style="margin-top:12px;">Save Changes</button>
+    </div>
+</div>
+
 <header class="app-header">
 <div class="header-inner">
     <div class="logo-area" onclick="goHome()">
@@ -203,23 +282,21 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
     <img id="heroBannerImg" src="https://i.postimg.cc/JzmwDZBp/file-000000004a4482438eebd37b7fd9db5f.png" alt="Banner">
 </div>
 
+<!-- Category Search-bar Style Box System -->
 <section class="category-section">
-    <div class="category-header-row">
-        <h3>Categories</h3>
-        <span class="show-all" onclick="goHome()">Showing All</span>
-    </div>
-    <div class="category-chips" id="categoryChipsContainer">
-        <button class="chip-btn" onclick="selectCategory('Rabbit',this)">Rabbit</button>
-        <button class="chip-btn" onclick="selectCategory('Hamster',this)">Hamster</button>
-        <button class="chip-btn" onclick="selectCategory('Pet Food',this)">Pet Food</button>
-        <button class="chip-btn" onclick="selectCategory('Accessories',this)">Accessories</button>
+    <div class="category-search-bar-box" onclick="openCategoryPopup()">
+        <div class="category-bar-left">
+            <i class="fa-solid fa-list-ul" style="color:var(--teal);"></i>
+            <span id="selectedCategoryTitle">Categories</span>
+        </div>
+        <div class="category-bar-right">
+            <span id="selectedCategoryBadge">Showing All</span>
+            <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i>
+        </div>
     </div>
 </section>
 
 <section class="products-section">
-    <div class="products-header-row">
-        <h3 id="productsTitle">Popular Pet Supplies</h3>
-    </div>
     <div id="productsGrid" class="products-grid"></div>
 </section>
 </main>
@@ -246,6 +323,90 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
     </button>
 </nav>
 
+<!-- Full-Screen Product Detail Page -->
+<div id="productDetailFullscreen" class="product-detail-fullscreen">
+    <div class="product-detail-content-box">
+        <button class="close-btn" onclick="closeProductDetail()" style="position:absolute; top:15px; right:15px; z-index:10; background:#e2e8f0; color:#1e293b;"><i class="fa-solid fa-xmark" style="font-size:18px;"></i></button>
+        
+        <div style="max-width:800px; margin:0 auto;">
+            <div style="position:relative; width:100%; aspect-ratio:1/1; margin-bottom:14px; background:#000; border-radius:18px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.06);">
+                <img id="modalProdImg" src="" alt="" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+            <div id="modalSecondImgWrap" style="margin-bottom:14px; display:none;">
+                <img id="modalProdImg2" src="" alt="" style="width:70px; height:70px; border-radius:10px; object-fit:cover; border:2px solid var(--teal);">
+            </div>
+            
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:16px; margin-bottom:14px; box-shadow:0 2px 10px rgba(0,0,0,0.02); text-align:center;">
+                <h3 id="modalProdName" style="font-size:22px; font-weight:900; color:var(--text-dark); margin-bottom:8px;"></h3>
+                <div id="modalGridPrice" style="font-size:16px; font-weight:900; color:var(--teal); display:flex; flex-direction:column; justify-content:center; align-items:center; gap:6px;"></div>
+            </div>
+            
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-bottom:14px;">
+                <div style="background:#f8fafc; padding:12px 8px; border-radius:12px; border:1px solid #e2e8f0; text-align:center;">
+                    <div style="font-size:11px; color:#64748b; font-weight:700; margin-bottom:2px;">স্টক (Stock)</div>
+                    <div id="modalGridStock" style="font-size:14px; font-weight:900; color:#10b981;"></div>
+                </div>
+                <div style="background:#f8fafc; padding:12px 8px; border-radius:12px; border:1px solid #e2e8f0; text-align:center;">
+                    <div style="font-size:11px; color:#64748b; font-weight:700; margin-bottom:2px;">বয়স (Age)</div>
+                    <div id="modalGridAge" style="font-size:13px; font-weight:800; color:var(--text-dark);"></div>
+                </div>
+                <div style="background:#f8fafc; padding:12px 8px; border-radius:12px; border:1px solid #e2e8f0; text-align:center;">
+                    <div style="font-size:11px; color:#64748b; font-weight:700; margin-bottom:2px;">কালার (Color)</div>
+                    <div id="modalGridColor" style="font-size:13px; font-weight:800; color:var(--text-dark);"></div>
+                </div>
+            </div>
+
+            <p id="modalProdDesc" style="font-size:13px; color:#334155; line-height:1.6; background:#f8fafc; padding:14px; border-radius:12px; border:1px solid #e2e8f0; margin-bottom:25px; width:100%; word-break:break-word;"></p>
+            
+            <div style="border-top:2px solid #e2e8f0; padding-top:20px; margin-top:20px; margin-bottom:25px;">
+                <div id="relatedProductsGrid" class="rolling-products-container"></div>
+            </div>
+
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:20px; margin-bottom:30px; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #f1f5f9; padding-bottom:10px; flex-wrap:wrap; gap:10px;">
+                    <h4 style="font-size:16px; font-weight:900; color:var(--text-dark); display:flex; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-comments" style="color:var(--teal);"></i> কাস্টমার রিভিউ ও মতামত
+                    </h4>
+                    <button onclick="openReviewPopup()" style="background:var(--teal); color:#fff; border:none; padding:8px 14px; border-radius:10px; font-size:12px; font-weight:800; cursor:pointer; box-shadow:0 3px 10px rgba(0,137,123,0.2);">
+                        <i class="fa-solid fa-pen-to-square"></i> রিভিউ দেওয়ার জন্য এখানে ক্লিক করুন
+                    </button>
+                </div>
+                <div id="productReviewsList" style="display:flex; flex-direction:column; gap:10px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="daraz-action-bar">
+        <a id="modalVideoBtn" href="#" target="_blank" class="btn-watch-video" style="display:none;">Watch Video</a>
+        <button id="modalAddToCartBtn" class="btn-add-cart"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
+        <button id="modalBuyNowBtn" class="btn-buy-now">Buy Now</button>
+    </div>
+</div>
+
+<!-- Review Popup Modal -->
+<div id="reviewPopupModal" class="review-popup-modal">
+    <div class="review-modal-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #e2e8f0; padding-bottom:10px;">
+            <h3 style="font-size:16px; font-weight:900; color:var(--teal);">আপনার রিভিউ বা মতামত লিখুন</h3>
+            <button onclick="closeReviewPopup()" style="background:#e2e8f0; border:none; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer;">✕</button>
+        </div>
+        <input type="hidden" id="editReviewIndex" value="">
+        <input id="reviewerName" placeholder="আপনার নাম (যেমন: Rahim)" style="width:100%; padding:10px 14px; border:1px solid #cbd5e1; border-radius:10px; font-size:13px; margin-bottom:10px; outline:none; background:#fff;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+            <label style="font-size:12px; font-weight:700; color:#64748b;">রেটিং:</label>
+            <select id="reviewRating" style="flex:1; padding:8px 12px; border:1px solid #cbd5e1; border-radius:10px; font-size:13px; outline:none; background:#fff;">
+                <option value="5">⭐⭐⭐⭐⭐ (৫ স্টার)</option>
+                <option value="4">⭐⭐⭐⭐ (৪ স্টার)</option>
+                <option value="3">⭐⭐⭐ (৩ স্টার)</option>
+                <option value="2">⭐⭐ (২ স্টার)</option>
+                <option value="1">⭐ (১ স্টার)</option>
+            </select>
+        </div>
+        <textarea id="reviewComment" placeholder="প্রোডাক্টটি আপনার কেমন লেগেছে তা এখানে বিস্তারিত লিখুন..." style="width:100%; height:85px; padding:10px 14px; border:1px solid #cbd5e1; border-radius:10px; font-size:13px; outline:none; resize:vertical; margin-bottom:14px; background:#fff;"></textarea>
+        <button onclick="submitProductReview()" id="reviewSubmitBtn" style="background:var(--teal); color:#fff; border:none; padding:12px; border-radius:10px; font-size:13px; font-weight:800; width:100%; cursor:pointer; box-shadow:0 3px 10px rgba(0,137,123,0.2);">রিভিউ সাবমিট করুন</button>
+    </div>
+</div>
+
 <div id="supportModal" class="support-modal">
     <div class="support-modal-card">
         <h3 style="color:var(--teal); margin-bottom:15px; font-size:18px;">Customer Support</h3>
@@ -268,7 +429,7 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
     </div>
 </div>
 
-<!-- Admin Fullscreen Panel with Clean Header -->
+<!-- Admin Fullscreen Panel -->
 <div id="adminFullscreenPanel" class="admin-fullscreen-overlay">
     <div class="admin-card">
         <header class="admin-app-header">
@@ -287,7 +448,6 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
         </header>
 
         <div class="admin-group-container">
-            <!-- Group 1: Product & Category Management -->
             <div class="admin-group-box">
                 <div class="admin-group-title"><i class="fa-solid fa-boxes-stacked"></i> প্রোডাক্ট ও ক্যাটাগরি ম্যানেজমেন্ট</div>
                 <button class="admin-menu-btn" onclick="openAdminModal('addProductModal')">
@@ -299,12 +459,23 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
                     <i class="fa-solid fa-chevron-right" style="font-size:12px; color:#94a3b8;"></i>
                 </button>
                 <button class="admin-menu-btn" onclick="openAdminModal('categoryModal')">
-                    <span><i class="fa-solid fa-folder-plus" style="color:var(--teal); margin-right:8px;"></i> নতুন ক্যাটাগরি যোগ করুন</span>
+                    <span><i class="fa-solid fa-folder-plus" style="color:var(--teal); margin-right:8px;"></i> ক্যাটাগরি ম্যানেজমেন্ট ও ছবি/আইকন</span>
                     <i class="fa-solid fa-chevron-right" style="font-size:12px; color:#94a3b8;"></i>
                 </button>
             </div>
 
-            <!-- Group 2: Banner & Notice Management -->
+            <div class="admin-group-box">
+                <div class="admin-group-title"><i class="fa-solid fa-receipt"></i> অর্ডার ও মার্কেটিং</div>
+                <button class="admin-menu-btn" onclick="openAdminModal('ordersModalAdmin')">
+                    <span><i class="fa-solid fa-clipboard-list" style="color:var(--teal); margin-right:8px;"></i> কাস্টমার অর্ডারসমূহ</span>
+                    <i class="fa-solid fa-chevron-right" style="font-size:12px; color:#94a3b8;"></i>
+                </button>
+                <button class="admin-menu-btn" onclick="openAdminModal('couponModal')">
+                    <span><i class="fa-solid fa-ticket" style="color:var(--teal); margin-right:8px;"></i> ইউনিক ব্যাচ কুপন জেনারেটর</span>
+                    <i class="fa-solid fa-chevron-right" style="font-size:12px; color:#94a3b8;"></i>
+                </button>
+            </div>
+
             <div class="admin-group-box">
                 <div class="admin-group-title"><i class="fa-solid fa-panorama"></i> ব্যানার ও নোটিশ</div>
                 <button class="admin-menu-btn" onclick="openAdminModal('heroBannerModal')">
@@ -324,35 +495,30 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
                     <i class="fa-solid fa-chevron-right" style="font-size:12px; color:#94a3b8;"></i>
                 </button>
             </div>
-
-            <!-- Group 3: Orders & Marketing -->
-            <div class="admin-group-box">
-                <div class="admin-group-title"><i class="fa-solid fa-receipt"></i> অর্ডার ও মার্কেটিং</div>
-                <button class="admin-menu-btn" onclick="openAdminModal('ordersModalAdmin')">
-                    <span><i class="fa-solid fa-clipboard-list" style="color:var(--teal); margin-right:8px;"></i> কাস্টমার অর্ডারসমূহ</span>
-                    <i class="fa-solid fa-chevron-right" style="font-size:12px; color:#94a3b8;"></i>
-                </button>
-                <button class="admin-menu-btn" onclick="openAdminModal('couponModal')">
-                    <span><i class="fa-solid fa-ticket" style="color:var(--teal); margin-right:8px;"></i> ইউনিক ব্যাচ কুপন জেনারেটর</span>
-                    <i class="fa-solid fa-chevron-right" style="font-size:12px; color:#94a3b8;"></i>
-                </button>
-            </div>
         </div>
     </div>
 </div>
 
 <div id="subModal_categoryModal" class="admin-sub-modal">
-    <div class="admin-modal-box" style="max-width:450px;">
+    <div class="admin-modal-box" style="max-width:480px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
             <h3 style="font-size:18px; color:var(--teal); font-weight:900;"><i class="fa-solid fa-folder-plus"></i> নতুন ক্যাটাগরি তৈরি করুন</h3>
             <button onclick="closeAdminModal('categoryModal')" style="background:#e2e8f0; border:none; width:32px; height:32px; border-radius:50%; font-weight:bold; cursor:pointer;">✕</button>
         </div>
         <label style="font-size:11px; font-weight:700;">ক্যাটাগরির নাম (Category Name) *</label>
         <input id="newCategoryName" placeholder="যেমন: Bird, Cat ইত্যাদি">
+        
+        <label style="font-size:11px; font-weight:700; margin-top:6px; display:block;">ক্যাটাগরি ছবি (Image URL - ঐচ্ছিক)</label>
+        <input id="newCategoryImg" placeholder="https://..." oninput="previewImage(this.value, 'newCatPreview')">
+        <div id="newCatPreview" style="margin-bottom:6px;"></div>
+
+        <label style="font-size:11px; font-weight:700; margin-top:6px; display:block;">অথবা ফন্ট-অ্যাসোম আইকন (যেমন: fa-solid fa-cat)</label>
+        <input id="newCategoryIcon" placeholder="fa-solid fa-cat">
+
         <button onclick="addNewCategory()" class="admin-submit-btn" style="margin-top:10px;">ক্যাটাগরি সেভ করুন</button>
         <div style="margin-top:14px; border-top:1px solid #cbd5e1; padding-top:10px;">
             <div style="font-size:12px; font-weight:800; color:var(--teal); margin-bottom:6px;">বিদ্যমান ক্যাটাগরি সমূহ:</div>
-            <div id="adminCategoriesList" style="max-height:140px; overflow-y:auto;"></div>
+            <div id="adminCategoriesList" style="max-height:180px; overflow-y:auto;"></div>
         </div>
     </div>
 </div>
@@ -583,32 +749,6 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
     </div>
 </div>
 
-<div id="productDetailModal" class="product-modal" onclick="handleModalBackdropClick(event)">
-    <div class="product-modal-card">
-        <button onclick="closeProductModal()" style="position:absolute; top:12px; right:12px; background:#f1f5f9; border:none; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer; z-index:10;">✕</button>
-        <div style="position:relative; width:100%; aspect-ratio:1/1; margin-bottom:12px; background:#000; border-radius:14px; overflow:hidden;">
-            <img id="modalProdImg" src="" alt="" style="width:100%; height:100%; object-fit:cover;">
-        </div>
-        <div id="modalSecondImgWrap" style="margin-bottom:12px; display:none;">
-            <img id="modalProdImg2" src="" alt="" style="width:70px; height:70px; border-radius:10px; object-fit:cover; border:2px solid var(--teal);">
-        </div>
-        <h3 id="modalProdName" style="font-size:16px; font-weight:800; color:var(--text-dark); margin-bottom:4px;"></h3>
-        <div id="modalExtraMeta" style="display:flex; gap:10px; font-size:12px; color:#475569; margin-bottom:8px; font-weight:600;"></div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <div id="modalProdPrice" style="font-size:18px; font-weight:900; color:var(--teal);"></div>
-            <div id="modalProdStock" style="font-size:11px; color:#10b981; font-weight:700; background:#ecfdf5; padding:4px 8px; border-radius:8px;"></div>
-        </div>
-        <div style="display:flex; gap:10px; margin-bottom:12px;">
-            <button id="modalAddToCartBtn" style="flex:1; padding:10px; border:none; border-radius:10px; background:var(--teal); color:white; font-weight:800; cursor:pointer;">Add to Cart</button>
-            <button id="modalBuyNowBtn" style="flex:1; padding:10px; border:none; border-radius:10px; background:#f97316; color:white; font-weight:800; cursor:pointer;">Buy Now</button>
-        </div>
-        <div id="modalVideoContainer" style="margin-bottom:12px; display:none;">
-            <a id="modalVideoBtn" href="#" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:12px; background:#ff0000; color:white; border-radius:10px; font-weight:800; text-decoration:none;"><i class="fa-brands fa-youtube"></i> Watch Video</a>
-        </div>
-        <p id="modalProdDesc" style="font-size:12px; color:#334155; line-height:1.4; background:#f8fafc; padding:10px; border-radius:8px; max-height:80px; overflow-y:auto; margin-bottom:10px; max-width:100%; word-break:break-word;"></p>
-    </div>
-</div>
-
 <div id="cartOverlay" class="cart-overlay" onclick="handleCartBackdropClick(event)">
 <div class="cart-box">
     <div class="cart-header" style="justify-content: center; position: relative;">
@@ -662,13 +802,19 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
 emailjs.init({ publicKey: "P7lqeBS7YKyU3Kpaq" });
 
 let products = [];
-let categoriesList = ["Rabbit", "Hamster", "Pet Food", "Accessories"];
+let categoriesList = [
+    { name: "Rabbit", img: "", icon: "fa-solid fa-folder" },
+    { name: "Hamster", img: "", icon: "fa-solid fa-folder" },
+    { name: "Pet Food", img: "", icon: "fa-solid fa-folder" },
+    { name: "Accessories", img: "", icon: "fa-solid fa-folder" }
+];
 let cart = JSON.parse(localStorage.getItem("adoresCart")) || [];
 let siteSettings = { popupImg: "", popupProdCode: "", notice: "", vacation: false, heroImg: "", heroProdCode: "" };
 let couponsList = [];
 let appliedCouponData = null;
 let currentCategory = "";
 let currentAdminTab = "Pending";
+let currentOpenProductCode = null;
 
 const DEFAULT_HERO_IMG = "https://i.postimg.cc/JzmwDZBp/file-000000004a4482438eebd37b7fd9db5f.png";
 
@@ -704,11 +850,22 @@ const districtVillagesMap = {
 };
 
 window.addEventListener('DOMContentLoaded', () => {
+    let cachedProducts = localStorage.getItem("adoresCachedProducts");
+    if(cachedProducts){
+        try { products = JSON.parse(cachedProducts); renderProducts(); } catch(e){}
+    }
     fetchCategories();
     fetchProducts();
     fetchSiteSettings();
     fetchCoupons();
     updateCartBadge();
+});
+
+window.addEventListener('popstate', (event) => {
+    const detailModal = document.getElementById("productDetailFullscreen");
+    if(detailModal.classList.contains("show")){
+        detailModal.classList.remove("show");
+    }
 });
 
 function showToast(msg){
@@ -739,7 +896,7 @@ function copyBkashNumber(){
 function previewImage(url, previewId){
     const container = document.getElementById(previewId);
     if(url && url.trim().length > 5){
-        container.innerHTML = `<img src="${url.trim()}" alt="Preview" style="width:60px; height:60px; object-fit:cover; border-radius:8px; border:1px solid #cbd5e1; margin-top:4px;">`;
+        container.innerHTML = `<img src="${url.trim()}" alt="Preview" style="width:50px; height:50px; object-fit:cover; border-radius:8px; border:1px solid #cbd5e1; margin-top:4px;">`;
     } else {
         container.innerHTML = "";
     }
@@ -765,37 +922,64 @@ async function fetchCategories(){
         const { data, error } = await supabaseClient.from('site_settings').select('*').eq('key', 'categories').single();
         if(!error && data && data.value){
             let parsed = JSON.parse(data.value);
-            if(Array.isArray(parsed) && parsed.length > 0) categoriesList = parsed;
+            if(Array.isArray(parsed) && parsed.length > 0){
+                categoriesList = parsed.map(item => {
+                    if(typeof item === 'string') return { name: item, img: "", icon: "fa-solid fa-folder" };
+                    return { name: item.name || '', img: item.img || '', icon: item.icon || 'fa-solid fa-folder' };
+                });
+            }
         }
     } catch(err){ console.error(err); }
     renderCategoryUI();
 }
 
 function renderCategoryUI(){
-    const chipsContainer = document.getElementById("categoryChipsContainer");
-    if(chipsContainer){
-        chipsContainer.innerHTML = categoriesList.map(cat => `
-            <button class="chip-btn" onclick="selectCategory('${cat}',this)">${cat}</button>
-        `).join("");
+    const listContainer = document.getElementById("categoryPopupList");
+    if(listContainer){
+        let gridHtml = categoriesList.map(cat => {
+            let mediaHtml = cat.img && cat.img.trim() !== "" ? 
+                `<img src="${cat.img}" alt="${cat.name}">` : 
+                `<i class="${cat.icon || 'fa-solid fa-folder'}"></i>`;
+            return `
+                <div class="category-popup-grid-item" onclick="selectCategory('${cat.name}')">
+                    ${mediaHtml}
+                    <span>${cat.name}</span>
+                </div>
+            `;
+        }).join("");
+        listContainer.innerHTML = gridHtml;
     }
     
     const newProdCat = document.getElementById("newProdCat");
     const editProdCat = document.getElementById("editProdCat");
-    let optionsHtml = categoriesList.map(cat => `<option value="${cat}">${cat}</option>`).join("");
+    let optionsHtml = categoriesList.map(cat => `<option value="${cat.name}">${cat.name}</option>`).join("");
     if(newProdCat) newProdCat.innerHTML = optionsHtml;
     if(editProdCat) editProdCat.innerHTML = optionsHtml;
 }
 
+function openCategoryPopup(){
+    document.getElementById("categoryPopupModal").classList.add("show");
+}
+function closeCategoryPopup(){
+    document.getElementById("categoryPopupModal").classList.remove("show");
+}
+
 async function addNewCategory(){
     const name = document.getElementById("newCategoryName").value.trim();
+    const img = document.getElementById("newCategoryImg").value.trim();
+    const icon = document.getElementById("newCategoryIcon").value.trim() || "fa-solid fa-folder";
+
     if(!name) return showAlert("সতর্কতা", "ক্যাটাগরির নাম লিখুন!");
-    if(categoriesList.includes(name)) return showAlert("সতর্কতা", "এই ক্যাটাগরি ইতিমধ্যে রয়েছে!");
+    if(categoriesList.some(c => c.name.toLowerCase() === name.toLowerCase())) return showAlert("সতর্কতা", "এই ক্যাটাগরি ইতিমধ্যে রয়েছে!");
     
-    categoriesList.push(name);
+    categoriesList.push({ name, img, icon });
     try {
         await supabaseClient.from('site_settings').upsert([{ key: 'categories', value: JSON.stringify(categoriesList) }], { onConflict: 'key' });
         showToast("ক্যাটাগরি সফলভাবে যোগ হয়েছে!");
         document.getElementById("newCategoryName").value = "";
+        document.getElementById("newCategoryImg").value = "";
+        document.getElementById("newCategoryIcon").value = "";
+        document.getElementById("newCatPreview").innerHTML = "";
         renderCategoryUI();
         renderAdminCategoriesList();
     } catch(err){ showAlert("ত্রুটি", err.message); }
@@ -804,12 +988,50 @@ async function addNewCategory(){
 async function renderAdminCategoriesList(){
     const container = document.getElementById("adminCategoriesList");
     if(!container) return;
-    container.innerHTML = categoriesList.map((cat, idx) => `
-        <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:6px; border-radius:6px; margin-bottom:4px; font-size:11px;">
-            <div><b>${cat}</b></div>
-            ${categoriesList.length > 1 ? `<button onclick="deleteCategory(${idx})" style="background:#ef4444; color:#fff; border:none; padding:2px 6px; border-radius:4px; cursor:pointer;">ডিলিট</button>` : ''}
-        </div>
-    `).join("");
+    container.innerHTML = categoriesList.map((cat, idx) => {
+        let displayMedia = cat.img ? `<img src="${cat.img}" style="width:24px; height:24px; border-radius:4px; object-fit:cover; margin-right:6px; vertical-align:middle;">` : `<i class="${cat.icon || 'fa-solid fa-folder'}" style="color:var(--teal); margin-right:6px;"></i>`;
+        return `
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:6px 8px; border-radius:8px; margin-bottom:6px; font-size:11px; border:1px solid #e2e8f0;">
+                <div style="display:flex; align-items:center;">${displayMedia}<b>${cat.name}</b></div>
+                <div style="display:flex; gap:4px;">
+                    <button onclick="openEditCategoryModal(${idx})" style="background:#2563eb; color:#fff; border:none; padding:4px 10px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:11px;">Edit</button>
+                    ${categoriesList.length > 1 ? `<button onclick="deleteCategory(${idx})" style="background:#ef4444; color:#fff; border:none; padding:4px 10px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:11px;">Delete</button>` : ''}
+                </div>
+            </div>
+        `;
+    }).join("");
+}
+
+function openEditCategoryModal(idx){
+    const cat = categoriesList[idx];
+    document.getElementById("editCatIndex").value = idx;
+    document.getElementById("editCatName").value = cat.name;
+    document.getElementById("editCatImg").value = cat.img || "";
+    previewImage(cat.img || "", 'editCatImgPreview');
+    document.getElementById("editCatIcon").value = cat.icon || "fa-solid fa-folder";
+    document.getElementById("editCategoryModal").classList.add("show");
+}
+
+function closeEditCategoryModal(){
+    document.getElementById("editCategoryModal").classList.remove("show");
+}
+
+async function saveEditedCategory(){
+    const idx = parseInt(document.getElementById("editCatIndex").value);
+    const name = document.getElementById("editCatName").value.trim();
+    const img = document.getElementById("editCatImg").value.trim();
+    const icon = document.getElementById("editCatIcon").value.trim() || "fa-solid fa-folder";
+
+    if(!name) return showAlert("সতর্কতা", "ক্যাটাগরির নাম লিখুন!");
+
+    categoriesList[idx] = { name, img, icon };
+    try {
+        await supabaseClient.from('site_settings').upsert([{ key: 'categories', value: JSON.stringify(categoriesList) }], { onConflict: 'key' });
+        showToast("ক্যাটাগরি সফলভাবে এডিট হয়েছে!");
+        closeEditCategoryModal();
+        renderCategoryUI();
+        renderAdminCategoriesList();
+    } catch(err){ showAlert("ত্রুটি", err.message); }
 }
 
 async function deleteCategory(idx){
@@ -828,6 +1050,7 @@ async function fetchProducts(){
         const { data, error } = await supabaseClient.from('products').select('*').eq('is_active', true);
         if(error) throw error;
         products = data || [];
+        localStorage.setItem("adoresCachedProducts", JSON.stringify(products));
         renderProducts();
     } catch(err){ console.error(err); }
 }
@@ -904,18 +1127,20 @@ function closeSupportModal(){ document.getElementById("supportModal").classList.
 function goHome(){
     currentCategory = "";
     document.getElementById("searchInput").value = "";
-    document.querySelectorAll(".chip-btn").forEach(b => b.classList.remove("active"));
+    document.getElementById("selectedCategoryBadge").innerText = "Showing All";
     renderProducts();
 }
-function selectCategory(cat, btn){
+
+function selectCategory(cat){
     currentCategory = cat;
-    document.querySelectorAll(".chip-btn").forEach(b => b.classList.remove("active"));
-    if(btn) btn.classList.add("active");
+    closeCategoryPopup();
+    document.getElementById("selectedCategoryBadge").innerText = cat ? cat : "Showing All";
     renderProducts();
 }
+
 function searchProducts(){
     currentCategory = "";
-    document.querySelectorAll(".chip-btn").forEach(b => b.classList.remove("active"));
+    document.getElementById("selectedCategoryBadge").innerText = "Showing All";
     renderProducts();
 }
 
@@ -948,7 +1173,7 @@ function renderProducts(){
                 <div class="product-info">
                     <div class="product-name">${p.name}</div>
                     ${ratingHtml}
-                    <div style="font-size:11px; color:#10b981; font-weight:700; margin-bottom:4px;">${stockText}</div>
+                    <div style="font-size:11px; color:#10b981; font-weight:700; margin-bottom:6px;">${stockText}</div>
                     <div class="product-footer-row"><div>${priceHtml}</div></div>
                 </div>
             </div>
@@ -959,6 +1184,11 @@ function renderProducts(){
 function openProductDetail(code){
     const p = products.find(prod => String(prod.product_code) === String(code) || String(prod.id) === String(code));
     if(!p) return;
+
+    currentOpenProductCode = p.product_code || p.id;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    history.pushState({ modalOpen: true }, "", "#product");
 
     document.getElementById("modalProdImg").src = p.image_url || '';
     
@@ -971,40 +1201,200 @@ function openProductDetail(code){
     }
 
     document.getElementById("modalProdName").innerText = p.name;
-    document.getElementById("modalProdStock").innerText = p.stock > 0 ? `Stock: ${p.stock}` : `Out of Stock`;
     
-    let metaText = [];
-    if(p.age){
-        let unitText = p.unit || 'Month';
-        metaText.push(`<span><i class="fa-solid fa-cake-candles" style="color:var(--teal);"></i> বয়স: <b>${p.age} ${unitText}</b></span>`);
-    }
-    if(p.color){
-        metaText.push(`<span><i class="fa-solid fa-palette" style="color:var(--teal);"></i> কালার: <b>${p.color}</b></span>`);
-    }
-    document.getElementById("modalExtraMeta").innerHTML = metaText.join(" | ");
-
     let price = p.price || 0;
     let salePrice = p.sale_price || 0;
     let activePrice = salePrice > 0 && salePrice < price ? salePrice : price;
     
-    document.getElementById("modalProdPrice").innerHTML = salePrice > 0 && salePrice < price ? `<span class="old-price" style="font-size:14px;">৳${price}</span> ৳${salePrice}` : `৳${price}`;
+    let pricingHtml = "";
+    if(salePrice > 0 && salePrice < price){
+        let discountVal = price - salePrice;
+        let discountPercent = Math.round((discountVal / price) * 100);
+        pricingHtml = `
+            <div style="display:flex; align-items:center; justify-content:center; gap:8px; font-size:14px;">
+                <span class="old-price">পূর্বের মূল্য: ৳${price}</span>
+                <span style="background:#fee2e2; color:#b91c1c; padding:2px 8px; border-radius:6px; font-size:11px; font-weight:800;">${discountPercent}% ছাড়</span>
+            </div>
+            <div style="font-size:18px; font-weight:900; color:var(--teal);">বর্তমান মূল্য: ৳${salePrice}</div>
+            <div style="font-size:11px; color:#10b981; font-weight:700; margin-top:2px;">✨ ফিক্সড প্রাইস (Fixed Price)</div>
+        `;
+    } else {
+        pricingHtml = `
+            <div style="font-size:18px; font-weight:900; color:var(--teal);">মূল্য: ৳${price}</div>
+            <div style="font-size:11px; color:#10b981; font-weight:700; margin-top:2px;">✨ ফিক্সড প্রাইস (Fixed Price)</div>
+        `;
+    }
+    document.getElementById("modalGridPrice").innerHTML = pricingHtml;
+
+    let stockStr = p.stock > 0 ? `${p.stock} টি` : `Stock Out`;
+    document.getElementById("modalGridStock").innerText = stockStr;
+
+    let ageStr = p.age ? `${p.age} ${p.unit || 'Month'}` : 'N/A';
+    document.getElementById("modalGridAge").innerText = ageStr;
+
+    let colorStr = p.color ? p.color : 'Standard';
+    document.getElementById("modalGridColor").innerText = colorStr;
+
     document.getElementById("modalProdDesc").innerText = p.description || "কোনো বিবরণ নেই।";
     
-    const vidContainer = document.getElementById("modalVideoContainer");
     const vidBtn = document.getElementById("modalVideoBtn");
-    if(p.video_url && p.video_url.trim() !== ""){ vidBtn.href = p.video_url.trim(); vidContainer.style.display = "block"; } else { vidContainer.style.display = "none"; }
+    if(p.video_url && p.video_url.trim() !== ""){ 
+        vidBtn.href = p.video_url.trim(); 
+        vidBtn.style.display = "flex"; 
+    } else { 
+        vidBtn.style.display = "none"; 
+    }
     
     const addBtn = document.getElementById("modalAddToCartBtn");
     const buyBtn = document.getElementById("modalBuyNowBtn");
-    addBtn.innerText = p.stock > 0 ? "Add to Cart" : "Out of Stock"; addBtn.disabled = p.stock <= 0;
-    addBtn.onclick = function(){ addToCart(p.product_code || p.id, activePrice); closeProductModal(); };
-    buyBtn.innerText = p.stock > 0 ? "Buy Now" : "Out of Stock"; buyBtn.disabled = p.stock <= 0;
-    buyBtn.onclick = function(){ addToCart(p.product_code || p.id, activePrice); closeProductModal(); openCart(); };
+    
+    addBtn.innerHTML = `<i class="fa-solid fa-cart-shopping"></i> ${p.stock > 0 ? "Add to Cart" : "Out of Stock"}`; 
+    addBtn.disabled = p.stock <= 0;
+    addBtn.onclick = function(){ addToCart(p.product_code || p.id, activePrice); };
+    
+    buyBtn.innerHTML = p.stock > 0 ? "Buy Now" : "Out of Stock"; 
+    buyBtn.disabled = p.stock <= 0;
+    buyBtn.onclick = function(){ 
+        addToCartDirectBuy(p.product_code || p.id, activePrice); 
+    };
 
-    document.getElementById("productDetailModal").classList.add("show");
+    renderProductReviews(currentOpenProductCode);
+    renderRelatedProducts(p);
+
+    document.getElementById("productDetailFullscreen").classList.add("show");
 }
-function closeProductModal(){ document.getElementById("productDetailModal").classList.remove("show"); }
-function handleModalBackdropClick(e){ if(e.target.id === 'productDetailModal') closeProductModal(); }
+
+function closeProductDetail(){ 
+    document.getElementById("productDetailFullscreen").classList.remove("show"); 
+    if(window.location.hash === "#product"){
+        history.back();
+    }
+}
+
+function openReviewPopup(editIndex = null){
+    if(editIndex !== null){
+        let allReviews = JSON.parse(localStorage.getItem("adoresProductReviews")) || {};
+        let prodReviews = allReviews[currentOpenProductCode] || [];
+        let r = prodReviews[editIndex];
+        if(r){
+            document.getElementById("reviewerName").value = r.name;
+            document.getElementById("reviewRating").value = r.rating;
+            document.getElementById("reviewComment").value = r.comment;
+            document.getElementById("editReviewIndex").value = editIndex;
+            document.getElementById("reviewSubmitBtn").innerText = "রিভিউ আপডেট করুন";
+        }
+    } else {
+        document.getElementById("reviewerName").value = "";
+        document.getElementById("reviewRating").value = "5";
+        document.getElementById("reviewComment").value = "";
+        document.getElementById("editReviewIndex").value = "";
+        document.getElementById("reviewSubmitBtn").innerText = "রিভিউ সাবমিট করুন";
+    }
+    document.getElementById("reviewPopupModal").classList.add("show");
+}
+
+function closeReviewPopup(){
+    document.getElementById("reviewPopupModal").classList.remove("show");
+}
+
+async function submitProductReview(){
+    const name = document.getElementById("reviewerName").value.trim();
+    const rating = document.getElementById("reviewRating").value;
+    const comment = document.getElementById("reviewComment").value.trim();
+    const editIdx = document.getElementById("editReviewIndex").value;
+
+    if(!name || !comment) return showAlert("সতর্কতা", "দয়া করে আপনার নাম এবং মতামত লিখুন!");
+
+    let allReviews = JSON.parse(localStorage.getItem("adoresProductReviews")) || {};
+    if(!allReviews[currentOpenProductCode]) allReviews[currentOpenProductCode] = [];
+
+    if(editIdx !== "" && !isNaN(editIdx)){
+        allReviews[currentOpenProductCode][editIdx] = {
+            name: name,
+            rating: rating,
+            comment: comment,
+            date: new Date().toLocaleDateString('bn-BD')
+        };
+        showToast("আপনার রিভিউ সফলভাবে আপডেট হয়েছে!");
+    } else {
+        allReviews[currentOpenProductCode].unshift({
+            name: name,
+            rating: rating,
+            comment: comment,
+            date: new Date().toLocaleDateString('bn-BD')
+        });
+        showToast("আপনার রিভিউ সফলভাবে যুক্ত হয়েছে!");
+    }
+
+    localStorage.setItem("adoresProductReviews", JSON.stringify(allReviews));
+    closeReviewPopup();
+    renderProductReviews(currentOpenProductCode);
+}
+
+function renderProductReviews(prodCode){
+    const container = document.getElementById("productReviewsList");
+    let allReviews = JSON.parse(localStorage.getItem("adoresProductReviews")) || {};
+    let prodReviews = allReviews[prodCode] || [];
+
+    if(prodReviews.length === 0){
+        container.innerHTML = ``;
+        return;
+    }
+
+    container.innerHTML = prodReviews.map((r, idx) => {
+        let stars = '';
+        for(let i=1; i<=5; i++){
+            stars += i <= r.rating ? `<i class="fa-solid fa-star" style="color:#f59e0b; font-size:11px;"></i>` : `<i class="fa-regular fa-star" style="color:#cbd5e1; font-size:11px;"></i>`;
+        }
+        return `
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px; font-size:13px; margin-bottom:8px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <b style="color:var(--text-dark);">${r.name}</b>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:11px; color:#94a3b8;">${r.date}</span>
+                        <button onclick="openReviewPopup(${idx})" style="background:#e0f2f1; color:var(--teal); border:none; padding:2px 8px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-pen"></i> এডিট</button>
+                    </div>
+                </div>
+                <div style="margin-bottom:6px; display:flex; gap:2px;">${stars}</div>
+                <p style="color:#334155; line-height:1.5;">${r.comment}</p>
+            </div>
+        `;
+    }).join("");
+}
+
+function renderRelatedProducts(currentProd){
+    const container = document.getElementById("relatedProductsGrid");
+    let otherProds = products.filter(prod => String(prod.id) !== String(currentProd.id) && String(prod.product_code) !== String(currentProd.product_code));
+    if(otherProds.length === 0){
+        container.innerHTML = `<p style="text-align:center; color:#64748b; font-size:12px; width:100%;">অন্য কোনো পণ্য নেই।</p>`;
+        return;
+    }
+
+    container.innerHTML = otherProds.map(p => {
+        let price = p.price || 0;
+        let salePrice = p.sale_price || 0;
+        let priceHtml = salePrice > 0 && salePrice < price ? 
+            `<span class="old-price">৳${price}</span><span class="product-price">৳${salePrice}</span>` : 
+            `<span class="product-price">৳${price}</span>`;
+        let imgUrl = p.image_url || 'https://via.placeholder.com/200x200?text=Pet';
+        let stockText = p.stock > 0 ? `Stock: ${p.stock}` : `<span style="color:#ef4444;">Out of Stock</span>`;
+        let code = p.product_code || p.id;
+        let ratingHtml = renderStars(p.numeric_rating || p.rating || 5);
+
+        return `
+            <div class="product-card" onclick="openProductDetail('${code}')">
+                <div class="product-img-wrap"><img src="${imgUrl}" alt=""></div>
+                <div class="product-info">
+                    <div class="product-name">${p.name}</div>
+                    ${ratingHtml}
+                    <div style="font-size:11px; color:#10b981; font-weight:700; margin-bottom:4px;">${stockText}</div>
+                    <div class="product-footer-row"><div>${priceHtml}</div></div>
+                </div>
+            </div>
+        `;
+    }).join("");
+}
+
 function handleCartBackdropClick(e){ if(e.target.id === 'cartOverlay') closeCart(); }
 function handleOrdersBackdropClick(e){ if(e.target.id === 'ordersModal') closeOrdersModal(); }
 function handleVoucherBackdropClick(e){ if(e.target.id === 'voucherModal') closeVoucherModal(); }
@@ -1020,6 +1410,23 @@ function addToCart(code, activePrice){
     localStorage.setItem("adoresCart", JSON.stringify(cart));
     updateCartBadge();
     showToast("প্রডাক্টটি কার্টে যোগ করা হয়েছে!");
+}
+
+function addToCartDirectBuy(code, activePrice){
+    const p = products.find(prod => String(prod.product_code) === String(code) || String(prod.id) === String(code));
+    if(!p || p.stock <= 0) return showAlert("সতর্কতা", "স্টক শেষ!");
+    const item = cart.find(i => String(i.code) === String(code));
+    if(item){
+        if(item.qty < p.stock) item.qty++;
+    } else { 
+        cart.push({ code: code, price: activePrice, qty: 1 }); 
+    }
+    localStorage.setItem("adoresCart", JSON.stringify(cart));
+    updateCartBadge();
+    
+    document.getElementById("productDetailFullscreen").classList.remove("show");
+    openCart();
+    proceedToCheckout();
 }
 
 function updateCartBadge(){
@@ -1166,10 +1573,9 @@ function proceedToCheckout(){
 
         <div style="margin-bottom:10px;">
             <label style="font-size:12px; font-weight:700;">সম্পূর্ণ ঠিকানা (বাসা ও রোড নম্বর) *</label>
-            <textarea id="customerAddress" placeholder="বাসা ও রোড নম্বর..." class="checkout-input" style="height:45px;"></textarea>
+            <textarea id="customerAddress" placeholder="বাসা ও রোড নম্বর..." class="checkout-input" style="height:45px; resize:vertical;"></textarea>
         </div>
         
-        <!-- Delivery Mode Notice Box -->
         <div id="deliveryModeNotice" style="display:none; background:#e0f2f1; color:var(--teal-dark); padding:10px; border-radius:10px; margin-bottom:12px; font-size:11px; font-weight:800; border:1px solid #b2dfdb; text-align:center;"></div>
 
         ${hasPet ? `
@@ -1309,8 +1715,11 @@ async function openOrdersModal(){
 
     try {
         const { data, error } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false }).limit(10);
-        if(error) throw error;
-        if(!data || data.length === 0){ container.innerHTML = `<p style="color:#64748b; text-align:center;">কোনো অর্ডার নেই।</p>`; return; }
+        
+        if(error || !data || data.length === 0){ 
+            container.innerHTML = `<p style="color:#64748b; text-align:center; padding:25px; font-weight:700;">আপনি কোনো পণ্য সিলেক্ট করেননি অথবা কোনো অর্ডার পাওয়া যায়নি।</p>`; 
+            return; 
+        }
 
         container.innerHTML = data.map(o => {
             let canCancel = o.status === 'pending' || o.status === 'Pending';
@@ -1331,7 +1740,9 @@ async function openOrdersModal(){
                 </div>
             `;
         }).join("");
-    } catch(err){ container.innerHTML = `<p style="color:red; text-align:center;">অর্ডার লোড করতে সমস্যা হয়েছে।</p>`; }
+    } catch(err){ 
+        container.innerHTML = `<p style="color:#64748b; text-align:center; padding:25px; font-weight:700;">আপনি কোনো পণ্য সিলেক্ট করেননি অথবা কোনো অর্ডার পাওয়া যায়নি।</p>`; 
+    }
 }
 function closeOrdersModal(){ document.getElementById("ordersModal").classList.remove("show"); }
 
@@ -1487,7 +1898,7 @@ function openEditModal(id){
     document.getElementById("editProdRating").value = p.numeric_rating || p.rating || "5.0";
     document.getElementById("editProdAge").value = p.age || "";
     document.getElementById("editProdUnit").value = p.unit || "Month";
-    document.getElementById("editProdCat").value = p.category || categoriesList[0];
+    document.getElementById("editProdCat").value = p.category || categoriesList[0].name;
     document.getElementById("editProdActive").value = (p.is_active !== false) ? "true" : "false";
     document.getElementById("editProdDesc").value = p.description || "";
     document.getElementById("editProductModal").classList.add("show");
