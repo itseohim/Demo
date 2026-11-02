@@ -157,6 +157,9 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 .cart-item img{width:65px; height:65px; object-fit:cover; border-radius:12px;}
 
 .thankyou-card, .voucher-box, .support-modal-card, .custom-popup-box, .review-modal-card{background: white; padding: 25px; border-radius: 20px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.2);}
+.reason-modal{background:#fff;width:100%;max-width:430px;border-radius:22px;padding:22px;box-shadow:0 18px 55px rgba(0,0,0,.25);text-align:left;}
+.reason-modal textarea{width:100%;min-height:110px;border:1.5px solid #cbd5e1;border-radius:12px;padding:12px;font:inherit;resize:vertical;outline:none;}
+.reason-modal textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,137,123,.12);}
 .edit-modal-card, .admin-modal-box{background: white; padding: 20px; border-radius: 24px; text-align: left; max-width: 550px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);}
 .thankyou-btn, .order-btn{width: 100%; padding: 14px; border: none; border-radius: 12px; background: var(--teal); color: white; font-weight: 800; cursor: pointer; font-size: 15px; box-shadow: 0 4px 12px rgba(0,137,123,0.3); transition: all 0.2s;}
 .order-btn:hover{filter: brightness(1.05); transform: translateY(-1px);}
@@ -457,6 +460,16 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 /* Restore the original illustrated side decorations in the home header */
 .app-header:before,.app-header:after{display:block !important;}
 .app-header .header-paw,.app-header .header-leaf{display:block !important;}
+
+
+.pet-payment-panel .payment-brand-row{min-height:34px}
+.pet-payment-panel .payment-number-row strong{font-variant-numeric:tabular-nums}
+@media(max-width:360px){
+ .pet-payment-panel{padding:11px 8px!important}
+ .pet-payment-panel .payment-brand-row{gap:18px!important}
+ .pet-payment-panel .payment-brand{font-size:16px!important}
+ .pet-payment-panel .payment-number-row strong{font-size:17px!important}
+}
 
 </style>
 </head>
@@ -1157,7 +1170,7 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
         
         <!-- Centered Header -->
         <div style="position:relative; text-align:center; margin-bottom:14px; border-bottom:2px solid #e2e8f0; padding-bottom:10px;">
-            <h2 id="myAccountMainTitle" style="font-size:18px; color:var(--teal); font-weight:900; margin:0;">My Details & My Orders</h2>
+            <h2 id="myAccountMainTitle" style="font-size:18px; color:var(--teal); font-weight:900; margin:0;">My Profile</h2>
             <button class="close-btn" onclick="closeMyAccountModal()" style="position:absolute; right:0; top:0; width:32px; height:32px; font-size:14px;">✕</button>
         </div>
 
@@ -1174,10 +1187,7 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
         <div id="accountLoggedInState" style="display:none; flex:1; display:flex; flex-direction:column; overflow:hidden;">
             
             <!-- Centered Round Button System for Profile & Orders -->
-            <div style="display:flex; justify-content:center; gap:12px; margin-bottom:14px;">
-                <button id="accountTabProfileBtn" onclick="switchAccountTab('profile')" style="background:var(--teal); color:#fff; border:none; padding:8px 20px; border-radius:30px; font-size:13px; font-weight:800; cursor:pointer; box-shadow:0 3px 10px rgba(0,137,123,0.2); transition:all 0.2s;">প্রোফাইল</button>
-                <button id="accountTabOrdersBtn" onclick="switchAccountTab('orders')" style="background:#e2e8f0; color:var(--text-dark); border:none; padding:8px 20px; border-radius:30px; font-size:13px; font-weight:800; cursor:pointer; transition:all 0.2s;">আমার অর্ডারসমূহ</button>
-            </div>
+            <div id="accountTabSwitchPlaceholder" style="display:none"></div>
 
             <!-- Tab 1: Profile View (Display mode vs Edit mode) -->
             <div id="accountTabProfileContent" style="overflow-y:auto; flex:1; padding-right:4px;">
@@ -1250,9 +1260,21 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
             <tbody id="voucherTableBody"></tbody>
         </table>
         <div id="voucherTotalsBox" style="font-size:12px; text-align:right; margin-bottom:15px; line-height:1.5;"></div>
-        <button onclick="window.print()" class="thankyou-btn" style="margin-bottom:8px;"><i class="fa-solid fa-print"></i> প্রিন্ট বা ডাউনলোড করুন</button>
+        <button onclick="printOrderVoucher()" class="thankyou-btn" style="margin-bottom:8px;"><i class="fa-solid fa-print"></i> প্রিন্ট বা ডাউনলোড করুন</button>
         <button onclick="closeVoucherModal()" class="thankyou-btn" style="background:#64748b;">বন্ধ করুন</button>
     </div>
+</div>
+
+<div id="orderReasonModal" class="custom-popup" style="z-index:100100;" onclick="if(event.target===this)closeOrderReasonModal(false)">
+  <div class="reason-modal">
+    <h3 id="orderReasonTitle" style="color:var(--teal);font-size:19px;font-weight:900;margin-bottom:8px;">অর্ডার বাতিলের কারণ</h3>
+    <p id="orderReasonHint" style="font-size:13px;color:#64748b;margin-bottom:12px;">অর্ডার বাতিলের কারণ লিখুন:</p>
+    <textarea id="orderReasonInput" placeholder="কারণ লিখুন..."></textarea>
+    <div style="display:flex;gap:9px;margin-top:14px;">
+      <button type="button" onclick="closeOrderReasonModal(false)" style="flex:1;padding:12px;border:0;border-radius:10px;background:#e2e8f0;color:#334155;font-weight:800;">ফিরে যান</button>
+      <button type="button" onclick="closeOrderReasonModal(true)" style="flex:1;padding:12px;border:0;border-radius:10px;background:var(--teal);color:white;font-weight:800;">নিশ্চিত করুন</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -2161,13 +2183,23 @@ function renderCheckoutForm(){
         <div id="deliveryModeNotice" style="display:none; background:#e0f2f1; color:var(--teal-dark); padding:10px; border-radius:10px; margin-bottom:12px; font-size:11px; font-weight:800; border:1px solid #b2dfdb; text-align:center;"></div>
 
         ${hasPet ? `
-            <div style="background:#e0f2f1; border:1.5px dashed var(--teal); border-radius:14px; padding:12px; margin-bottom:12px; text-align:center;">
-                <div style="font-size:12px; font-weight:800; color:var(--teal); margin-bottom:6px; display:flex; align-items:center; justify-content:center; gap:8px;">
-                    <span>bKash / Nagad: <b style="font-size:14px; background:#fff; padding:2px 8px; border-radius:6px; border:1px solid #cbd5e1;">01681578599</b></span>
-                    <button onclick="copyBkashNumber()" style="background:var(--teal); color:#fff; border:none; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-copy"></i> Copy</button>
+            <div class="pet-payment-panel" style="background:#e0f2f1; border:1.5px dashed var(--teal); border-radius:14px; padding:14px 12px; margin-bottom:12px; text-align:center;">
+                <div class="payment-brand-row" style="display:flex;align-items:center;justify-content:center;gap:28px;margin:0 auto 10px;">
+                    <div class="payment-brand bkash-brand" style="display:flex;align-items:center;gap:6px;color:#d4145a;font-weight:900;font-size:18px;">
+                        <svg viewBox="0 0 40 40" role="img" aria-label="bKash logo" style="width:30px;height:30px;display:block;"><circle cx="20" cy="20" r="18" fill="#e2136e"/><path d="M13 9h5v8c1.5-2 3.4-3 5.8-3 4.4 0 7.2 3.2 7.2 7.5S28 29 23.7 29c-2.5 0-4.5-1.1-5.8-3.1V29H13zm5 12.5c0 2.2 1.4 3.8 3.5 3.8s3.5-1.6 3.5-3.8-1.4-3.8-3.5-3.8-3.5 1.6-3.5 3.8" fill="#fff"/></svg>
+                        <span>bKash</span>
+                    </div>
+                    <div class="payment-brand nagad-brand" style="display:flex;align-items:center;gap:6px;color:#e65b21;font-weight:900;font-size:18px;">
+                        <svg viewBox="0 0 40 40" role="img" aria-label="Nagad logo" style="width:30px;height:30px;display:block;"><circle cx="20" cy="20" r="18" fill="#f26522"/><path d="M11 23c4-10 13-13 19-7-5-1-10 2-12 7-1 3 1 5 4 5 3 0 5-2 7-5-1 6-5 10-11 9-6-1-9-5-7-9" fill="#fff"/><path d="M25 9l5 2-2 5" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span>Nagad</span>
+                    </div>
                 </div>
-                <div id="advanceAmountDisplay" style="display:none; color:#047857; font-size:13px; font-weight:900; margin-top:6px;">৫০% অগ্রিম প্রদেয়: ৳<span id="advance50Val">0</span></div>
-                <div style="font-size:10px; color:#b91c1c; margin-top:4px;">খরগোশ বা হ্যামস্টারের জন্য ৫০% অগ্রিম সেন্ড মানি করে TrxID দিন।</div>
+                <div class="payment-number-row" style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+                    <strong style="font-size:19px;letter-spacing:.5px;color:#087f70;background:#fff;padding:5px 12px;border-radius:8px;border:1px solid #cbd5e1;">01681578599</strong>
+                    <button type="button" onclick="copyBkashNumber()" style="background:var(--teal);color:#fff;border:none;padding:8px 12px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;"><i class="fa-solid fa-copy"></i> Copy</button>
+                </div>
+                <div id="advanceAmountDisplay" style="display:none;color:#047857;font-size:15px;font-weight:900;margin-top:5px;">৫০% অগ্রিম প্রদেয়: ৳<span id="advance50Val">0</span></div>
+                <div style="font-size:11px;color:#9f1239;margin-top:5px;line-height:1.45;">পণ্যের মূল্য ও ডেলিভারি চার্জসহ সর্বমোট টাকার ৫০% অগ্রিম Send Money করে TrxID দিন।</div>
             </div>
             <div style="margin-bottom:10px;"><label style="font-size:12px; font-weight:700;">ট্রানজেকশন আইডি (TrxID) *</label><input id="customerTrxId" placeholder="9J87H6G5F4" class="checkout-input"></div>
         ` : ''}
@@ -2354,6 +2386,7 @@ function openMyAccountModal(){
     const modalBox = document.getElementById("myAccountModalBox");
     const loginState = document.getElementById("accountLoginPopupState");
     const loggedInState = document.getElementById("accountLoggedInState");
+    document.getElementById("myAccountMainTitle").innerText = "My Profile";
 
     if(!currentUser){
         modalBox.style.maxWidth = "400px";
@@ -2370,34 +2403,35 @@ function openMyAccountModal(){
     document.getElementById("myAccountModal").classList.add("show");
 }
 
+function openMyOrdersFromNav(){
+    if(!currentUser){
+        openMyAccountModal();
+        return;
+    }
+    const modalBox = document.getElementById("myAccountModalBox");
+    document.getElementById("accountLoginPopupState").style.display = "none";
+    document.getElementById("accountLoggedInState").style.display = "flex";
+    modalBox.style.maxWidth = "550px";
+    modalBox.style.height = "88vh";
+    document.getElementById("myAccountMainTitle").innerText = "আমার অর্ডারসমূহ";
+    switchAccountTab('orders');
+    document.getElementById("myAccountModal").classList.add("show");
+}
+
 function closeMyAccountModal(){ document.getElementById("myAccountModal").classList.remove("show"); }
 
 function switchAccountTab(tab){
     activeAccountTab = tab;
-    const btnProfile = document.getElementById("accountTabProfileBtn");
-    const btnOrders = document.getElementById("accountTabOrdersBtn");
     const contentProfile = document.getElementById("accountTabProfileContent");
     const contentOrders = document.getElementById("accountTabOrdersContent");
-
+    const title = document.getElementById("myAccountMainTitle");
     if(tab === 'profile'){
-        btnProfile.style.background = "var(--teal)";
-        btnProfile.style.color = "#fff";
-        btnProfile.style.boxShadow = "0 3px 10px rgba(0,137,123,0.2)";
-        btnOrders.style.background = "#e2e8f0";
-        btnOrders.style.color = "var(--text-dark)";
-        btnOrders.style.boxShadow = "none";
-
+        title.innerText = "My Profile";
         contentProfile.style.display = "block";
         contentOrders.style.display = "none";
         renderProfileTabState();
     } else {
-        btnOrders.style.background = "var(--teal)";
-        btnOrders.style.color = "#fff";
-        btnOrders.style.boxShadow = "0 3px 10px rgba(0,137,123,0.2)";
-        btnProfile.style.background = "#e2e8f0";
-        btnProfile.style.color = "var(--text-dark)";
-        btnProfile.style.boxShadow = "none";
-
+        title.innerText = "আমার অর্ডারসমূহ";
         contentOrders.style.display = "block";
         contentProfile.style.display = "none";
         renderUserOrdersList();
@@ -2424,7 +2458,12 @@ function renderProfileTabState(){
         document.getElementById("profileDisplayCard").style.display = "block";
         document.getElementById("profileEditForm").style.display = "none";
     } else {
-        toggleProfileEditMode(true);
+        document.getElementById("viewAccName").innerText = "তথ্য যোগ করা হয়নি";
+        document.getElementById("viewAccPhone").innerText = currentUser.includes('@') ? "-" : currentUser;
+        document.getElementById("viewAccLocation").innerText = "-";
+        document.getElementById("viewAccAddress").innerText = "-";
+        document.getElementById("profileDisplayCard").style.display = "block";
+        document.getElementById("profileEditForm").style.display = "none";
     }
 
     document.getElementById("accName").value = prof.name || "";
@@ -2477,8 +2516,8 @@ function saveUserProfileData(){
 
     userProfiles[currentUser] = { name, phone, division:selectedDivisionVal, district:selectedDistrictVal, upazila:selectedUpazilaVal, union:selectedUnionVal, local_area:selectedLocalAreaVal, city:selectedCityVal, address };
     localStorage.setItem("adoresUserProfiles", JSON.stringify(userProfiles));
-    showToast("আপনার সমস্ত তথ্য সফলভাবে সেভ করা হয়েছে!");
     renderProfileTabState();
+    showAlert("সফল হয়েছে", "আপনার প্রোফাইলের তথ্য সফলভাবে সেভ হয়েছে।");
 }
 
 async function renderUserOrdersList(){
@@ -2499,6 +2538,8 @@ async function renderUserOrdersList(){
             const canCancel = String(o.status || '').toLowerCase() === 'pending';
             const cancelMsg = String(o.status || '').toLowerCase() === 'cancelled' && o.cancel_reason ? `<br><span style="color:red; font-size:11px;">কারণ: ${o.cancel_reason}</span>` : '';
             const adminMessage = String(o.status || '').toLowerCase() !== 'pending' ? `<div style="background:#e0f2f1; color:var(--teal-dark); padding:6px 10px; border-radius:6px; font-size:11px; margin-top:6px; font-weight:bold;">📢 অর্ডার স্ট্যাটাস: ${o.status}</div>` : '';
+            window.__adoresVoucherOrders = window.__adoresVoucherOrders || {};
+            window.__adoresVoucherOrders[String(o.id)] = {...o, items:data.items || []};
             html += `
                 <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:10px; margin-bottom:10px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
@@ -2508,7 +2549,7 @@ async function renderUserOrdersList(){
                     <div style="font-size:12px; color:#64748b; margin-bottom:6px;">নাম: ${o.customer_name || ''}<br>ফোন: ${o.phone || ''}<br>ঠিকানা: ${o.address || ''}<br>সর্বমোট: ৳${o.total || 0}${cancelMsg}</div>
                     ${adminMessage}
                     <div style="display:flex; gap:6px; margin-top:8px;">
-                        <button onclick='openVoucherModalFromOrderData(${JSON.stringify({...o, items:data.items || []})})' style="background:var(--teal); color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">ভাউচার ও পণ্যের তালিকা</button>
+                        <button onclick="openVoucherForOrder('${o.id}')" style="background:var(--teal); color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">ভাউচার ও পণ্যের তালিকা</button>
                         ${canCancel ? `<button onclick="cancelCustomerOrder('${saved.tracking_token}')" style="background:#f97316; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">অর্ডার বাতিল করুন</button>` : ''}
                     </div>
                 </div>`;
@@ -2517,22 +2558,53 @@ async function renderUserOrdersList(){
     container.innerHTML = html || `<p style="color:#64748b; text-align:center; padding:25px; font-weight:700;">অর্ডার পাওয়া যায়নি।</p>`;
 }
 
+let orderReasonResolver = null;
+function askOrderReason(title, hint, defaultValue=''){
+    return new Promise(resolve=>{
+        orderReasonResolver=resolve;
+        document.getElementById('orderReasonTitle').innerText=title;
+        document.getElementById('orderReasonHint').innerText=hint;
+        document.getElementById('orderReasonInput').value=defaultValue;
+        document.getElementById('orderReasonModal').classList.add('show');
+        setTimeout(()=>document.getElementById('orderReasonInput')?.focus(),80);
+    });
+}
+function closeOrderReasonModal(confirmed){
+    const modal=document.getElementById('orderReasonModal');
+    if(!modal) return;
+    modal.classList.remove('show');
+    const value=document.getElementById('orderReasonInput')?.value?.trim() || '';
+    if(orderReasonResolver){const resolve=orderReasonResolver;orderReasonResolver=null;resolve(confirmed ? value : null);}
+}
 async function cancelCustomerOrder(trackingToken){
-    const cancelReason = prompt("অর্ডার বাতিলের কারণ লিখুন:", "আমি অর্ডারটি বাতিল করতে চাই।");
+    const cancelReason = await askOrderReason('অর্ডার বাতিল করুন','অর্ডার বাতিলের কারণ লিখুন:','আমি অর্ডারটি বাতিল করতে চাই।');
     if(cancelReason === null) return;
+    if(!cancelReason) return showAlert('কারণ প্রয়োজন','অর্ডার বাতিল করতে একটি কারণ লিখুন।');
     try{
         const { data, error } = await supabaseClient.rpc('cancel_order_by_tracking_token', {
             p_tracking_token: trackingToken, p_cancel_reason: cancelReason
         });
         if(error) throw error;
         if(!data || data.success !== true) throw new Error(data?.message || 'অর্ডার বাতিল করা যায়নি।');
-        showToast("অর্ডারটি বাতিল করা হয়েছে।");
+        showToast('অর্ডারটি বাতিল করা হয়েছে।');
         renderUserOrdersList();
-    }catch(err){ showAlert("ত্রুটি", "বাতিল করা যায়নি: " + err.message); }
+    }catch(err){ showAlert('ত্রুটি', 'বাতিল করা যায়নি: ' + err.message); }
+}
+
+function openVoucherForOrder(orderId){
+    const order=(window.__adoresVoucherOrders||{})[String(orderId)];
+    if(!order){showAlert('ভাউচার পাওয়া যায়নি','অর্ডারের তথ্য আবার লোড করে চেষ্টা করুন।');return;}
+    openVoucherModalFromOrderData(order);
 }
 
 async function openVoucherModalFromOrderData(o){
-    document.getElementById("voucherDetailsContent").innerHTML = `<b>Order No:</b> #${o.order_number || o.id}<br><b>Name:</b> ${o.customer_name || ''}<br><b>Phone:</b> ${o.phone || ''}<br><b>Address:</b> ${o.address || ''}<br><b>Status:</b> ${o.status || ''}`;
+    const details=document.getElementById("voucherDetailsContent");
+    const tableBody=document.getElementById("voucherTableBody");
+    const totals=document.getElementById("voucherTotalsBox");
+    details.innerHTML = `<b>Order No:</b> #${o.order_number || o.id}<br><b>Name:</b> ${o.customer_name || ''}<br><b>Phone:</b> ${o.phone || ''}<br><b>Address:</b> ${o.address || ''}<br><b>Status:</b> ${o.status || ''}`;
+    tableBody.innerHTML='<tr><td colspan="3" style="padding:12px;text-align:center;">ভাউচার লোড হচ্ছে...</td></tr>';
+    totals.innerHTML=`Delivery Fee: ৳${o.delivery_fee || 0}<br>Discount: ৳${o.discount_amount || 0}<br><b>Total: ৳${o.total || 0}</b>`;
+    document.getElementById("voucherModal").classList.add("show");
     let items = Array.isArray(o.items) ? o.items : null;
     if(!items){
         try{
@@ -2552,12 +2624,17 @@ async function openVoucherModalFromOrderData(o){
     }else{
         itemsTableHtml = `<tr><td style="border:1px solid #cbd5e1; padding:6px;" colspan="3">পণ্যের বিস্তারিত পাওয়া যায়নি। সাবটোটাল: ৳${o.subtotal || o.total || 0}</td></tr>`;
     }
-    document.getElementById("voucherTableBody").innerHTML = itemsTableHtml;
-    document.getElementById("voucherTotalsBox").innerHTML = `Delivery Fee: ৳${o.delivery_fee || 0}<br>Discount: ৳${o.discount_amount || 0}<br><b>Total: ৳${o.total || 0}</b>`;
-    document.getElementById("voucherModal").classList.add("show");
+    tableBody.innerHTML = itemsTableHtml;
+    totals.innerHTML = `Delivery Fee: ৳${o.delivery_fee || 0}<br>Discount: ৳${o.discount_amount || 0}<br><b>Total: ৳${o.total || 0}</b>`;
 }
 
 function closeVoucherModal(){ document.getElementById("voucherModal").classList.remove("show"); }
+function printOrderVoucher(){
+    const modal=document.getElementById('voucherModal');
+    if(!modal) return;
+    modal.classList.add('show');
+    window.print();
+}
 
 let supportPhotoSecretCount = 0;
 let supportPhotoSecretTimer = null;
@@ -2574,12 +2651,6 @@ function handleSupportPhotoSecretClick(){
 function setActiveNav(button){
     document.querySelectorAll(".bottom-nav .nav-item").forEach(item => item.classList.remove("active"));
     if(button) button.classList.add("active");
-}
-function openMyOrdersFromNav(){
-    openMyAccountModal();
-    if(currentUser){
-        switchAccountTab('orders');
-    }
 }
 function closeAdminLoginModal(){ document.getElementById("adminLoginModal").classList.remove("show"); }
 
@@ -2882,6 +2953,8 @@ async function renderAdminOrders(){
     const { data, error } = await supabaseClient.from('orders').select('*').eq('status', currentAdminTab).order('created_at', { ascending: false });
     if(error || !data || data.length === 0){ container.innerHTML = `<p style="font-size:12px; color:#64748b; text-align:center; padding:10px;">এই ট্যাবে কোনো অর্ডার নেই।</p>`; return; }
 
+    window.__adoresVoucherOrders = window.__adoresVoucherOrders || {};
+    data.forEach(o => { window.__adoresVoucherOrders[String(o.id)] = o; });
     container.innerHTML = data.map(o => `
         <div style="background:#fff; border:1px solid #cbd5e1; padding:10px; border-radius:8px; margin-bottom:8px; font-size:12px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
@@ -2899,8 +2972,9 @@ async function renderAdminOrders(){
                     <option value="Completed">Completed</option>
                     <option value="Cancelled">Cancelled</option>
                 </select>
-                <button onclick='openVoucherModalFromOrderData(${JSON.stringify(o)})' style="background:var(--teal); color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">ভাউচার</button>
+                <button onclick="openVoucherForOrder('${o.id}')" style="background:var(--teal); color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">ভাউচার</button>
                 <button onclick="adminEditDeliveryFee('${o.id}', ${Number(o.delivery_fee)||0})" style="background:#0f766e; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">ডেলিভারি চার্জ</button>
+                <button onclick="adminDeleteOrder('${o.id}', '${String(o.order_number || o.id).replace(/'/g, '')}')" style="background:#dc2626; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">ডিলিট</button>
             </div>
         </div>
     `).join("");
@@ -2908,8 +2982,9 @@ async function renderAdminOrders(){
 
 async function updateOrderStatus(id, newStatus){
     if(!newStatus) return;
-    const cancelReason = newStatus === 'Cancelled' ? prompt("অর্ডার বাতিলের কারণ লিখুন:", "Product বর্তমানে Stock-এ নেই।") : null;
+    const cancelReason = newStatus === 'Cancelled' ? await askOrderReason('অর্ডার বাতিল করুন','অর্ডার বাতিলের কারণ লিখুন:','Product বর্তমানে Stock-এ নেই।') : null;
     if(newStatus === 'Cancelled' && cancelReason === null) return;
+    if(newStatus === 'Cancelled' && !cancelReason) return showAlert('কারণ প্রয়োজন','অর্ডার বাতিল করতে একটি কারণ লিখুন।');
     try {
         const { data, error } = await supabaseClient.rpc('admin_update_adores_order', {
             p_order_id: id, p_status: newStatus, p_cancel_reason: cancelReason, p_delivery_fee: null
@@ -2918,6 +2993,21 @@ async function updateOrderStatus(id, newStatus){
         if(data && data.success === false) throw new Error(data.message || 'Update failed');
         renderAdminOrders(); updateOrderBadgesCount(); showToast("স্ট্যাটাস আপডেট হয়েছে!");
     } catch(err){ showAlert("ত্রুটি", err.message); }
+}
+
+async function adminDeleteOrder(orderId, orderNumber){
+    const confirmed = await askOrderReason('অর্ডার ডিলিট করবেন?','অর্ডার #' + orderNumber + ' স্থায়ীভাবে মুছে যাবে। নিশ্চিত করতে নিচে DELETE লিখুন।','');
+    if(confirmed === null) return;
+    if(confirmed.toUpperCase() !== 'DELETE') return showAlert('ডিলিট বাতিল','নিশ্চিত করতে ঠিক DELETE লিখতে হবে।');
+    try{
+        const {data,error}=await supabaseClient.rpc('admin_delete_adores_order',{p_order_id:orderId});
+        if(error) throw error;
+        if(data && data.success === false) throw new Error(data.message || 'Order delete failed.');
+        delete (window.__adoresVoucherOrders||{})[String(orderId)];
+        await renderAdminOrders();
+        updateOrderBadgesCount();
+        showToast('অর্ডারটি ডিলিট হয়েছে।');
+    }catch(err){showAlert('ডিলিট করা যায়নি',err.message + ' প্রয়োজনে Supabase-এ দেওয়া SQL migration চালু করুন।');}
 }
 
 async function adminEditDeliveryFee(orderId, currentFee){
