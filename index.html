@@ -192,9 +192,6 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 
 /* Full-Screen Admin Panel */
 .admin-fullscreen-overlay{display:none; position:fixed; inset:0; background:#f8fafc; z-index:3000; overflow-y:auto; padding:0;}
-/* Voucher must appear above the Admin fullscreen panel and every other modal. */
-#voucherModal{z-index:7000 !important; position:fixed !important; inset:0 !important;}
-#voucherModal .voucher-box{max-height:calc(100dvh - 30px); overflow-y:auto; overscroll-behavior:contain;}
 .admin-fullscreen-overlay.show{display:block;}
 .admin-card{width:100%; min-height:100vh; background:#f8fafc; padding:15px; position: relative;}
 
@@ -320,12 +317,7 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 
 
 /* Final ADORE'S PET illustrated header */
-.app-header{position:sticky;top:0;z-index:3000;will-change:transform;transition:transform .28s ease, opacity .22s ease;}
-.app-header.header-scroll-hidden{transform:translateY(-110%);opacity:0;pointer-events:none;}
-.app-header.header-scroll-visible{transform:translateY(0);opacity:1;pointer-events:auto;}
-@media(prefers-reduced-motion:reduce){.app-header{transition:none;}}
-/* Header auto-hide: retain its normal layout space while it slides away */
-.app-header{overflow:hidden;padding:10px 16px 18px;background:radial-gradient(ellipse at 50% 0%,#078b66 0%,#006b54 55%,#004d40 100%);border-radius:0 0 30px 30px;box-shadow:0 7px 22px rgba(0,77,64,.22);}
+.app-header{position:sticky;top:0;z-index:3000;overflow:hidden;padding:10px 16px 18px;background:radial-gradient(ellipse at 50% 0%,#078b66 0%,#006b54 55%,#004d40 100%);border-radius:0 0 30px 30px;box-shadow:0 7px 22px rgba(0,77,64,.22);}
 .app-header:before,.app-header:after{content:"";position:absolute;pointer-events:none;bottom:108px;width:34%;height:42px;border-top:5px solid #9ccf13;border-radius:50%;opacity:.95;}
 .app-header:before{left:-7%;transform:rotate(12deg)}.app-header:after{right:-7%;transform:rotate(-12deg)}
 .header-topline{position:relative;z-index:2;min-height:126px;display:grid;grid-template-columns:48px minmax(0,1fr) 48px;align-items:center;gap:4px;max-width:900px;margin:0 auto;}
@@ -371,6 +363,100 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
  .app-header .search-box input{height:44px;font-size:13.5px;padding:8px 80px 8px 39px;border-radius:14px;}
  .app-header .search-tool-btn{width:30px;height:30px;font-size:13px;}
 }
+
+
+/* ADORE'S PET: responsive logo + scroll-direction auto-hide header */
+.app-header{
+  position:sticky !important;
+  top:0 !important;
+  z-index:3000 !important;
+  transform:translateY(0);
+  transition:transform .30s ease;
+  will-change:transform;
+}
+.app-header.header-auto-hidden{
+  transform:translateY(calc(-100% - 3px));
+  pointer-events:none;
+}
+.header-topline{
+  min-height:0 !important;
+  height:auto !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  position:relative !important;
+  padding:3px 46px 0 !important;
+  gap:0 !important;
+}
+.header-banner-area{
+  width:100% !important;
+  max-width:680px !important;
+  margin:0 auto !important;
+}
+.header-brand-banner{
+  display:block !important;
+  width:100% !important;
+  max-width:680px !important;
+  height:auto !important;
+  max-height:145px !important;
+  object-fit:contain !important;
+  object-position:center !important;
+}
+.header-topline .menu-action{
+  position:absolute !important;
+  left:0 !important;
+  top:50% !important;
+  transform:translateY(-50%) !important;
+}
+.header-topline .notification-action{
+  position:absolute !important;
+  right:0 !important;
+  top:50% !important;
+  transform:translateY(-50%) !important;
+}
+.app-header:before,.app-header:after,
+.app-header .header-paw,.app-header .header-leaf{
+  display:none !important;
+}
+.app-header .search-box{
+  margin:3px auto 0 !important;
+}
+.app-header .search-box input{
+  height:46px !important;
+  min-height:46px !important;
+  border-radius:16px !important;
+  font-size:14px !important;
+  padding:8px 82px 8px 42px !important;
+}
+.app-header .search-tool-btn{
+  width:32px !important;
+  height:32px !important;
+  border-radius:10px !important;
+  font-size:14px !important;
+}
+@media(max-width:480px){
+  .app-header{padding:3px 10px 9px !important;border-radius:0 0 22px 22px !important;}
+  .header-topline{padding:2px 38px 0 !important;}
+  .header-brand-banner{max-height:132px !important;}
+  .header-topline .header-action-btn{width:34px !important;height:34px !important;font-size:22px !important;}
+  .app-header .search-box input{height:44px !important;min-height:44px !important;font-size:13.5px !important;padding:7px 78px 7px 39px !important;}
+  .app-header .search-tool-btn{width:30px !important;height:30px !important;font-size:13px !important;}
+}
+
+
+/* Reliable inline icons for the home header; independent of external icon fonts */
+.ui-icon{display:block;width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+.header-action-btn .ui-icon{width:25px;height:25px}
+.search-svg-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:21px;height:21px;color:#64748b;z-index:2}
+.search-tool-btn .ui-icon{width:19px;height:19px}
+.search-tool-btn .filled-mic rect{fill:currentColor;stroke:currentColor}
+.category-svg-icon{width:24px;height:24px;color:var(--teal)}
+.chevron-svg-icon{width:15px;height:15px;color:var(--teal)}
+
+
+/* Restore the original illustrated side decorations in the home header */
+.app-header:before,.app-header:after{display:block !important;}
+.app-header .header-paw,.app-header .header-leaf{display:block !important;}
 
 </style>
 </head>
@@ -436,20 +522,20 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 
 <header class="app-header">
   <div class="header-topline">
-    <button class="header-action-btn menu-action" type="button" onclick="openSideMenu()" aria-label="মেনু খুলুন"><i class="fa-solid fa-bars"></i></button>
+    <button class="header-action-btn menu-action" type="button" onclick="openSideMenu()" aria-label="মেনু খুলুন"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
     <div class="logo-area header-banner-area" onclick="goHome()" role="button" aria-label="ADORE'S PET Home" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goHome();}">
-      <img src="https://i.postimg.cc/217sFy04/file-000000009f7081fa831e5f907b7b1fab.png" alt="ADORE'S PET logo" class="header-brand-banner" loading="eager">
+      <img src="https://i.postimg.cc/d3N6hfMD/file-00000000b5648211b197e639ac4f8be4.png" alt="ADORE'S PET logo" class="header-brand-banner" loading="eager">
     </div>
-    <button class="header-action-btn notification-action" type="button" onclick="openNotifications()" aria-label="নোটিফিকেশন দেখুন"><i class="fa-regular fa-bell"></i><span class="notification-dot"></span></button>
+    <button class="header-action-btn notification-action" type="button" onclick="openNotifications()" aria-label="নোটিফিকেশন দেখুন"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="notification-dot"></span></button>
   </div>
   <div class="header-paw paw-left"><i class="fa-solid fa-paw"></i></div><div class="header-paw paw-right"><i class="fa-solid fa-paw"></i></div>
   <div class="header-leaf leaf-left"><i class="fa-solid fa-leaf"></i></div><div class="header-leaf leaf-right"><i class="fa-solid fa-leaf"></i></div>
   <div class="search-box">
-    <i class="fa-solid fa-magnifying-glass search-icon"></i>
-    <input id="searchInput" type="search" name="product-search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search food, toys, grooming..." oninput="searchProducts()">
+    <svg class="ui-icon search-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+    <input id="searchInput" type="text" placeholder="Search food, toys, grooming..." oninput="searchProducts()">
     <div class="search-tools">
-      <button type="button" class="search-tool-btn" onclick="document.getElementById('visualSearchInput').click()" aria-label="ছবি দিয়ে সার্চ" title="ছবি দিয়ে খুঁজুন"><i class="fa-solid fa-camera"></i></button>
-      <button type="button" class="search-tool-btn" onclick="startVoiceSearch()" aria-label="ভয়েস সার্চ" title="ভয়েস সার্চ"><i class="fa-solid fa-microphone"></i></button>
+      <button type="button" class="search-tool-btn" onclick="document.getElementById('visualSearchInput').click()" aria-label="ছবি দিয়ে সার্চ" title="ছবি দিয়ে খুঁজুন"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
+      <button type="button" class="search-tool-btn" onclick="startVoiceSearch()" aria-label="ভয়েস সার্চ" title="ভয়েস সার্চ"><svg class="ui-icon filled-mic" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v4m-4 0h8"/></svg></button>
     </div>
     <input id="visualSearchInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="searchProductsByImage(event)">
   </div>
@@ -487,12 +573,12 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 <section class="category-section">
     <div class="category-search-bar-box" onclick="openCategoryPopup()">
         <div class="category-bar-left">
-            <i class="fa-solid fa-list-ul" style="color:var(--teal);"></i>
+            <svg class="ui-icon category-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>
             <span id="selectedCategoryTitle">Categories</span>
         </div>
         <div class="category-bar-right">
             <span id="selectedCategoryBadge">Showing All</span>
-            <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i>
+            <svg class="ui-icon chevron-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg>
         </div>
     </div>
 </section>
@@ -1172,9 +1258,9 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 <script>
 const SUPABASE_URL = "https://zrtyzsyofsxupbseoleg.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_kokkuXrrSBfrYA85jdWtYA_Dc7CR3oZ";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = (window.supabase && typeof window.supabase.createClient === 'function') ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-emailjs.init({ publicKey: "P7lqeBS7YKyU3Kpaq" });
+if (window.emailjs && typeof window.emailjs.init === "function") emailjs.init({ publicKey: "P7lqeBS7YKyU3Kpaq" });
 
 let products = [];
 let categoriesList = [
@@ -1240,41 +1326,6 @@ let selectedCityVal = "";
 let activeLocationTab = "district";
 let activeAccountTab = "profile";
 
-// Home header: hide while scrolling down, reveal while scrolling up.
-(function initHomeHeaderAutoHide(){
-    let lastY = window.scrollY || 0;
-    let ticking = false;
-    function updateHeaderByScroll(){
-        const header = document.querySelector(".app-header");
-        if(!header) return;
-        const y = window.scrollY || document.documentElement.scrollTop || 0;
-        const overlayOpen = !!document.querySelector(
-            "#cartOverlay.show,#thankyouModal.show,#voucherModal.show,#supportModal.show,#productDetailFullscreen.show,#myAccountModal.show,#adminFullscreenPanel.show,#adminLoginModal.show,#categoryPopupModal.show,#sideMenuOverlay.show,#notificationOverlay.show"
-        );
-        if(overlayOpen){
-            header.classList.add("header-scroll-hidden");
-            header.classList.remove("header-scroll-visible");
-        } else if(y < 24 || y < lastY - 3){
-            header.classList.remove("header-scroll-hidden");
-            header.classList.add("header-scroll-visible");
-        } else if(y > lastY + 3 && y > 70){
-            header.classList.add("header-scroll-hidden");
-            header.classList.remove("header-scroll-visible");
-        }
-        lastY = y;
-        ticking = false;
-    }
-    window.addEventListener("scroll", function(){
-        if(!ticking){ticking=true;requestAnimationFrame(updateHeaderByScroll);}
-    }, {passive:true});
-    window.addEventListener("pageshow", function(){
-        lastY = window.scrollY || 0;
-        const header=document.querySelector(".app-header");
-        if(header){header.classList.remove("header-scroll-hidden");header.classList.add("header-scroll-visible");}
-    });
-    document.addEventListener("DOMContentLoaded", updateHeaderByScroll);
-    setTimeout(updateHeaderByScroll, 0);
-})();
 window.addEventListener('DOMContentLoaded', () => {
     let cachedProducts = localStorage.getItem("adoresCachedProducts");
     if(cachedProducts){
@@ -1454,6 +1505,14 @@ async function deleteCategory(idx){
 
 async function fetchProducts(){
     const grid = document.getElementById("productsGrid");
+    if(!supabaseClient){
+        try {
+            const cached = JSON.parse(localStorage.getItem("adoresCachedProducts") || "[]");
+            if(Array.isArray(cached) && cached.length){ products = cached; renderProducts(); return; }
+        } catch(e){}
+        if(grid) grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px 18px;color:#64748b;">পণ্য লোড করার সার্ভিসে সংযোগ পাওয়া যাচ্ছে না। ইন্টারনেট সংযোগ চালু করে পেজটি Refresh করুন।</div>`;
+        return;
+    }
     try {
         const { data, error } = await supabaseClient.from('products').select('*');
         if(error) throw error;
@@ -1545,21 +1604,13 @@ function openSupportModal(){ document.getElementById("supportModal").classList.a
 function closeSupportModal(){ document.getElementById("supportModal").classList.remove("show"); }
 
 function goHome(){
-    ["categoryPopupModal","editCategoryModal","cartOverlay","thankyouModal","voucherModal","supportModal","welcomePopupModal","productDetailFullscreen","myAccountModal","locationSheetOverlay","reviewPopupModal","adminLoginModal","adminFullscreenPanel","sideMenuOverlay","notificationOverlay"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove("show");});
+    ["categoryPopupModal","editCategoryModal","cartOverlay","thankyouModal","voucherModal","supportModal","welcomePopupModal","productDetailFullscreen","myAccountModal","locationSheetOverlay","reviewPopupModal","adminLoginModal","adminFullscreenPanel"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove("show");});
     const storeNav=document.querySelector('.bottom-nav .nav-item[onclick*="goHome"]');
     if(storeNav)setActiveNav(storeNav);
     currentCategory="";
-    if(typeof visualSearchCategory!=="undefined") visualSearchCategory="";
-    const search=document.getElementById("searchInput");
-    if(search){search.value="";search.blur();}
-    const status=document.getElementById("visualSearchStatus");
-    if(status){status.style.display="none";status.textContent="";}
+    const search=document.getElementById("searchInput");if(search)search.value="";
     const badge=document.getElementById("selectedCategoryBadge");if(badge)badge.innerText="Showing All";
-    const header=document.querySelector(".app-header");
-    if(header){header.classList.remove("header-scroll-hidden");header.classList.add("header-scroll-visible");}
-    // Clear any stale search/filter state before restoring the full catalogue.
-    if(typeof renderProducts==="function") renderProducts();
-    window.scrollTo({top:0,behavior:"smooth"});
+    renderProducts();window.scrollTo({top:0,behavior:"smooth"});
 }
 
 function selectCategory(cat){
@@ -1629,7 +1680,9 @@ function startVoiceSearch(){
 
 function renderProducts(){
     const grid = document.getElementById("productsGrid");
-    const search = document.getElementById("searchInput").value.trim().toLowerCase();
+    const searchInput = document.getElementById("searchInput");
+    if(!grid) return;
+    const search = searchInput ? searchInput.value.trim().toLowerCase() : "";
     let filtered = products.filter(p => p.is_active !== false);
     if(visualSearchCategory) filtered = filtered.filter(p => String(p.category || "").toLowerCase() === visualSearchCategory.toLowerCase() || String(p.name || "").toLowerCase().includes(visualSearchCategory.toLowerCase()));
     else if(currentCategory) filtered = filtered.filter(p => p.category && p.category.toLowerCase() === currentCategory.toLowerCase());
@@ -2501,11 +2554,7 @@ async function openVoucherModalFromOrderData(o){
     }
     document.getElementById("voucherTableBody").innerHTML = itemsTableHtml;
     document.getElementById("voucherTotalsBox").innerHTML = `Delivery Fee: ৳${o.delivery_fee || 0}<br>Discount: ৳${o.discount_amount || 0}<br><b>Total: ৳${o.total || 0}</b>`;
-    const voucherModal = document.getElementById("voucherModal");
-    voucherModal.style.zIndex = "7000";
-    voucherModal.classList.add("show");
-    // Keep the voucher visible immediately, even when opened from Admin Orders.
-    voucherModal.scrollTop = 0;
+    document.getElementById("voucherModal").classList.add("show");
 }
 
 function closeVoucherModal(){ document.getElementById("voucherModal").classList.remove("show"); }
@@ -2913,5 +2962,72 @@ function openNotifications(){closeHeaderPanels();const el=document.getElementByI
 function closeHeaderPanels(){['sideMenuOverlay','notificationOverlay'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('show');});}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHeaderPanels();});
 </script>
+
+<script>
+/* Header stays on Home, hides while scrolling down and returns while scrolling up.
+   It is also hidden whenever a full-screen page/modal is opened. */
+(function(){
+  const header = document.querySelector('.app-header');
+  if(!header) return;
+
+  const overlaySelectors = [
+    '#customPopupModal.show','#welcomePopupModal.show',
+    '#categoryPopupModal.show','#editCategoryModal.show',
+    '#sideMenuOverlay.show','#notificationOverlay.show',
+    '#productDetailFullscreen.show','#reviewPopupModal.show',
+    '#supportModal.show','#adminLoginModal.show','#adminFullscreenPanel.show',
+    '#locationSheetOverlay.show','#cartOverlay.show','#thankyouModal.show',
+    '#myAccountModal.show','#voucherModal.show',
+    '.admin-sub-modal.show','.edit-product-modal.show'
+  ];
+  let lastY = Math.max(0, window.scrollY || 0);
+  let isHidden = false;
+
+  function hasOpenPageOrModal(){
+    return overlaySelectors.some(selector => document.querySelector(selector));
+  }
+  function setHeaderHidden(hide){
+    if(hide === isHidden) return;
+    isHidden = hide;
+    header.classList.toggle('header-auto-hidden', hide);
+    header.setAttribute('aria-hidden', hide ? 'true' : 'false');
+  }
+  function handleScroll(){
+    const currentY = Math.max(0, window.scrollY || window.pageYOffset || 0);
+    if(hasOpenPageOrModal()){
+      setHeaderHidden(true);
+      lastY = currentY;
+      return;
+    }
+    if(currentY <= 8){
+      setHeaderHidden(false);
+    } else if(currentY > lastY + 5){
+      setHeaderHidden(true);
+    } else if(currentY < lastY - 5){
+      setHeaderHidden(false);
+    }
+    lastY = currentY;
+  }
+
+  window.addEventListener('scroll', handleScroll, {passive:true});
+  window.addEventListener('resize', function(){
+    if(window.scrollY <= 8 && !hasOpenPageOrModal()) setHeaderHidden(false);
+  }, {passive:true});
+
+  const observer = new MutationObserver(function(){
+    if(hasOpenPageOrModal()) setHeaderHidden(true);
+    else if(window.scrollY <= 8) setHeaderHidden(false);
+  });
+  observer.observe(document.body, {
+    subtree:true,
+    attributes:true,
+    attributeFilter:['class']
+  });
+
+  if(hasOpenPageOrModal()) setHeaderHidden(true);
+  else if(window.scrollY <= 8) setHeaderHidden(false);
+})();
+</script>
+
 </body>
 </html>
