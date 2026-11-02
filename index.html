@@ -18,6 +18,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1"></script>
 
 <style>
 :root{
@@ -45,7 +47,11 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 
 .search-box{max-width: 600px; margin: auto; position: relative; display: flex; align-items: center;}
 .search-icon{position: absolute; left: 16px; color: #94a3b8; font-size: 14px;}
-.search-box input{width: 100%; padding: 13px 16px 13px 42px; background: white; border: none; border-radius: 14px; font-size: 14px; outline: none; box-shadow: 0 2px 8px rgba(0,0,0,0.06);}
+.search-box input{width: 100%; padding: 13px 88px 13px 42px; background: white; border: none; border-radius: 14px; font-size: 14px; outline: none; box-shadow: 0 2px 8px rgba(0,0,0,0.06);}
+.search-tools{position:absolute;right:9px;display:flex;align-items:center;gap:5px;}
+.search-tool-btn{width:34px;height:34px;border:0;border-radius:10px;background:#e8f5f3;color:var(--teal);display:grid;place-items:center;font-size:15px;cursor:pointer;}
+.search-tool-btn:active{transform:scale(.94);}
+#visualSearchStatus{display:none;margin:8px 4px 0;font-size:12px;color:var(--teal);font-weight:700;}
 
 .container{max-width: 1200px; margin: auto; padding: 24px 16px;}
 .hero-image-banner{width: 100%; margin-bottom: 24px; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(0, 137, 123, 0.12); background: #ffffff; max-height: 400px; cursor: pointer;}
@@ -309,6 +315,24 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
  .header-brand-banner{display:block;width:auto;max-width:min(220px,72vw);height:54px;object-fit:contain;object-position:center;background:transparent;border:0;border-radius:0;box-shadow:none;}
 }
 
+
+/* Final ADORE'S PET illustrated header */
+.app-header{position:sticky;top:0;z-index:3000;overflow:hidden;padding:10px 16px 18px;background:radial-gradient(ellipse at 50% 0%,#078b66 0%,#006b54 55%,#004d40 100%);border-radius:0 0 30px 30px;box-shadow:0 7px 22px rgba(0,77,64,.22);}
+.app-header:before,.app-header:after{content:"";position:absolute;pointer-events:none;bottom:108px;width:34%;height:42px;border-top:5px solid #9ccf13;border-radius:50%;opacity:.95;}
+.app-header:before{left:-7%;transform:rotate(12deg)}.app-header:after{right:-7%;transform:rotate(-12deg)}
+.header-topline{position:relative;z-index:2;min-height:126px;display:grid;grid-template-columns:48px minmax(0,1fr) 48px;align-items:center;gap:4px;max-width:900px;margin:0 auto;}
+.header-action-btn{width:42px;height:42px;border:0;background:transparent;color:#fff;display:grid;place-items:center;font-size:25px;cursor:pointer;position:relative;z-index:3;}
+.logo-area.header-banner-area{width:100%;height:126px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;z-index:2;}
+.header-brand-banner{display:block;width:min(100%,430px);height:118px;max-height:118px;object-fit:contain;object-position:center;filter:drop-shadow(0 3px 5px rgba(0,0,0,.22));}
+.header-paw,.header-leaf{position:absolute;color:#b6d52a;opacity:.85;pointer-events:none;z-index:1}.header-paw{font-size:26px}.paw-left{left:16%;top:52px;transform:rotate(-18deg)}.paw-right{right:16%;top:52px;transform:rotate(18deg)}.header-leaf{font-size:34px;color:#a8d92a;top:18px}.leaf-left{left:22%;transform:rotate(-35deg)}.leaf-right{right:22%;transform:scaleX(-1) rotate(-35deg)}
+.notification-dot{position:absolute;right:5px;top:5px;width:9px;height:9px;background:#ff5252;border:2px solid white;border-radius:50%;}
+.app-header .search-box{max-width:900px;width:100%;margin:4px auto 0;z-index:2;}
+.app-header .search-box input{height:56px;padding:14px 94px 14px 48px;border-radius:18px;font-size:16px;box-shadow:0 4px 12px rgba(0,0,0,.13);}
+.app-header .search-icon{left:17px;font-size:19px;color:#64748b}.app-header .search-tools{right:8px;gap:4px}.app-header .search-tool-btn{width:38px;height:38px;border-radius:11px;background:#e8f5f3;color:#00796b;font-size:17px}
+#visualSearchStatus{position:relative;z-index:2;color:#fff;margin:7px auto 0;max-width:900px}
+.header-overlay{display:none;position:fixed;inset:0;background:rgba(0,25,22,.48);z-index:6000}.header-overlay.show{display:block}.header-drawer{height:100%;width:min(82vw,330px);background:#fff;padding:18px 14px;box-shadow:8px 0 28px rgba(0,0,0,.2);animation:drawerIn .22s ease;display:flex;flex-direction:column;gap:5px}.drawer-heading{display:flex;align-items:center;justify-content:space-between;padding:8px 8px 16px;color:#00695c;font-size:18px;border-bottom:1px solid #e2e8f0;margin-bottom:8px}.drawer-heading button{border:0;background:#e8f5f3;color:#00695c;border-radius:50%;width:34px;height:34px;font-size:24px;line-height:1;cursor:pointer}.header-drawer>button{border:0;background:#fff;color:#263238;text-align:left;padding:13px 12px;border-radius:12px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:13px;cursor:pointer}.header-drawer>button:active{background:#e8f5f3}.header-drawer>button i{color:#00897b;width:20px;text-align:center}.notification-overlay{display:flex;align-items:flex-start;justify-content:center;padding:18px}.notification-overlay:not(.show){display:none}.notification-overlay.show{display:flex}.notification-panel{width:min(100%,440px);margin-top:12px;background:#fff;border-radius:18px;padding:16px;box-shadow:0 12px 32px rgba(0,0,0,.22);animation:drawerIn .2s ease}.notification-content{padding:22px 10px;color:#64748b;text-align:center;font-size:14px;line-height:1.6;white-space:pre-wrap}
+@keyframes drawerIn{from{opacity:.5;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
+@media(max-width:480px){.app-header{padding:7px 12px 15px;border-radius:0 0 27px 27px}.header-topline{min-height:116px;grid-template-columns:40px minmax(0,1fr) 40px}.header-action-btn{width:38px;height:38px;font-size:23px}.logo-area.header-banner-area{height:116px}.header-brand-banner{width:min(100%,360px);height:108px;max-height:108px}.header-paw{font-size:20px}.paw-left{left:13%;top:52px}.paw-right{right:13%;top:52px}.header-leaf{font-size:25px;top:17px}.leaf-left{left:17%}.leaf-right{right:17%}.app-header:before,.app-header:after{bottom:105px;width:29%}.app-header .search-box input{height:54px;font-size:15px;padding-right:92px}.app-header .search-tool-btn{width:36px;height:36px;font-size:16px}}
 </style>
 </head>
 
@@ -372,17 +396,43 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 </div>
 
 <header class="app-header">
-<div class="header-inner">
-    <div class="logo-area header-banner-area" onclick="goHome()" role="button" aria-label="ADORE'S PET Home">
-        <img src="https://i.postimg.cc/217sFy04/file-000000009f7081fa831e5f907b7b1fab.png" alt="ADORE'S PET logo" class="header-brand-banner" loading="eager">
+  <div class="header-topline">
+    <button class="header-action-btn menu-action" type="button" onclick="openSideMenu()" aria-label="মেনু খুলুন"><i class="fa-solid fa-bars"></i></button>
+    <div class="logo-area header-banner-area" onclick="goHome()" role="button" aria-label="ADORE'S PET Home" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goHome();}">
+      <img src="https://i.postimg.cc/217sFy04/file-000000009f7081fa831e5f907b7b1fab.png" alt="ADORE'S PET logo" class="header-brand-banner" loading="eager">
     </div>
-
-</div>
-<div class="search-box">
+    <button class="header-action-btn notification-action" type="button" onclick="openNotifications()" aria-label="নোটিফিকেশন দেখুন"><i class="fa-regular fa-bell"></i><span class="notification-dot"></span></button>
+  </div>
+  <div class="header-paw paw-left"><i class="fa-solid fa-paw"></i></div><div class="header-paw paw-right"><i class="fa-solid fa-paw"></i></div>
+  <div class="header-leaf leaf-left"><i class="fa-solid fa-leaf"></i></div><div class="header-leaf leaf-right"><i class="fa-solid fa-leaf"></i></div>
+  <div class="search-box">
     <i class="fa-solid fa-magnifying-glass search-icon"></i>
     <input id="searchInput" type="text" placeholder="Search food, toys, grooming..." oninput="searchProducts()">
-</div>
+    <div class="search-tools">
+      <button type="button" class="search-tool-btn" onclick="document.getElementById('visualSearchInput').click()" aria-label="ছবি দিয়ে সার্চ" title="ছবি দিয়ে খুঁজুন"><i class="fa-solid fa-camera"></i></button>
+      <button type="button" class="search-tool-btn" onclick="startVoiceSearch()" aria-label="ভয়েস সার্চ" title="ভয়েস সার্চ"><i class="fa-solid fa-microphone"></i></button>
+    </div>
+    <input id="visualSearchInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="searchProductsByImage(event)">
+  </div>
+  <div id="visualSearchStatus" role="status" aria-live="polite"></div>
 </header>
+
+<div id="sideMenuOverlay" class="header-overlay" onclick="if(event.target===this)closeHeaderPanels()">
+  <aside class="header-drawer" aria-label="প্রধান মেনু">
+    <div class="drawer-heading"><strong>ADORE’S PET</strong><button type="button" onclick="closeHeaderPanels()" aria-label="বন্ধ করুন">×</button></div>
+    <button type="button" onclick="closeHeaderPanels();goHome()"><i class="fa-solid fa-house"></i> Home</button>
+    <button type="button" onclick="closeHeaderPanels();openCategoryPopup()"><i class="fa-solid fa-layer-group"></i> All Categories</button>
+    <button type="button" onclick="closeHeaderPanels();selectCategory('Rabbit')"><i class="fa-solid fa-carrot"></i> Rabbit</button>
+    <button type="button" onclick="closeHeaderPanels();selectCategory('Hamster')"><i class="fa-solid fa-paw"></i> Hamster</button>
+    <button type="button" onclick="closeHeaderPanels();openCart()"><i class="fa-solid fa-cart-shopping"></i> My Cart</button>
+    <button type="button" onclick="closeHeaderPanels();openMyOrdersFromNav()"><i class="fa-solid fa-box"></i> My Orders</button>
+    <button type="button" onclick="closeHeaderPanels();openMyAccountModal()"><i class="fa-solid fa-user"></i> My Account</button>
+    <button type="button" onclick="closeHeaderPanels();openSupportModal()"><i class="fa-solid fa-headset"></i> Support</button>
+  </aside>
+</div>
+<div id="notificationOverlay" class="header-overlay notification-overlay" onclick="if(event.target===this)closeHeaderPanels()">
+  <section class="notification-panel" role="dialog" aria-modal="true" aria-label="নোটিফিকেশন"><div class="drawer-heading"><strong><i class="fa-regular fa-bell"></i> Notifications</strong><button type="button" onclick="closeHeaderPanels()" aria-label="বন্ধ করুন">×</button></div><div id="notificationContent" class="notification-content">এখন কোনো নতুন নোটিফিকেশন নেই।</div></section>
+</div>
 
 <main class="container">
 <div id="vacationNoticeBanner" class="vacation-banner">
@@ -1105,6 +1155,8 @@ let siteSettings = { popupImg: "", popupProdCode: "", notice: "", vacation: fals
 let couponsList = [];
 let appliedCouponData = null;
 let currentCategory = "";
+let visualSearchCategory = "";
+let visualSearchModelPromise = null;
 let currentAdminTab = "Pending";
 let currentOpenProductCode = null;
 let lastPlacedOrderNumber = null;
@@ -1437,15 +1489,68 @@ function selectCategory(cat){
 
 function searchProducts(){
     currentCategory = "";
+    visualSearchCategory = "";
+    const status = document.getElementById("visualSearchStatus");
+    if(status){ status.style.display="none"; status.textContent=""; }
     document.getElementById("selectedCategoryBadge").innerText = "Showing All";
     renderProducts();
+}
+
+async function searchProductsByImage(event){
+    const file = event.target.files && event.target.files[0];
+    if(!file) return;
+    const status = document.getElementById("visualSearchStatus");
+    status.style.display="block";
+    status.textContent="ছবিটি বিশ্লেষণ করা হচ্ছে…";
+    try{
+        if(!window.mobilenet || !window.tf) throw new Error("ছবি শনাক্তকরণ মডেল লোড হয়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।");
+        if(!visualSearchModelPromise) visualSearchModelPromise = mobilenet.load();
+        const model = await visualSearchModelPromise;
+        const imageUrl = URL.createObjectURL(file);
+        const img = new Image();
+        img.src = imageUrl;
+        await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;});
+        const predictions = await model.classify(img, 10);
+        URL.revokeObjectURL(imageUrl);
+        const labels = predictions.map(x=>String(x.className||"").toLowerCase());
+        const rabbitMatch = labels.some(x=>/rabbit|hare|bunny/.test(x));
+        const hamsterMatch = labels.some(x=>/hamster/.test(x));
+        if(rabbitMatch && !hamsterMatch) visualSearchCategory="Rabbit";
+        else if(hamsterMatch && !rabbitMatch) visualSearchCategory="Hamster";
+        else if(rabbitMatch && hamsterMatch) visualSearchCategory = predictions.find(x=>/rabbit|hare|bunny|hamster/i.test(x.className))?.className.toLowerCase().match(/hamster/) ? "Hamster" : "Rabbit";
+        else {
+            status.textContent="ছবিতে Rabbit বা Hamster নিশ্চিতভাবে শনাক্ত করা যায়নি। পরিষ্কার ছবি দিয়ে আবার চেষ্টা করুন।";
+            event.target.value="";
+            return;
+        }
+        currentCategory="";
+        document.getElementById("searchInput").value="";
+        document.getElementById("selectedCategoryBadge").innerText=visualSearchCategory+" (ছবি দিয়ে খোঁজা)";
+        status.textContent=visualSearchCategory+" ছবির সঙ্গে মিলে এমন পণ্য দেখানো হচ্ছে।";
+        renderProducts();
+        document.getElementById("productsGrid").scrollIntoView({behavior:"smooth",block:"start"});
+    }catch(err){
+        status.textContent=err && err.message ? err.message : "ছবি বিশ্লেষণ করা যায়নি। আবার চেষ্টা করুন।";
+    }
+    event.target.value="";
+}
+
+function startVoiceSearch(){
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SpeechRecognition){ alert("এই ব্রাউজারে ভয়েস সার্চ সমর্থিত নয়।"); return; }
+    const recognition = new SpeechRecognition();
+    recognition.lang="bn-BD";
+    recognition.onresult = e => { document.getElementById("searchInput").value=e.results[0][0].transcript; searchProducts(); };
+    recognition.onerror = () => alert("ভয়েস সার্চ করা যায়নি। আবার চেষ্টা করুন।");
+    recognition.start();
 }
 
 function renderProducts(){
     const grid = document.getElementById("productsGrid");
     const search = document.getElementById("searchInput").value.trim().toLowerCase();
     let filtered = products.filter(p => p.is_active !== false);
-    if(currentCategory) filtered = filtered.filter(p => p.category && p.category.toLowerCase() === currentCategory.toLowerCase());
+    if(visualSearchCategory) filtered = filtered.filter(p => String(p.category || "").toLowerCase() === visualSearchCategory.toLowerCase() || String(p.name || "").toLowerCase().includes(visualSearchCategory.toLowerCase()));
+    else if(currentCategory) filtered = filtered.filter(p => p.category && p.category.toLowerCase() === currentCategory.toLowerCase());
     else if(search) filtered = filtered.filter(p => p.name && p.name.toLowerCase().includes(search));
 
     if(filtered.length === 0){
@@ -2715,6 +2820,12 @@ document.addEventListener('change',async function(e){
     if(compressed!==original){const dt=new DataTransfer();dt.items.add(compressed);input.files=dt.files;if(typeof showToast==='function')showToast('ছবির সাইজ কমানো হয়েছে');}
 },true);
 
+
+
+function openSideMenu(){closeHeaderPanels();const el=document.getElementById('sideMenuOverlay');if(el)el.classList.add('show');}
+function openNotifications(){closeHeaderPanels();const el=document.getElementById('notificationOverlay');const box=document.getElementById('notificationContent');const announcement=document.getElementById('announcementBox');if(box){const msg=announcement&&announcement.textContent.trim();box.textContent=msg?msg:'এখন কোনো নতুন নোটিফিকেশন নেই।';}if(el)el.classList.add('show');}
+function closeHeaderPanels(){['sideMenuOverlay','notificationOverlay'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('show');});}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHeaderPanels();});
 </script>
 </body>
 </html>
