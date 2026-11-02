@@ -2196,47 +2196,57 @@ async function renderUserOrdersList(){
         myOrdersArr.unshift(lastPlacedOrderNumber);
     }
 
-    if(myOrdersArr.length === 0){
-        container.innerHTML = `<p style="color:#64748b; text-align:center; padding:25px; font-weight:700;">আপনার কোনো অর্ডার পাওয়া যায়নি।</p>`;
-        return;
-    }
-
     try {
-        let ordersHtml = "";
+        let ordersMap = new Map();
+
         for(let orderNum of myOrdersArr){
             const { data, error } = await supabaseClient.from('orders').select('*').or(`order_number.eq.${orderNum},id.eq.${orderNum}`).maybeSingle();
             if(!error && data){
-                let o = data;
-                let canCancel = (o.status === 'pending' || o.status === 'Pending');
-                let cancelMsg = (o.status === 'Cancelled' || o.status === 'cancelled') && o.cancel_reason ? `<br><span style="color:red; font-size:11px;">কারণ: ${o.cancel_reason}</span>` : '';
-                let adminMessage = o.status !== 'Pending' && o.status !== 'pending' ? `<div style="background:#e0f2f1; color:var(--teal-dark); padding:6px 10px; border-radius:6px; font-size:11px; margin-top:6px; font-weight:bold;">📢 স্ট্যাটাস আপডেট: আপনার অর্ডারটি বর্তমানে '${o.status}' অবস্থায় রয়েছে।</div>` : '';
-                
-                ordersHtml += `
-                    <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:10px; margin-bottom:10px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                            <b style="color:var(--teal);">Order: #${o.order_number || o.id}</b>
-                            <span style="background:#e0f2f1; color:var(--teal); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:bold;">${o.status || 'Pending'}</span>
-                        </div>
-                        <div style="font-size:12px; color:#64748b; margin-bottom:6px;">
-                            নাম: ${o.customer_name} | ফোন: ${o.phone}<br>
-                            ঠিকানা: ${o.address}<br>
-                            টাকা: ৳${o.total} | TrxID: ${o.payment_trxid || 'N/A'}${cancelMsg}
-                        </div>
-                        ${adminMessage}
-                        <div style="display:flex; gap:6px; margin-top:8px;">
-                            <button onclick='openVoucherModalFromOrderData(${JSON.stringify(o)})' style="background:var(--teal); color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-receipt"></i> ভাউচার ও পণ্যের তালিকা</button>
-                            ${canCancel ? `<button onclick="cancelCustomerOrder('${o.id}')" style="background:#f97316; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">অর্ডার বাতিল করুন</button>` : ''}
-                        </div>
-                    </div>
-                `;
+                ordersMap.set(data.id, data);
             }
         }
 
-        if(ordersHtml === ""){
-            container.innerHTML = `<p style="color:#64748b; text-align:center; padding:25px; font-weight:700;">আপনার কোনো অর্ডার পাওয়া যায়নি।</p>`;
-        } else {
-            container.innerHTML = ordersHtml;
+        if(currentUser){
+            const { data: dbOrders, error: dbError } = await supabaseClient.from('orders').select('*').or(`phone.eq.${currentUser},email.eq.${currentUser}`).order('created_at', { ascending: false });
+            if(!dbError && dbOrders){
+                dbOrders.forEach(o => ordersMap.set(o.id, o));
+            }
         }
+
+        let allOrdersList = Array.from(ordersMap.values());
+
+        if(allOrdersList.length === 0){
+            container.innerHTML = `<p style="color:#64748b; text-align:center; padding:25px; font-weight:700;">আপনার কোনো অর্ডার পাওয়া যায়নি।</p>`;
+            return;
+        }
+
+        let ordersHtml = allOrdersList.map(o => {
+            let canCancel = (o.status === 'pending' || o.status === 'Pending');
+            let cancelMsg = (o.status === 'Cancelled' || o.status === 'cancelled') && o.cancel_reason ? `<br><span style="color:red; font-size:11px;">কারণ: ${o.cancel_reason}</span>` : '';
+            let adminMessage = o.status !== 'Pending' && o.status !== 'pending' ? `<div style="background:#e0f2f1; color:var(--teal-dark); padding:6px 10px; border-radius:6px; font-size:11px; margin-top:6px; font-weight:bold;">📢 স্ট্যাটাস আপডেট: আপনার অর্ডারটি বর্তমানে '${o.status}' অবস্থায় রয়েছে।</div>` : '';
+            
+            return `
+                <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:10px; margin-bottom:10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <b style="color:var(--teal);">Order: #${o.order_number || o.id}</b>
+                        <span style="background:#e0f2f1; color:var(--teal); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:bold;">${o.status || 'Pending'}</span>
+                    </div>
+                    <div style="font-size:12px; color:#64748b; margin-bottom:6px;">
+                        নাম: ${o.customer_name} | ফোন: ${o.phone}<br>
+                        ঠিকানা: ${o.address}<br>
+                        টাকা: ৳${o.total} | TrxID: ${o.payment_trxid || 'N/A'}${cancelMsg}
+                    </div>
+                    ${adminMessage}
+                    <div style="display:flex; gap:6px; margin-top:8px;">
+                        <button onclick='openVoucherModalFromOrderData(${JSON.stringify(o)})' style="background:var(--teal); color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-receipt"></i> ভাউচার ও পণ্যের তালিকা</button>
+                        ${canCancel ? `<button onclick="cancelCustomerOrder('${o.id}')" style="background:#f97316; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">অর্ডার বাতিল করুন</button>` : ''}
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+        container.innerHTML = ordersHtml;
+
     } catch(err){
         container.innerHTML = `<p style="color:#64748b; text-align:center; padding:25px; font-weight:700;">অর্ডার লোড করতে সমস্যা হয়েছে।</p>`;
     }
@@ -2482,119 +2492,3 @@ async function saveEditProduct(){
     const unit = document.getElementById("editProdUnit").value;
     const is_active = document.getElementById("editProdActive").value === "true";
     const description = document.getElementById("editProdDesc").value.trim();
-
-    try {
-        const { error } = await supabaseClient.from('products').update({ 
-            name, image_url, image_url_2, video_url, price, sale_price, stock, category, piece_type, color, numeric_rating, age, unit, is_active, description 
-        }).eq('id', id);
-        if(error) throw error;
-        closeEditModal(); 
-        await fetchProducts(); 
-        renderAdminProducts(); 
-        showToast("সফলভাবে আপডেট হয়েছে!");
-    } catch(err){ showAlert("ডাটাবেজ এরর", err.message); }
-}
-
-async function deleteProduct(id){
-    if(!confirm("নিশ্চিতভাবে ডিলিট করতে চান?")) return;
-    await supabaseClient.from('products').delete().eq('id', id);
-    fetchProducts(); renderAdminProducts(); showToast("ডিলিট সম্পন্ন হয়েছে");
-}
-
-async function saveSiteSettings(){
-    const popupImg = document.getElementById("settingPopupImg").value.trim();
-    const popupProdCode = document.getElementById("settingPopupProdCode").value.trim();
-    const notice = document.getElementById("settingNotice").value.trim();
-    await supabaseClient.from('site_settings').upsert([
-        { key: 'popup_img', value: popupImg },
-        { key: 'popup_product_id', value: popupProdCode },
-        { key: 'notice', value: notice }
-    ], { onConflict: 'key' });
-    fetchSiteSettings(); showToast("সেটিংস সেভ হয়েছে!");
-    closeAdminModal('popupModal'); closeAdminModal('noticeModal');
-}
-
-async function saveHeroBannerSettings(){
-    const heroImg = document.getElementById("settingHeroImg").value.trim();
-    const heroProdCode = document.getElementById("settingHeroProdCode").value.trim();
-    await supabaseClient.from('site_settings').upsert([
-        { key: 'hero_img', value: heroImg },
-        { key: 'hero_product_id', value: heroProdCode }
-    ], { onConflict: 'key' });
-    fetchSiteSettings(); showToast("হোম পেজ ব্যানার সেভ হয়েছে!");
-    closeAdminModal('heroBannerModal');
-}
-
-async function toggleVacation(){
-    const vacation = document.getElementById("vacationCheckbox").checked;
-    await supabaseClient.from('site_settings').upsert([{ key: 'vacation', value: String(vacation) }], { onConflict: 'key' });
-    siteSettings.vacation = vacation; applySiteSettings(); showToast("শপ মোড আপডেট হয়েছে");
-}
-
-function switchOrderTab(tab){
-    currentAdminTab = tab;
-    document.querySelectorAll(".order-square-tab").forEach(b => b.classList.remove("active"));
-    const activeTabEl = document.getElementById("squareTab" + tab);
-    if(activeTabEl) activeTabEl.classList.add("active");
-    renderAdminOrders();
-}
-
-async function updateOrderBadgesCount(){
-    const statuses = ['Pending', 'Confirmed', 'Processing', 'Packed', 'Shipped', 'Completed', 'Cancelled'];
-    for(let st of statuses){
-        const { count, error } = await supabaseClient.from('orders').select('*', { count: 'exact', head: true }).eq('status', st);
-        const badgeEl = document.getElementById("badge" + st);
-        if(badgeEl){
-            if(!error && count > 0){
-                badgeEl.innerText = count;
-                badgeEl.style.display = "flex";
-            } else {
-                badgeEl.style.display = "none";
-            }
-        }
-    }
-}
-
-async function renderAdminOrders(){
-    updateOrderBadgesCount();
-    const container = document.getElementById("adminOrdersContainer");
-    const { data, error } = await supabaseClient.from('orders').select('*').eq('status', currentAdminTab).order('created_at', { ascending: false });
-    if(error || !data || data.length === 0){ container.innerHTML = `<p style="font-size:12px; color:#64748b; text-align:center; padding:10px;">এই ট্যাবে কোনো অর্ডার নেই।</p>`; return; }
-
-    container.innerHTML = data.map(o => `
-        <div style="background:#fff; border:1px solid #cbd5e1; padding:10px; border-radius:8px; margin-bottom:8px; font-size:12px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                <b>ID: #${o.order_number || o.id}</b> - ${o.customer_name} (${o.phone})
-                <button onclick="deleteOrderPermanently('${o.id}')" style="background:#ef4444; color:#fff; border:none; padding:2px 6px; border-radius:4px; font-size:10px; cursor:pointer;" title="ডিলিট"><i class="fa-solid fa-trash"></i></button>
-            </div>
-            ৳${o.total} | TrxID: ${o.payment_trxid || 'N/A'}<br>
-            <div style="margin-top:6px; display:flex; gap:6px; align-items:center;">
-                <select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:4px; border-radius:4px; font-size:11px; flex:1;">
-                    <option value="">স্ট্যাটাস পরিবর্তন করুন</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Confirmed">Confirmed</option>
-                    <option value="Processing">Processing</option>
-                    <option value="Packed">Packed</option>
-                    <option value="Shipped">Shipped</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Cancelled">Cancelled</option>
-                </select>
-                <button onclick='openVoucherModalFromOrderData(${JSON.stringify(o)})' style="background:var(--teal); color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">ভাউচার</button>
-            </div>
-        </div>
-    `).join("");
-}
-
-async function updateOrderStatus(id, newStatus){
-    if(!newStatus) return;
-    const cancelReason = newStatus === 'Cancelled' ? prompt("অর্ডার বাতিলের কারণ লিখুন:", "Product বর্তমানে Stock-এ নেই।") : null;
-    if(newStatus === 'Cancelled' && cancelReason === null) return;
-    try {
-        const { error } = await supabaseClient.from('orders').update({ status: newStatus, cancel_reason: cancelReason }).eq('id', id);
-        if(error) throw error;
-        renderAdminOrders(); showToast("স্ট্যাটাস আপডেট হয়েছে!");
-    } catch(err){ showAlert("ত্রুটি", err.message); }
-}
-</script>
-</body>
-</html>
