@@ -1044,6 +1044,10 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
                 <span id="badgeCompleted" class="order-tab-badge" style="display:none;">0</span>
                 <span>Completed</span>
             </div>
+            <div class="order-square-tab" id="squareTabCancelled" onclick="switchOrderTab('Cancelled')">
+                <span id="badgeCancelled" class="order-tab-badge" style="display:none;">0</span>
+                <span>বাতিলের অনুরোধ</span>
+            </div>
         </div>
 
         <div id="adminOrdersContainer" style="max-height:350px; overflow-y:auto; margin-top:10px;"></div>
@@ -3101,7 +3105,7 @@ function switchOrderTab(tab){
 }
 
 async function updateOrderBadgesCount(){
-    const statuses = ['Pending', 'Confirmed', 'Shipped', 'Completed'];
+    const statuses = ['Pending', 'Confirmed', 'Shipped', 'Completed', 'Cancelled'];
     for(let st of statuses){
         const { count, error } = await supabaseClient.from('orders').select('*', { count: 'exact', head: true }).eq('status', st);
         const badgeEl = document.getElementById("badge" + st);
@@ -3120,33 +3124,43 @@ async function renderAdminOrders(){
     updateOrderBadgesCount();
     const container = document.getElementById("adminOrdersContainer");
     const { data, error } = await supabaseClient.from('orders').select('*').eq('status', currentAdminTab).order('created_at', { ascending: false });
-    if(error || !data || data.length === 0){ container.innerHTML = `<p style="font-size:12px; color:#64748b; text-align:center; padding:10px;">এই ট্যাবে কোনো অর্ডার নেই।</p>`; return; }
-
+    if(error || !data || data.length === 0){
+        container.innerHTML = `<p style="font-size:12px; color:#64748b; text-align:center; padding:14px;">${currentAdminTab === 'Cancelled' ? 'এখনো কোনো বাতিল অর্ডার নেই।' : 'এই ট্যাবে কোনো অর্ডার নেই।'}</p>`;
+        return;
+    }
     window.__adoresVoucherOrders = window.__adoresVoucherOrders || {};
     data.forEach(o => { window.__adoresVoucherOrders[String(o.id)] = o; });
-    container.innerHTML = data.map(o => `
-        <div style="background:#fff; border:1px solid #cbd5e1; padding:10px; border-radius:8px; margin-bottom:8px; font-size:12px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                <b>ID: #${o.order_number || o.id}</b> - ${o.customer_name} (${o.phone})
+    container.innerHTML = data.map(o => {
+        const isCancelled = String(o.status || '').toLowerCase() === 'cancelled';
+        const reason = String(o.cancel_reason || '').trim();
+        const cancellationBlock = isCancelled
+            ? `<div style="margin-top:9px;padding:10px 11px;border-radius:9px;background:#fff1f2;border:1px solid #fecdd3;color:#9f1239;line-height:1.5;">
+                 <b style="display:block;margin-bottom:3px;">বাতিলের কারণ / কাস্টমারের মন্তব্য</b>
+                 <span>${reason ? reason : 'কোনো বাতিলের কারণ সংরক্ষিত নেই।'}</span>
+               </div>` : '';
+        return `
+        <div style="background:#fff; border:1px solid ${isCancelled ? '#fecdd3' : '#cbd5e1'}; padding:10px; border-radius:10px; margin-bottom:9px; font-size:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:5px; flex-wrap:wrap;">
+                <b>ID: #${o.order_number || o.id}</b>
+                <span style="background:${isCancelled ? '#ffe4e6' : '#e0f2f1'};color:${isCancelled ? '#be123c' : 'var(--teal)'};padding:3px 8px;border-radius:7px;font-weight:800;">${o.status || 'Pending'}</span>
             </div>
-            ৳${o.total} | TrxID: ${o.payment_trxid || 'N/A'}<br>
-            <div style="margin-top:6px; display:flex; gap:6px; align-items:center;">
-                <select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:4px; border-radius:4px; font-size:11px; flex:1;">
+            <div style="margin-bottom:5px;">${o.customer_name || 'নাম নেই'} · ${o.phone || 'ফোন নেই'}</div>
+            ৳${o.total || 0} | TrxID: ${o.payment_trxid || o.trx_id || 'N/A'}
+            ${cancellationBlock}
+            <div style="margin-top:8px; display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                ${!isCancelled ? `<select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:5px; border-radius:6px; font-size:11px; flex:1; min-width:120px;">
                     <option value="">স্ট্যাটাস পরিবর্তন করুন</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Confirmed">Confirmed</option>
-                    <option value="Shipped">Shipped</option>
-                    <option value="Completed">Completed</option>
-                </select>
-                <button onclick="openVoucherForOrder('${o.id}')" style="background:var(--teal); color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">ভাউচার</button>
-                <button onclick="adminEditDeliveryFee('${o.id}', ${Number(o.delivery_fee)||0})" style="background:#0f766e; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">ডেলিভারি চার্জ</button>
-                ${String(o.status).toLowerCase() !== 'completed' ? `<button onclick="adminCancelOrder('${o.id}')" style="background:#f97316; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">বাতিল</button>` : ''}
-                <button onclick="adminDeleteOrder('${o.id}', '${String(o.order_number || o.id).replace(/'/g, '')}')" style="background:#dc2626; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">ডিলিট</button>
+                    <option value="Pending">Pending</option><option value="Confirmed">Confirmed</option>
+                    <option value="Shipped">Shipped</option><option value="Completed">Completed</option>
+                </select>` : ''}
+                <button onclick="openVoucherForOrder('${o.id}')" style="background:var(--teal); color:#fff; border:none; padding:6px 9px; border-radius:6px; font-size:11px; cursor:pointer;">ভাউচার</button>
+                <button onclick="adminEditDeliveryFee('${o.id}', ${Number(o.delivery_fee)||0})" style="background:#0f766e; color:#fff; border:none; padding:6px 9px; border-radius:6px; font-size:11px; cursor:pointer;">ডেলিভারি চার্জ</button>
+                ${!isCancelled && String(o.status).toLowerCase() !== 'completed' ? `<button onclick="adminCancelOrder('${o.id}')" style="background:#f97316; color:#fff; border:none; padding:6px 9px; border-radius:6px; font-size:11px; cursor:pointer;">বাতিল</button>` : ''}
+                <button onclick="adminDeleteOrder('${o.id}', '${String(o.order_number || o.id).replace(/'/g, '')}')" style="background:#dc2626; color:#fff; border:none; padding:6px 9px; border-radius:6px; font-size:11px; cursor:pointer;">ডিলিট</button>
             </div>
-        </div>
-    `).join("");
+        </div>`;
+    }).join("");
 }
-
 async function updateOrderStatus(id, newStatus){
     if(!newStatus) return;
     if(!['Pending','Confirmed','Shipped','Completed'].includes(newStatus)) return showAlert('ভুল স্ট্যাটাস','শুধু Pending, Confirmed, Shipped ও Completed ব্যবহার করা যাবে।');
