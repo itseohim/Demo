@@ -473,6 +473,47 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
  .pet-payment-panel .payment-number-row strong{font-size:17px!important}
 }
 
+
+/* Professional compact customer order card with expandable details */
+.customer-order-card{
+  background:#f8fafc;border:1px solid #cbd5e1;border-radius:16px;
+  padding:12px;margin:0 0 12px;box-shadow:0 3px 12px rgba(15,23,42,.035);
+}
+.customer-order-main{display:flex;align-items:flex-start;gap:12px;min-width:0}
+.customer-order-photo{width:112px;flex:0 0 112px;aspect-ratio:1/1;border-radius:13px;overflow:hidden;background:#e2e8f0}
+.customer-order-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.customer-order-summary{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}
+.customer-order-id-row{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;flex-wrap:wrap}
+.customer-order-id-row strong{color:var(--teal);font-size:14px;font-weight:900;overflow-wrap:anywhere}
+.customer-order-status{background:#e0f2f1;color:var(--teal);padding:4px 9px;border-radius:8px;font-size:10px;font-weight:900;white-space:nowrap}
+.customer-order-product{font-size:13px;line-height:1.45;color:#334155;font-weight:800;overflow-wrap:anywhere}
+.customer-order-total{font-size:13px;color:#0f766e;font-weight:900}
+.customer-order-details-toggle{
+  align-self:flex-start;border:0;background:#e7f5f2;color:#00796b;padding:7px 11px;
+  border-radius:9px;font-size:12px;font-weight:900;cursor:pointer;display:inline-flex;gap:8px;align-items:center
+}
+.customer-order-details{border-top:1px solid #dbe4ea;margin-top:12px;padding-top:12px}
+.customer-order-details[hidden]{display:none!important}
+.customer-order-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+.customer-order-detail-grid>div{min-width:0;display:flex;flex-direction:column;gap:3px}
+.customer-order-detail-grid>div.full{grid-column:1/-1}
+.customer-order-detail-grid span{font-size:10px;color:#64748b;font-weight:700}
+.customer-order-detail-grid strong{font-size:12px;color:#263445;font-weight:800;line-height:1.5;overflow-wrap:anywhere}
+.customer-order-status-note{background:#e0f2f1;color:var(--teal-dark);padding:8px 10px;border-radius:9px;font-size:11px;margin-top:10px;font-weight:800}
+.customer-order-cancel-reason{background:#fff1f2;color:#be123c;padding:9px 10px;border-radius:9px;font-size:12px;margin-top:10px;line-height:1.5}
+.customer-order-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.customer-order-actions button{border:0;border-radius:9px;background:var(--teal);color:#fff;padding:9px 12px;font-size:12px;font-weight:800;cursor:pointer}
+.customer-order-actions button.cancel{background:#f97316}
+@media(max-width:380px){
+ .customer-order-card{padding:9px}
+ .customer-order-main{gap:9px}
+ .customer-order-photo{width:88px;flex-basis:88px}
+ .customer-order-id-row strong{font-size:12px}
+ .customer-order-product{font-size:12px}
+ .customer-order-detail-grid{grid-template-columns:1fr}
+ .customer-order-detail-grid>div.full{grid-column:auto}
+}
+
 </style>
 </head>
 
@@ -2577,11 +2618,14 @@ async function renderUserOrdersList(){
             if(error || !data || !data.order) continue;
             const o = data.order;
             const canCancel = String(o.status || '').toLowerCase() === 'pending';
-            const cancelMsg = String(o.status || '').toLowerCase() === 'cancelled' && o.cancel_reason ? `<br><span style="color:red; font-size:11px;">কারণ: ${o.cancel_reason}</span>` : '';
-            const adminMessage = String(o.status || '').toLowerCase() !== 'pending' ? `<div style="background:#e0f2f1; color:var(--teal-dark); padding:6px 10px; border-radius:6px; font-size:11px; margin-top:6px; font-weight:bold;">📢 অর্ডার স্ট্যাটাস: ${o.status}</div>` : '';
+            const cancelMsg = String(o.status || '').toLowerCase() === 'cancelled' && o.cancel_reason
+                ? `<div class="customer-order-cancel-reason"><i class="fa-solid fa-circle-info"></i> বাতিলের কারণ: ${o.cancel_reason}</div>` : '';
+            const adminMessage = String(o.status || '').toLowerCase() !== 'pending'
+                ? `<div class="customer-order-status-note">📢 অর্ডার স্ট্যাটাস: ${o.status}</div>` : '';
             const orderItems = Array.isArray(data.items) ? data.items : [];
             window.__adoresVoucherOrders = window.__adoresVoucherOrders || {};
             window.__adoresVoucherOrders[String(o.id)] = {...o, items:orderItems};
+
             const firstItem = orderItems[0] || {};
             const matchedProduct = (Array.isArray(products) ? products : []).find(p =>
                 (firstItem.product_id && String(p.id) === String(firstItem.product_id)) ||
@@ -2591,30 +2635,67 @@ async function renderUserOrdersList(){
             const itemSummary = orderItems.length
                 ? orderItems.map(it => `${it.product_name || 'পণ্য'} × ${Number(it.quantity) || 1}`).join('<br>')
                 : 'পণ্যের তথ্য পাওয়া যায়নি';
+            const itemShort = orderItems.length
+                ? orderItems.map(it => `${it.product_name || 'পণ্য'} × ${Number(it.quantity) || 1}`).join(' • ')
+                : 'পণ্যের তথ্য পাওয়া যায়নি';
+
             html += `
-                <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:10px; margin-bottom:10px;">
-                    <div style="display:flex; gap:12px; align-items:stretch;">
-                        <div style="flex:0 0 104px; width:104px; min-height:112px; border-radius:9px; overflow:hidden; background:#e2e8f0; align-self:flex-start;">
-                            <img src="${orderImage}" alt="${firstItem.product_name || 'অর্ডারকৃত পণ্য'}" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/240x240?text=Product';" style="display:block;width:100%;height:112px;object-fit:cover;">
+                <article class="customer-order-card">
+                    <div class="customer-order-main">
+                        <div class="customer-order-photo">
+                            <img src="${orderImage}" alt="${firstItem.product_name || 'অর্ডারকৃত পণ্য'}" loading="lazy"
+                                 onerror="this.onerror=null;this.src='https://via.placeholder.com/240x240?text=Product';">
                         </div>
-                        <div style="flex:1;min-width:0;font-size:12px;color:#64748b;line-height:1.65;">
-                            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;margin-bottom:5px;flex-wrap:wrap;">
-                                <b style="color:var(--teal);font-size:14px;">Order: #${o.order_number || saved.order_number}</b>
-                                <span style="background:#e0f2f1;color:var(--teal);padding:2px 8px;border-radius:6px;font-size:10px;font-weight:bold;">${o.status || 'Pending'}</span>
+                        <div class="customer-order-summary">
+                            <div class="customer-order-id-row">
+                                <strong>Order: #${o.order_number || saved.order_number || o.id}</strong>
+                                <span class="customer-order-status">${o.status || 'Pending'}</span>
                             </div>
-                            <div style="color:#334155;font-weight:800;margin-bottom:3px;">${itemSummary}</div>
-                            নাম: ${o.customer_name || ''}<br>ফোন: ${o.phone || ''}<br>ঠিকানা: ${o.address || ''}<br><b style="color:#0f766e;">সর্বমোট: ৳${o.total || 0}</b>${cancelMsg}
+                            <div class="customer-order-product">${itemShort}</div>
+                            <div class="customer-order-total">সর্বমোট: ৳${o.total || 0}</div>
+                            <button type="button" class="customer-order-details-toggle"
+                                    aria-expanded="false"
+                                    onclick="toggleCustomerOrderDetails(this)">
+                                বিস্তারিত দেখুন <i class="fa-solid fa-chevron-down"></i>
+                            </button>
                         </div>
                     </div>
-                    ${adminMessage}
-                    <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
-                        <button onclick="openVoucherForOrder('${o.id}')" style="background:var(--teal);color:#fff;border:none;padding:7px 12px;border-radius:6px;font-size:11px;font-weight:bold;cursor:pointer;">ভাউচার ও পণ্যের তালিকা</button>
-                        ${canCancel ? `<button onclick="cancelCustomerOrder('${saved.tracking_token}')" style="background:#f97316;color:#fff;border:none;padding:7px 12px;border-radius:6px;font-size:11px;font-weight:bold;cursor:pointer;">অর্ডার বাতিল করুন</button>` : ''}
+                    <div class="customer-order-details" hidden>
+                        <div class="customer-order-detail-grid">
+                            <div><span>কাস্টমারের নাম</span><strong>${o.customer_name || '—'}</strong></div>
+                            <div><span>মোবাইল নম্বর</span><strong>${o.phone || '—'}</strong></div>
+                            <div class="full"><span>সম্পূর্ণ ঠিকানা</span><strong>${o.address || '—'}</strong></div>
+                            <div class="full"><span>অর্ডার করা পণ্য</span><strong>${itemSummary}</strong></div>
+                            <div><span>ডেলিভারি চার্জ</span><strong>৳${o.delivery_fee || 0}</strong></div>
+                            <div><span>ডিসকাউন্ট</span><strong>৳${o.discount_amount || 0}</strong></div>
+                            <div><span>পেমেন্ট</span><strong>${o.payment_method || '—'}${o.trx_id ? ' · TrxID: '+o.trx_id : ''}</strong></div>
+                            <div><span>অর্ডার স্ট্যাটাস</span><strong>${o.status || 'Pending'}</strong></div>
+                        </div>
+                        ${adminMessage}
+                        ${cancelMsg}
+                        <div class="customer-order-actions">
+                            <button type="button" onclick="openVoucherForOrder('${o.id}')">
+                                <i class="fa-solid fa-receipt"></i> ভাউচার দেখুন
+                            </button>
+                            ${canCancel ? `<button type="button" class="cancel" onclick="cancelCustomerOrder('${saved.tracking_token}')"><i class="fa-solid fa-ban"></i> অর্ডার বাতিল করুন</button>` : ''}
+                        </div>
                     </div>
-                </div>`;
+                </article>`;
         }catch(e){ console.error('Order tracking error', e); }
     }
     container.innerHTML = html || `<p style="color:#64748b; text-align:center; padding:25px; font-weight:700;">অর্ডার পাওয়া যায়নি।</p>`;
+}
+
+function toggleCustomerOrderDetails(button){
+    const card = button.closest('.customer-order-card');
+    if(!card) return;
+    const details = card.querySelector('.customer-order-details');
+    const isOpen = button.getAttribute('aria-expanded') === 'true';
+    button.setAttribute('aria-expanded', String(!isOpen));
+    details.hidden = isOpen;
+    button.innerHTML = isOpen
+        ? 'বিস্তারিত দেখুন <i class="fa-solid fa-chevron-down"></i>'
+        : 'বিস্তারিত বন্ধ করুন <i class="fa-solid fa-chevron-up"></i>';
 }
 
 let orderReasonResolver = null;
