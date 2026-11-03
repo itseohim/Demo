@@ -570,6 +570,23 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 .admin-delete-ok-btn{background:#dc2626;color:#fff}
 @media(max-width:360px){.admin-delete-confirm-box{padding:21px 15px 17px}.admin-delete-confirm-box h3{font-size:18px}}
 
+
+/* Unified branded popup dialogs replacing browser-native alert/confirm/prompt */
+.site-dialog-overlay{position:fixed;inset:0;z-index:100700;background:rgba(15,23,42,.58);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:18px}
+.site-dialog-overlay.show{display:flex}
+.site-dialog-box{width:min(100%,360px);background:#fff;color:#263445;border:1px solid #e2e8f0;border-radius:22px;padding:23px 20px 19px;box-shadow:0 22px 65px rgba(0,0,0,.25);text-align:center;animation:siteDialogIn .18s ease-out}
+@keyframes siteDialogIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.site-dialog-icon{width:52px;height:52px;margin:0 auto 12px;border-radius:50%;background:#e0f2f1;color:#008577;display:flex;align-items:center;justify-content:center;font-size:21px}
+.site-dialog-box h3{margin:0 0 9px;color:#087f70;font-size:20px;font-weight:900}
+.site-dialog-box p{margin:0;color:#64748b;font-size:14px;line-height:1.65;overflow-wrap:anywhere}
+.site-dialog-box input{display:block;width:100%;box-sizing:border-box;margin-top:15px;padding:12px 13px;border:1.5px solid #cbd5e1;border-radius:11px;background:#fff;color:#263445;font-size:16px;outline:none}
+.site-dialog-box input:focus{border-color:#008f7d;box-shadow:0 0 0 3px rgba(0,143,125,.12)}
+.site-dialog-actions{display:flex;gap:10px;margin-top:21px}
+.site-dialog-actions button{flex:1;min-width:0;border:0;border-radius:12px;padding:12px 8px;font-size:13px;font-weight:900;cursor:pointer}
+.site-dialog-cancel{background:#e2e8f0;color:#334155}
+.site-dialog-ok{background:#008f7d;color:#fff}
+@media(max-width:360px){.site-dialog-box{padding:20px 15px 17px}.site-dialog-box h3{font-size:18px}}
+
 </style>
 </head>
 
@@ -1627,7 +1644,7 @@ async function saveEditedCategory(){
 }
 
 async function deleteCategory(idx){
-    if(!confirm("নিশ্চিতভাবে এই ক্যাটাগরি ডিলিট করতে চান?")) return;
+    if(!await showSiteConfirm("নিশ্চিতভাবে এই ক্যাটাগরি ডিলিট করতে চান?", "ক্যাটাগরি ডিলিট করবেন?")) return;
     categoriesList.splice(idx, 1);
     try {
         await supabaseClient.from('site_settings').upsert([{ key: 'categories', value: JSON.stringify(categoriesList) }], { onConflict: 'key' });
@@ -1806,11 +1823,11 @@ async function searchProductsByImage(event){
 
 function startVoiceSearch(){
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if(!SpeechRecognition){ alert("এই ব্রাউজারে ভয়েস সার্চ সমর্থিত নয়।"); return; }
+    if(!SpeechRecognition){ showSiteMessage("এই ব্রাউজারে ভয়েস সার্চ সমর্থিত নয়।","ভয়েস সার্চ","fa-microphone-slash"); return; }
     const recognition = new SpeechRecognition();
     recognition.lang="bn-BD";
     recognition.onresult = e => { document.getElementById("searchInput").value=e.results[0][0].transcript; searchProducts(); };
-    recognition.onerror = () => alert("ভয়েস সার্চ করা যায়নি। আবার চেষ্টা করুন।");
+    recognition.onerror = () => showSiteMessage("ভয়েস সার্চ করা যায়নি। আবার চেষ্টা করুন।","ভয়েস সার্চ","fa-triangle-exclamation");
     recognition.start();
 }
 
@@ -2978,8 +2995,8 @@ async function renderAdminReviews(){
     }
 }
 
-function deleteAdminReview(prodCode, idx){
-    if(!confirm("নিশ্চিতভাবে এই রিভিউটি ডিলিট করতে চান?")) return;
+async function deleteAdminReview(prodCode, idx){
+    if(!await showSiteConfirm("নিশ্চিতভাবে এই রিভিউটি ডিলিট করতে চান?", "রিভিউ ডিলিট করবেন?")) return;
     let allReviews = JSON.parse(localStorage.getItem("adoresProductReviews")) || {};
     if(allReviews[prodCode]){
         allReviews[prodCode].splice(idx, 1);
@@ -3090,7 +3107,7 @@ async function saveEditProduct(){
 }
 
 async function deleteProduct(id){
-    if(!confirm("নিশ্চিতভাবে ডিলিট করতে চান?")) return;
+    if(!await showSiteConfirm("নিশ্চিতভাবে এই পণ্যটি ডিলিট করতে চান?", "পণ্য ডিলিট করবেন?")) return;
     await supabaseClient.from('products').delete().eq('id', id);
     fetchProducts(); renderAdminProducts(); showToast("ডিলিট সম্পন্ন হয়েছে");
 }
@@ -3205,7 +3222,7 @@ async function updateOrderStatus(id, newStatus){
 
 async function adminCancelOrder(orderId){
     const defaultReason = 'দুঃখিত, আপনার অর্ডার করা পণ্যটি বর্তমানে স্টকে নেই। তাই আপনার অর্ডারটি বাতিল করা হয়েছে।';
-    if(!confirm('এই অর্ডারটি বাতিল করবেন? কাস্টমারকে স্টক না থাকার নোটিফিকেশন পাঠানো হবে।')) return;
+    if(!await showSiteConfirm('এই অর্ডারটি বাতিল করবেন? কাস্টমারকে স্টক না থাকার নোটিফিকেশন পাঠানো হবে।','অর্ডার বাতিল করবেন?')) return;
     try{
         const { data, error } = await supabaseClient.rpc('admin_update_adores_order', {
             p_order_id: orderId, p_status: 'Cancelled', p_cancel_reason: defaultReason, p_delivery_fee: null
@@ -3218,16 +3235,47 @@ async function adminCancelOrder(orderId){
     }catch(err){ showAlert('অর্ডার বাতিল করা যায়নি', err.message); }
 }
 
+
+let siteDialogResolver=null;
+function openSiteDialog({title='নিশ্চিত করুন',message='',mode='confirm',defaultValue='',okText='ঠিক আছে',icon='fa-circle-question'}={}){
+ return new Promise(resolve=>{
+  siteDialogResolver=resolve;
+  const overlay=document.getElementById('siteDialogOverlay');
+  document.getElementById('siteDialogTitle').textContent=title;
+  document.getElementById('siteDialogMessage').textContent=message;
+  document.getElementById('siteDialogIcon').innerHTML=`<i class="fa-solid ${icon}"></i>`;
+  const input=document.getElementById('siteDialogInput');
+  const cancel=overlay.querySelector('.site-dialog-cancel');
+  const ok=overlay.querySelector('.site-dialog-ok');
+  input.style.display=mode==='input'?'block':'none';
+  input.value=defaultValue;
+  cancel.style.display=mode==='alert'?'none':'block';
+  ok.textContent=okText;
+  overlay.classList.add('show');overlay.setAttribute('aria-hidden','false');
+  if(mode==='input'){setTimeout(()=>input.focus(),80);}
+ });
+}
+function resolveSiteDialog(value){
+ const overlay=document.getElementById('siteDialogOverlay');
+ const input=document.getElementById('siteDialogInput');
+ if(overlay){overlay.classList.remove('show');overlay.setAttribute('aria-hidden','true');}
+ if(siteDialogResolver){const resolve=siteDialogResolver;siteDialogResolver=null;resolve(value===true?(input.style.display==='block'?input.value:true):value);}
+}
+function showSiteConfirm(message,title='নিশ্চিত করুন'){
+ return openSiteDialog({title,message,mode:'confirm',icon:'fa-circle-question'});
+}
+function showSiteInput(message,defaultValue='',title='তথ্য লিখুন'){
+ return openSiteDialog({title,message,mode:'input',defaultValue,okText:'সংরক্ষণ',icon:'fa-pen-to-square'});
+}
+function showSiteMessage(message,title='তথ্য',icon='fa-circle-info'){
+ return openSiteDialog({title,message,mode:'alert',okText:'ঠিক আছে',icon}).then(()=>true);
+}
+
 let adminDeleteConfirmResolver = null;
 function confirmAdminOrderDelete(orderNumber){
-    return new Promise(resolve=>{
-        adminDeleteConfirmResolver=resolve;
-        const modal=document.getElementById('adminDeleteConfirmModal');
-        const text=document.getElementById('adminDeleteConfirmText');
-        if(text) text.textContent='অর্ডার #' + orderNumber + ' স্থায়ীভাবে ডিলিট হবে। আপনি কি নিশ্চিত?';
-        if(modal){modal.classList.add('show');modal.setAttribute('aria-hidden','false');}
-    });
+    return showSiteConfirm('অর্ডার #' + orderNumber + ' স্থায়ীভাবে ডিলিট হবে। আপনি কি নিশ্চিত?', 'অর্ডার ডিলিট করবেন?');
 }
+
 function resolveAdminDeleteConfirm(confirmed){
     const modal=document.getElementById('adminDeleteConfirmModal');
     if(modal){modal.classList.remove('show');modal.setAttribute('aria-hidden','true');}
@@ -3252,7 +3300,7 @@ async function adminDeleteOrder(orderId, orderNumber){
 }
 
 async function adminEditDeliveryFee(orderId, currentFee){
-    const raw = prompt('নতুন ডেলিভারি চার্জ লিখুন (৳):', String(currentFee));
+    const raw = await showSiteInput('নতুন ডেলিভারি চার্জ লিখুন (৳):', String(currentFee), 'ডেলিভারি চার্জ পরিবর্তন');
     if(raw === null) return;
     const fee = Number(raw);
     if(!Number.isFinite(fee) || fee < 0 || fee > 100000) return showAlert('ভুল', 'সঠিক ডেলিভারি চার্জ লিখুন।');
@@ -3451,6 +3499,20 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHeaderP
       <button type="button" class="admin-delete-ok-btn" onclick="resolveAdminDeleteConfirm(true)">হ্যাঁ, ডিলিট করুন</button>
     </div>
   </div>
+</div>
+
+
+<div id="siteDialogOverlay" class="site-dialog-overlay" aria-hidden="true">
+ <div class="site-dialog-box" role="dialog" aria-modal="true" aria-labelledby="siteDialogTitle">
+  <div class="site-dialog-icon" id="siteDialogIcon"><i class="fa-solid fa-circle-question"></i></div>
+  <h3 id="siteDialogTitle">নিশ্চিত করুন</h3>
+  <p id="siteDialogMessage"></p>
+  <input id="siteDialogInput" type="number" inputmode="decimal" style="display:none" />
+  <div class="site-dialog-actions">
+   <button type="button" class="site-dialog-cancel" onclick="resolveSiteDialog(null)">বাতিল</button>
+   <button type="button" class="site-dialog-ok" onclick="resolveSiteDialog(true)">ঠিক আছে</button>
+  </div>
+ </div>
 </div>
 
 </body>
