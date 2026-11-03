@@ -266,6 +266,16 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 @media(hover:hover) and (pointer:fine){
  .nav-item:hover{transform:translateY(-4px); color:#fff;}
 }
+/* Hide the mobile bottom navigation while the page is actively scrolling. */
+.bottom-nav{
+    transition:transform .28s ease, opacity .22s ease;
+    will-change:transform;
+}
+.bottom-nav.is-scroll-hidden{
+    transform:translateY(110%);
+    opacity:0;
+    pointer-events:none;
+}
 body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 .category-popup-card{padding:18px;}
 .category-popup-heading{
@@ -3505,6 +3515,20 @@ function handleSupportPhotoSecretClick(){
     }
     supportPhotoSecretTimer = setTimeout(() => { supportPhotoSecretCount = 0; }, 1800);
 }
+// Auto-hide the mobile bottom navigation during scrolling, then reveal it when scrolling stops.
+let bottomNavScrollTimer = null;
+function handleBottomNavScroll(){
+    const nav = document.querySelector('.bottom-nav');
+    if(!nav || window.innerWidth >= 768) return;
+    nav.classList.add('is-scroll-hidden');
+    if(bottomNavScrollTimer) clearTimeout(bottomNavScrollTimer);
+    bottomNavScrollTimer = setTimeout(() => {
+        nav.classList.remove('is-scroll-hidden');
+        bottomNavScrollTimer = null;
+    }, 110);
+}
+window.addEventListener('scroll', handleBottomNavScroll, { passive:true });
+
 function setActiveNav(button){
     document.querySelectorAll(".bottom-nav .nav-item").forEach(item => item.classList.remove("active"));
     if(button) button.classList.add("active");
