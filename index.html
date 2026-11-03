@@ -541,6 +541,35 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 .product-notification-new{font-size:9px;color:#fff;background:#ef4444;border-radius:20px;padding:2px 7px;margin-left:5px;vertical-align:middle}
 .notification-empty{padding:28px 12px;text-align:center;color:#64748b;font-size:13px;background:#f8fafc;border-radius:12px}
 
+
+/* Small branded confirmation popup for admin order deletion */
+.admin-delete-confirm-overlay{
+ position:fixed;inset:0;z-index:100500;background:rgba(15,23,42,.58);
+ backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
+ display:none;align-items:center;justify-content:center;padding:20px;
+}
+.admin-delete-confirm-overlay.show{display:flex}
+.admin-delete-confirm-box{
+ width:min(100%,360px);background:#fff;border-radius:22px;padding:24px 20px 20px;
+ box-shadow:0 22px 65px rgba(0,0,0,.25);text-align:center;
+ animation:adminDeletePopupIn .18s ease-out;
+}
+@keyframes adminDeletePopupIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.admin-delete-confirm-icon{
+ width:54px;height:54px;margin:0 auto 12px;border-radius:50%;
+ display:flex;align-items:center;justify-content:center;background:#fff1f2;color:#dc2626;font-size:22px
+}
+.admin-delete-confirm-box h3{margin:0 0 9px;color:#0f766e;font-size:20px;font-weight:900}
+.admin-delete-confirm-box p{margin:0;color:#64748b;font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+.admin-delete-confirm-actions{display:flex;gap:10px;margin-top:22px}
+.admin-delete-confirm-actions button{
+ flex:1;min-width:0;border:0;border-radius:12px;padding:12px 8px;
+ font-size:13px;font-weight:900;cursor:pointer
+}
+.admin-delete-cancel-btn{background:#e2e8f0;color:#334155}
+.admin-delete-ok-btn{background:#dc2626;color:#fff}
+@media(max-width:360px){.admin-delete-confirm-box{padding:21px 15px 17px}.admin-delete-confirm-box h3{font-size:18px}}
+
 </style>
 </head>
 
@@ -3189,8 +3218,28 @@ async function adminCancelOrder(orderId){
     }catch(err){ showAlert('অর্ডার বাতিল করা যায়নি', err.message); }
 }
 
+let adminDeleteConfirmResolver = null;
+function confirmAdminOrderDelete(orderNumber){
+    return new Promise(resolve=>{
+        adminDeleteConfirmResolver=resolve;
+        const modal=document.getElementById('adminDeleteConfirmModal');
+        const text=document.getElementById('adminDeleteConfirmText');
+        if(text) text.textContent='অর্ডার #' + orderNumber + ' স্থায়ীভাবে ডিলিট হবে। আপনি কি নিশ্চিত?';
+        if(modal){modal.classList.add('show');modal.setAttribute('aria-hidden','false');}
+    });
+}
+function resolveAdminDeleteConfirm(confirmed){
+    const modal=document.getElementById('adminDeleteConfirmModal');
+    if(modal){modal.classList.remove('show');modal.setAttribute('aria-hidden','true');}
+    if(adminDeleteConfirmResolver){
+        const resolve=adminDeleteConfirmResolver;
+        adminDeleteConfirmResolver=null;
+        resolve(Boolean(confirmed));
+    }
+}
+
 async function adminDeleteOrder(orderId, orderNumber){
-    if(!confirm('অর্ডার #' + orderNumber + ' স্থায়ীভাবে ডিলিট করবেন?')) return;
+    if(!await confirmAdminOrderDelete(orderNumber)) return;
     try{
         const {data,error}=await supabaseClient.rpc('admin_delete_adores_order',{p_order_id:orderId});
         if(error) throw error;
@@ -3390,6 +3439,19 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHeaderP
   else if(window.scrollY <= 8) setHeaderHidden(false);
 })();
 </script>
+
+
+<div id="adminDeleteConfirmModal" class="admin-delete-confirm-overlay" aria-hidden="true">
+  <div class="admin-delete-confirm-box" role="dialog" aria-modal="true" aria-labelledby="adminDeleteConfirmTitle">
+    <div class="admin-delete-confirm-icon"><i class="fa-solid fa-trash-can"></i></div>
+    <h3 id="adminDeleteConfirmTitle">অর্ডার ডিলিট করবেন?</h3>
+    <p id="adminDeleteConfirmText">এই অর্ডারটি স্থায়ীভাবে ডিলিট হবে। আপনি কি নিশ্চিত?</p>
+    <div class="admin-delete-confirm-actions">
+      <button type="button" class="admin-delete-cancel-btn" onclick="resolveAdminDeleteConfirm(false)">ফিরে যান</button>
+      <button type="button" class="admin-delete-ok-btn" onclick="resolveAdminDeleteConfirm(true)">হ্যাঁ, ডিলিট করুন</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
