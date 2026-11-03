@@ -2701,7 +2701,7 @@ function renderCartView(){
     let deliveryNoticeHtml = '';;
 
     container.innerHTML = `
-        <div style="flex:1; overflow-y:auto; max-height:220px; margin-bottom:12px;">${itemsHtml}</div>
+        <div style="flex:1; margin-bottom:12px;">${itemsHtml}</div>
         <div style="display:flex; gap:6px; margin-bottom:12px;">
             <input id="cartCouponInput" placeholder="কুপন কোড দিন" style="flex:1; padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; font-size:12px; margin:0;">
             <button onclick="applyCoupon()" style="background:var(--teal); color:white; border:none; padding:8px 12px; border-radius:8px; font-weight:bold; font-size:12px; cursor:pointer;">Apply</button>
