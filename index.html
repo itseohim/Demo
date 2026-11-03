@@ -753,6 +753,15 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
   #productsGrid .star-rating{font-size:9px;}
 }
 
+/* Customer profile photo and refreshed profile layout */
+.profile-photo-section{display:flex;flex-direction:column;align-items:center;text-align:center;padding:8px 8px 16px;margin-bottom:12px;}
+.profile-photo-frame{width:112px;height:112px;border-radius:50%;padding:4px;background:linear-gradient(135deg,#079b83,#9bd32b);box-shadow:0 7px 20px rgba(0,137,123,.16);position:relative;}
+.profile-photo-frame img{width:100%;height:100%;border-radius:50%;object-fit:cover;background:#edf7f5;border:3px solid #fff;display:block;}
+.profile-photo-placeholder{width:100%;height:100%;border-radius:50%;background:#e8f5f3;color:#078f7d;display:flex;align-items:center;justify-content:center;font-size:36px;border:3px solid #fff;}
+.profile-photo-edit{margin-top:10px;border:0;border-radius:22px;padding:8px 16px;background:#078f7d;color:#fff;font-size:12px;font-weight:900;box-shadow:0 4px 12px rgba(0,137,123,.16);cursor:pointer;}
+.profile-photo-hint{font-size:10px;color:#82909a;margin-top:5px;}
+.profile-logout-btn{width:100%;margin-top:12px;border:0;border-radius:13px;padding:12px;background:#ef5350;color:#fff;font-size:14px;font-weight:900;cursor:pointer;box-shadow:0 5px 14px rgba(239,83,80,.15);}
+.profile-user-strip{background:#e0f2f1;border-radius:12px;padding:10px 13px;margin-bottom:12px;text-align:center;color:#087f72;font-size:12px;font-weight:800;}
 /* Account profile/orders tabs */
 .account-main-tab{flex:1;border:1px solid #dce8e6;background:#f4f8f7;color:#52616b;border-radius:12px;padding:10px 7px;font-size:12px;font-weight:800;}
 .account-main-tab.active{background:var(--teal);border-color:var(--teal);color:#fff;}
@@ -1588,12 +1597,20 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 
             <!-- Tab 1: Profile View (Display mode vs Edit mode) -->
             <div id="accountTabProfileContent" style="overflow-y:auto; flex:1; padding-right:4px;">
-                <div style="background:#e0f2f1; padding:12px; border-radius:12px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <div style="font-size:11px; color:#004d40; font-weight:700;">লগইনকৃত ইউজার:</div>
-                        <div id="displayLoggedUser" style="font-size:14px; font-weight:900; color:var(--teal);"></div>
+                <div class="profile-user-strip">লগইনকৃত ইউজার: <span id="displayLoggedUser"></span></div>
+                <div class="profile-photo-section">
+                    <div class="profile-photo-frame" id="profilePhotoFrame">
+                        <div class="profile-photo-placeholder" id="profilePhotoPlaceholder"><i class="fa-solid fa-user"></i></div>
+                        <img id="profilePhotoPreview" alt="Customer profile photo" style="display:none;">
                     </div>
-                    <button onclick="performUserLogout()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:11px; font-weight:bold; cursor:pointer;">লগআউট</button>
+                    <input id="profilePhotoInput" type="file" accept="image/*" hidden onchange="handleProfilePhotoSelection(event)">
+                    <button type="button" class="profile-photo-edit" onclick="document.getElementById('profilePhotoInput').click()"><i class="fa-solid fa-camera"></i> প্রোফাইল ছবি যোগ করুন</button>
+                    <div class="profile-photo-hint">মোবাইলের Gallery / Photos থেকে ছবি নির্বাচন করুন</div>
+                    <div id="profilePhotoSaveActions" style="display:none;gap:8px;justify-content:center;margin-top:10px;width:100%;">
+                        <button type="button" onclick="saveSelectedProfilePhoto()" style="border:0;border-radius:22px;padding:9px 18px;background:#078f7d;color:#fff;font-size:12px;font-weight:900;cursor:pointer;">ছবি সেভ করুন</button>
+                        <button type="button" onclick="cancelSelectedProfilePhoto()" style="border:1px solid #d7e1e5;border-radius:22px;padding:9px 18px;background:#f3f6f8;color:#52616b;font-size:12px;font-weight:800;cursor:pointer;">বাতিল</button>
+                    </div>
+                    <div id="profilePhotoPendingHint" class="profile-photo-hint" style="display:none;color:#078f7d;font-weight:800;">ছবিটি প্রিভিউ দেখছেন — সেভ করতে নিচের বাটনে চাপ দিন</div>
                 </div>
                 
                 <!-- Profile Display Card (Default) -->
@@ -1631,6 +1648,7 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
                     
                     <button onclick="saveUserProfileData()" class="thankyou-btn">তথ্য সেভ করুন</button>
                 </div>
+                <button type="button" class="profile-logout-btn" onclick="performUserLogout()"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
             </div>
 
             <!-- Tab 2: Orders & Vouchers View -->
@@ -3024,6 +3042,17 @@ function renderProfileTabState(){
 
     document.getElementById("displayLoggedUser").innerText = currentUser;
     const prof = userProfiles[currentUser] || {};
+    const photoPreview = document.getElementById("profilePhotoPreview");
+    const photoPlaceholder = document.getElementById("profilePhotoPlaceholder");
+    if(prof.avatarData){
+        photoPreview.src = prof.avatarData;
+        photoPreview.style.display = "block";
+        photoPlaceholder.style.display = "none";
+    } else {
+        photoPreview.removeAttribute("src");
+        photoPreview.style.display = "none";
+        photoPlaceholder.style.display = "flex";
+    }
 
     // Restore the complete selected location so the user does not need to enter
     // the village/local area again in the separate address field.
@@ -3070,6 +3099,110 @@ function renderProfileTabState(){
     locDispEl.style.fontWeight = locationParts.length ? "800" : "normal";
 }
 
+let pendingProfilePhotoData = null;
+
+async function handleProfilePhotoSelection(event){
+    const file = event.target.files && event.target.files[0];
+    if(!file) return;
+    if(!file.type || !file.type.startsWith('image/')){
+        showAlert("ছবি নির্বাচন করুন", "দয়া করে Gallery থেকে একটি ছবি নির্বাচন করুন।");
+        event.target.value = "";
+        return;
+    }
+    if(file.size > 12 * 1024 * 1024){
+        showAlert("ছবির সাইজ বেশি", "১২ MB-এর কম একটি ছবি নির্বাচন করুন।");
+        event.target.value = "";
+        return;
+    }
+    try{
+        showToast("ছবি ছোট করা হচ্ছে...");
+        pendingProfilePhotoData = await compressProfileImage(file);
+        const preview = document.getElementById("profilePhotoPreview");
+        preview.src = pendingProfilePhotoData;
+        preview.style.display = "block";
+        document.getElementById("profilePhotoPlaceholder").style.display = "none";
+        document.getElementById("profilePhotoSaveActions").style.display = "flex";
+        document.getElementById("profilePhotoPendingHint").style.display = "block";
+        const kb = Math.max(1, Math.round((pendingProfilePhotoData.length * 3 / 4) / 1024));
+        showToast(`ছবি প্রস্তুত (${kb} KB) — সেভ করুন`);
+    }catch(error){
+        console.error("Profile photo error:", error);
+        showAlert("ছবি প্রস্তুত হয়নি", "ছবিটি কমপ্রেস করা যায়নি। একটু ছোট ছবি দিয়ে আবার চেষ্টা করুন।");
+    }finally{
+        event.target.value = "";
+    }
+}
+
+function saveSelectedProfilePhoto(){
+    if(!pendingProfilePhotoData || !currentUser) return;
+    try{
+        const profile = userProfiles[currentUser] || {};
+        profile.avatarData = pendingProfilePhotoData;
+        userProfiles[currentUser] = profile;
+        localStorage.setItem("adoresUserProfiles", JSON.stringify(userProfiles));
+        pendingProfilePhotoData = null;
+        document.getElementById("profilePhotoSaveActions").style.display = "none";
+        document.getElementById("profilePhotoPendingHint").style.display = "none";
+        showToast("প্রোফাইল ছবি সেভ হয়েছে");
+    }catch(error){
+        console.error("Profile photo save error:", error);
+        showAlert("ছবি সেভ হয়নি", "ফোনের স্টোরেজে জায়গা কম থাকতে পারে। আবার চেষ্টা করুন।");
+    }
+}
+
+function cancelSelectedProfilePhoto(){
+    pendingProfilePhotoData = null;
+    document.getElementById("profilePhotoSaveActions").style.display = "none";
+    document.getElementById("profilePhotoPendingHint").style.display = "none";
+    const savedProfile = (userProfiles[currentUser] || {}).avatarData;
+    const preview = document.getElementById("profilePhotoPreview");
+    const placeholder = document.getElementById("profilePhotoPlaceholder");
+    if(savedProfile){
+        preview.src = savedProfile;
+        preview.style.display = "block";
+        placeholder.style.display = "none";
+    }else{
+        preview.removeAttribute("src");
+        preview.style.display = "none";
+        placeholder.style.display = "flex";
+    }
+    showToast("নতুন ছবি বাতিল করা হয়েছে");
+}
+
+function compressProfileImage(file){
+    return new Promise((resolve,reject)=>{
+        const reader = new FileReader();
+        reader.onerror = ()=>reject(new Error("ছবি পড়া যায়নি"));
+        reader.onload = ()=>{
+            const image = new Image();
+            image.onerror = ()=>reject(new Error("ছবি খোলা যায়নি"));
+            image.onload = ()=>{
+                const canvas = document.createElement("canvas");
+                const maxSide = 320;
+                const scale = Math.min(1, maxSide / Math.max(image.width,image.height));
+                canvas.width = Math.max(1,Math.round(image.width*scale));
+                canvas.height = Math.max(1,Math.round(image.height*scale));
+                const ctx = canvas.getContext("2d",{alpha:false});
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.drawImage(image,0,0,canvas.width,canvas.height);
+                let quality = 0.78;
+                const makeBlob = ()=>canvas.toBlob(blob=>{
+                    if(!blob){reject(new Error("ছবি কমপ্রেস করা যায়নি"));return;}
+                    if(blob.size > 55*1024 && quality > 0.35){quality -= 0.08;makeBlob();return;}
+                    const fr = new FileReader();
+                    fr.onerror = ()=>reject(new Error("কমপ্রেস করা ছবি পড়া যায়নি"));
+                    fr.onload = ()=>resolve(fr.result);
+                    fr.readAsDataURL(blob);
+                },"image/webp",quality);
+                makeBlob();
+            };
+            image.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
 function toggleProfileEditMode(isEdit){
     const displayCard = document.getElementById("profileDisplayCard");
     const editForm = document.getElementById("profileEditForm");
@@ -3109,6 +3242,7 @@ function saveUserProfileData(){
 
     const city = [selectedUpazilaVal, selectedUnionVal, selectedLocalAreaVal].filter(Boolean).join(" > ");
     userProfiles[currentUser] = {
+        ...(userProfiles[currentUser] || {}),
         name, phone,
         division:selectedDivisionVal,
         district:selectedDistrictVal,
