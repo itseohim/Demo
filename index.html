@@ -18,10 +18,21 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1"></script>
 
 <style>
+
+.voice-search-popup{display:none;position:fixed;top:14px;left:50%;transform:translateX(-50%);width:min(92vw,390px);z-index:99999;align-items:center;gap:11px;padding:12px 13px;background:#fff;border:1px solid #cce9e3;border-radius:18px;box-shadow:0 10px 35px rgba(0,55,48,.22);color:#164e46;}
+.voice-search-popup.show{display:flex;animation:voicePopupIn .2s ease-out;}
+.voice-search-pulse{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:grid;place-items:center;background:#e0f2ef;color:#00897b;font-size:18px;animation:voicePulse 1.2s infinite;}
+.voice-search-copy{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px;}
+.voice-search-copy strong{font-size:13px;color:#00695c;}
+.voice-search-copy span{font-size:12px;color:#64748b;overflow-wrap:anywhere;}
+.voice-search-actions{display:flex;align-items:center;gap:3px;}
+.voice-search-actions button{border:0;border-radius:8px;padding:6px 7px;background:#f1f5f4;color:#52635f;font-size:10px;font-weight:700;}
+.voice-search-actions button.active{background:#00897b;color:#fff;}
+.voice-search-actions .voice-search-close{font-size:19px;padding:2px 7px;background:transparent;color:#64748b;}
+@keyframes voicePulse{50%{box-shadow:0 0 0 7px rgba(0,137,123,.12);}}
+@keyframes voicePopupIn{from{opacity:0;transform:translate(-50%,-8px)}to{opacity:1;transform:translate(-50%,0)}}
 :root{
     --teal: #00897b;
     --teal-dark: #004d40;
@@ -51,7 +62,6 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 .search-tools{position:absolute;right:9px;display:flex;align-items:center;gap:5px;}
 .search-tool-btn{width:34px;height:34px;border:0;border-radius:10px;background:#e8f5f3;color:var(--teal);display:grid;place-items:center;font-size:15px;cursor:pointer;}
 .search-tool-btn:active{transform:scale(.94);}
-#visualSearchStatus{display:none;margin:8px 4px 0;font-size:12px;color:var(--teal);font-weight:700;}
 
 .container{max-width: 1200px; margin: auto; padding: 24px 16px;}
 .hero-image-banner{width: 100%; margin-bottom: 24px; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(0, 137, 123, 0.12); background: #ffffff; max-height: 400px; cursor: pointer;}
@@ -332,7 +342,6 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 .app-header .search-box{max-width:900px;width:100%;margin:4px auto 0;z-index:2;}
 .app-header .search-box input{height:56px;padding:14px 94px 14px 48px;border-radius:18px;font-size:16px;box-shadow:0 4px 12px rgba(0,0,0,.13);}
 .app-header .search-icon{left:17px;font-size:19px;color:#64748b}.app-header .search-tools{right:8px;gap:4px}.app-header .search-tool-btn{width:38px;height:38px;border-radius:11px;background:#e8f5f3;color:#00796b;font-size:17px}
-#visualSearchStatus{position:relative;z-index:2;color:#fff;margin:7px auto 0;max-width:900px}
 
 .header-drawer{overflow-y:auto;overscroll-behavior:contain}.drawer-category-list{display:flex;flex-direction:column;gap:4px;padding:0 0 6px 12px;margin:0 0 4px 10px;border-left:2px solid #d9efeb}.drawer-category-list button{border:0;background:#f7fbfa;color:#334155;text-align:left;padding:10px 12px;border-radius:10px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:10px;cursor:pointer}.drawer-category-list button i{color:#00897b;width:18px;text-align:center}.drawer-category-list button:active{background:#e0f2f1}
 .header-overlay{display:none;position:fixed;inset:0;background:rgba(0,25,22,.48);z-index:6000}.header-overlay.show{display:block}.header-drawer{height:100%;width:min(82vw,330px);background:#fff;padding:18px 14px;box-shadow:8px 0 28px rgba(0,0,0,.2);animation:drawerIn .22s ease;display:flex;flex-direction:column;gap:5px}.drawer-heading{display:flex;align-items:center;justify-content:space-between;padding:8px 8px 16px;color:#00695c;font-size:18px;border-bottom:1px solid #e2e8f0;margin-bottom:8px}.drawer-heading button{border:0;background:#e8f5f3;color:#00695c;border-radius:50%;width:34px;height:34px;font-size:24px;line-height:1;cursor:pointer}.header-drawer>button{border:0;background:#fff;color:#263238;text-align:left;padding:13px 12px;border-radius:12px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:13px;cursor:pointer}.header-drawer>button:active{background:#e8f5f3}.header-drawer>button i{color:#00897b;width:20px;text-align:center}.notification-overlay{display:flex;align-items:flex-start;justify-content:center;padding:18px}.notification-overlay:not(.show){display:none}.notification-overlay.show{display:flex}.notification-panel{width:min(100%,440px);margin-top:12px;background:#fff;border-radius:18px;padding:16px;box-shadow:0 12px 32px rgba(0,0,0,.22);animation:drawerIn .2s ease}.notification-content{padding:22px 10px;color:#64748b;text-align:center;font-size:14px;line-height:1.6;white-space:pre-wrap}
@@ -355,7 +364,6 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 .app-header .search-icon{left:14px;font-size:17px;}
 .app-header .search-tools{right:6px;gap:4px;}
 .app-header .search-tool-btn{width:32px;height:32px;border-radius:9px;font-size:14px;}
-#visualSearchStatus{margin-top:5px;}
 @media(max-width:480px){
  .app-header{padding:4px 10px 9px;border-radius:0 0 22px 22px;}
  .header-topline{min-height:82px;grid-template-columns:36px minmax(0,1fr) 36px;}
@@ -608,6 +616,107 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 .admin-action-cancel{background:#f97316;color:#fff}
 .admin-action-delete{background:#dc2626;color:#fff}
 
+
+/* Keep all five admin action buttons visible together on mobile */
+.admin-order-actions{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:6px!important;
+  width:100%!important;
+  min-width:0!important;
+  overflow:visible!important;
+  padding:2px 0 4px!important;
+  box-sizing:border-box!important;
+}
+.admin-order-actions button{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  flex:initial!important;
+  box-sizing:border-box!important;
+  padding:9px 3px!important;
+  font-size:clamp(9px,2.55vw,12px)!important;
+  line-height:1.15!important;
+  letter-spacing:-.25px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  border-radius:9px!important;
+}
+@media(max-width:380px){
+  .admin-order-actions{gap:3px!important}
+  .admin-order-actions button{font-size:9px!important;padding:8px 1px!important;letter-spacing:-.35px!important}
+}
+
+
+/* Header drawer categories are collapsed until the user opens the dropdown */
+.drawer-category-list[hidden]{display:none!important}
+.drawer-category-toggle{display:flex!important;align-items:center!important;justify-content:space-between!important}
+.drawer-category-toggle>span{display:flex;align-items:center;gap:10px}
+.drawer-category-toggle .drawer-category-chevron{font-size:13px;color:#64748b;transition:transform .2s ease}
+.drawer-category-toggle.is-open .drawer-category-chevron{transform:rotate(180deg)}
+.drawer-category-list button i{color:#00897b;width:18px;text-align:center}
+#selectedCategoryBadge{display:none!important}
+
+/* Admin order actions: three buttons in the first row, two in the second */
+.admin-order-actions{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:7px!important;
+  width:100%!important;
+  min-width:0!important;
+  overflow:visible!important;
+  padding:2px 0 4px!important;
+  box-sizing:border-box!important;
+}
+.admin-order-actions button{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;flex:none!important;
+  box-sizing:border-box!important;padding:10px 4px!important;
+  font-size:clamp(10px,3vw,13px)!important;line-height:1.15!important;
+  white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;
+}
+@media(max-width:380px){
+ .admin-order-actions{gap:5px!important}
+ .admin-order-actions button{font-size:10px!important;padding:9px 2px!important}
+}
+
+
+/* Homepage: replace category selector with a clear new-products heading */
+.new-products-heading{margin:22px 0 14px!important;padding:0!important}
+.new-products-title{display:flex;align-items:center;gap:13px;padding:12px 4px}
+.new-products-icon{width:44px;height:44px;flex:0 0 44px;border-radius:14px;background:#e0f2f1;color:#00897b;display:flex;align-items:center;justify-content:center;font-size:20px}
+.new-products-title h2{margin:0;color:#263238;font-size:20px;font-weight:900;line-height:1.25}
+.new-products-title p{margin:4px 0 0;color:#718096;font-size:13px;font-weight:500}
+.drawer-category-list button{min-height:62px!important;padding:9px 12px!important;gap:12px!important}
+.drawer-category-thumb{width:48px;height:48px;flex:0 0 48px;object-fit:cover;border-radius:11px;border:1px solid #dce8e5;background:#fff}
+.drawer-category-fallback{width:48px;height:48px;flex:0 0 48px;border-radius:11px;background:#e8f5f3;color:#00897b;display:inline-flex;align-items:center;justify-content:center;font-size:21px}
+.drawer-category-list button span{min-width:0;overflow-wrap:anywhere}
+@media(max-width:380px){.new-products-title h2{font-size:18px}.new-products-title p{font-size:12px}.drawer-category-thumb,.drawer-category-fallback{width:44px;height:44px;flex-basis:44px}}
+
+
+/* Latest Product heading — closely matched to the user's exact reference */
+.new-products-heading{margin:24px 0 18px!important;padding:0 4px!important}
+.product-update-heading{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:78px;box-sizing:border-box}
+.product-update-title{display:flex;align-items:center;gap:13px;min-width:0;position:relative;padding:8px 0 15px}
+.product-update-mark{width:94px;height:76px;flex:0 0 94px;display:flex;align-items:center;justify-content:center;position:relative;color:#fff}
+.product-update-mark .paw{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.product-update-mark .tag-shape{position:absolute;left:29px;top:20px;width:55px;height:55px;display:flex;align-items:center;justify-content:center;background:#079447;color:#fff;clip-path:polygon(0 19%,72% 0,100% 29%,79% 100%,17% 82%);transform:rotate(-9deg);filter:drop-shadow(0 2px 2px rgba(0,0,0,.12))}
+.product-update-mark .tag-shape:before{content:"";position:absolute;right:10px;top:9px;width:7px;height:7px;border-radius:50%;background:#fff}
+.product-update-mark .tag-shape b{font-size:25px;line-height:1;transform:rotate(9deg);font-weight:900}
+.product-update-title h2{margin:0;color:#111827;font-size:clamp(21px,5.4vw,31px);font-weight:900;line-height:1.12;white-space:nowrap;letter-spacing:-.45px}
+.product-update-title:after{content:"";position:absolute;left:107px;right:0;bottom:1px;height:5px;border-radius:50%;background:#a6d52d;transform:rotate(-1.2deg)}
+.product-update-spark{position:absolute;right:-22px;top:0;width:38px;height:30px;font-size:0}
+.product-update-spark:before,.product-update-spark:after{content:"";position:absolute;background:#9bd32b;border-radius:5px;width:7px;height:22px;top:0;left:9px;transform:rotate(7deg)}
+.product-update-spark:after{height:17px;left:27px;top:8px;transform:rotate(48deg)}
+.product-view-all{flex:0 0 auto;min-height:54px;padding:0 17px 0 22px;border:0;border-radius:30px;background:#079b35;color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-size:18px;font-weight:800;white-space:nowrap;box-shadow:0 5px 12px rgba(7,141,50,.12);cursor:pointer}
+.product-view-all i{width:25px;height:25px;border-radius:50%;background:#fff;color:#079b35;display:inline-flex;align-items:center;justify-content:center;font-size:15px}
+.product-view-all:active{transform:scale(.97)}
+@media(max-width:420px){.new-products-heading{margin:20px 0 15px!important;padding:0 2px!important}.product-update-heading{min-height:72px;gap:7px}.product-update-title{gap:8px;padding-bottom:14px}.product-update-mark{width:78px;height:68px;flex-basis:78px}.product-update-mark .tag-shape{left:24px;top:18px;width:49px;height:49px}.product-update-mark .tag-shape b{font-size:22px}.product-update-title h2{font-size:clamp(20px,5.6vw,25px)}.product-update-title:after{left:87px;height:4px}.product-update-spark{right:-18px;top:0;transform:scale(.82)}.product-view-all{min-height:46px;padding:0 12px 0 15px;gap:7px;font-size:15px}.product-view-all i{width:22px;height:22px;font-size:13px}}
+@media(max-width:360px){.product-update-mark{width:67px;flex-basis:67px}.product-update-mark .tag-shape{left:19px;width:45px;height:45px}.product-update-title{gap:6px}.product-update-title h2{font-size:19px}.product-update-title:after{left:73px}.product-view-all{font-size:13px;padding:0 9px 0 11px;min-height:42px}}
 </style>
 </head>
 
@@ -684,20 +793,25 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
     <svg class="ui-icon search-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
     <input id="searchInput" type="text" placeholder="Search food, toys, grooming..." oninput="searchProducts()">
     <div class="search-tools">
-      <button type="button" class="search-tool-btn" onclick="document.getElementById('visualSearchInput').click()" aria-label="ছবি দিয়ে সার্চ" title="ছবি দিয়ে খুঁজুন"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
       <button type="button" class="search-tool-btn" onclick="startVoiceSearch()" aria-label="ভয়েস সার্চ" title="ভয়েস সার্চ"><svg class="ui-icon filled-mic" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v4m-4 0h8"/></svg></button>
     </div>
-    <input id="visualSearchInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="searchProductsByImage(event)">
   </div>
-  <div id="visualSearchStatus" role="status" aria-live="polite"></div>
+  <div id="voiceSearchPopup" class="voice-search-popup" role="status" aria-live="polite" aria-hidden="true">
+    <div class="voice-search-pulse"><i class="fa-solid fa-microphone"></i></div>
+    <div class="voice-search-copy"><strong id="voiceSearchTitle">শুনছি...</strong><span id="voiceSearchTranscript">আপনি কী খুঁজছেন বলুন</span></div>
+    <div class="voice-search-actions"><button type="button" id="voiceLangBn" class="active" onclick="setVoiceSearchLanguage('bn-BD')">বাংলা</button><button type="button" id="voiceLangEn" onclick="setVoiceSearchLanguage('en-US')">English</button><button type="button" class="voice-search-close" onclick="stopVoiceSearch()" aria-label="বন্ধ করুন">×</button></div>
+  </div>
 </header>
 
 <div id="sideMenuOverlay" class="header-overlay" onclick="if(event.target===this)closeHeaderPanels()">
   <aside class="header-drawer" aria-label="প্রধান মেনু">
     <div class="drawer-heading"><strong>ADORE’S PET</strong><button type="button" onclick="closeHeaderPanels()" aria-label="বন্ধ করুন">×</button></div>
     <button type="button" onclick="closeHeaderPanels();goHome()"><i class="fa-solid fa-house"></i> Home</button>
-    <button type="button" onclick="closeHeaderPanels();openCategoryPopup()"><i class="fa-solid fa-layer-group"></i> All Categories</button>
-    <div id="drawerDynamicCategories" class="drawer-category-list" aria-label="ক্যাটাগরি তালিকা"></div>
+    <button type="button" class="drawer-category-toggle" aria-expanded="false" aria-controls="drawerDynamicCategories" onclick="toggleDrawerCategories(this)">
+      <span><i class="fa-solid fa-layer-group"></i> Categories</span>
+      <i class="fa-solid fa-chevron-down drawer-category-chevron" aria-hidden="true"></i>
+    </button>
+    <div id="drawerDynamicCategories" class="drawer-category-list" aria-label="ক্যাটাগরি তালিকা" hidden></div>
     <button type="button" onclick="closeHeaderPanels();openCart()"><i class="fa-solid fa-cart-shopping"></i> My Cart</button>
     <button type="button" onclick="closeHeaderPanels();openMyOrdersFromNav()"><i class="fa-solid fa-box"></i> My Orders</button>
     <button type="button" onclick="closeHeaderPanels();openMyAccountModal()"><i class="fa-solid fa-user"></i> My Account</button>
@@ -720,16 +834,27 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
     <img id="heroBannerImg" src="https://i.postimg.cc/JzmwDZBp/file-000000004a4482438eebd37b7fd9db5f.png" alt="Banner" loading="lazy">
 </div>
 
-<section class="category-section">
-    <div class="category-search-bar-box" onclick="openCategoryPopup()">
-        <div class="category-bar-left">
-            <svg class="ui-icon category-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>
-            <span id="selectedCategoryTitle">Categories</span>
+<section class="category-section new-products-heading" aria-label="Latest products">
+    <div class="product-update-heading">
+        <div class="product-update-title">
+            <span class="product-update-mark" aria-hidden="true">
+                <svg class="paw" viewBox="0 0 100 80" aria-hidden="true">
+                    <g fill="#dff0b5" opacity=".95">
+                        <ellipse cx="20" cy="17" rx="10" ry="16" transform="rotate(-34 20 17)"/>
+                        <ellipse cx="44" cy="10" rx="10" ry="16" transform="rotate(-8 44 10)"/>
+                        <ellipse cx="67" cy="17" rx="10" ry="16" transform="rotate(24 67 17)"/>
+                        <ellipse cx="83" cy="34" rx="9" ry="14" transform="rotate(42 83 34)"/>
+                        <path d="M12 48 C15 35 29 32 39 39 C48 28 65 32 69 45 C78 58 63 71 49 72 C31 76 7 67 12 48Z"/>
+                    </g>
+                </svg>
+                <span class="tag-shape"><b>%</b></span>
+            </span>
+            <h2>Latest Product</h2>
+            <span class="product-update-spark" aria-hidden="true"></span>
         </div>
-        <div class="category-bar-right">
-            <span id="selectedCategoryBadge">Showing All</span>
-            <svg class="ui-icon chevron-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg>
-        </div>
+        <button class="product-view-all" type="button" onclick="viewAllProducts()">
+            <span>View All</span><i class="fa-solid fa-circle-chevron-right" aria-hidden="true"></i>
+        </button>
     </div>
 </section>
 
@@ -1431,8 +1556,6 @@ let siteSettings = { popupImg: "", popupProdCode: "", notice: "", vacation: fals
 let couponsList = [];
 let appliedCouponData = null;
 let currentCategory = "";
-let visualSearchCategory = "";
-let visualSearchModelPromise = null;
 let currentAdminTab = "Pending";
 let currentOpenProductCode = null;
 let lastPlacedOrderNumber = null;
@@ -1550,6 +1673,15 @@ async function fetchCategories(){
     renderCategoryUI();
 }
 
+function toggleDrawerCategories(button){
+    const list = document.getElementById("drawerDynamicCategories");
+    if(!list || !button) return;
+    const willOpen = list.hidden;
+    list.hidden = !willOpen;
+    button.setAttribute("aria-expanded", willOpen ? "true" : "false");
+    button.classList.toggle("is-open", willOpen);
+}
+
 function renderCategoryUI(){
     const listContainer = document.getElementById("categoryPopupList");
     if(listContainer){
@@ -1576,12 +1708,18 @@ function renderCategoryUI(){
     const drawerCategoryList = document.getElementById("drawerDynamicCategories");
     if(drawerCategoryList){
         const escapeMenuText = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
-        drawerCategoryList.innerHTML = categoriesList.map(cat => `
-            <button type="button" data-drawer-category="${escapeMenuText(cat.name)}">
-                <i class="${escapeMenuText(cat.icon || 'fa-solid fa-folder')}"></i>
-                <span>${escapeMenuText(cat.name)}</span>
-            </button>
-        `).join("");
+        drawerCategoryList.innerHTML = categoriesList.map(cat => {
+            const categoryImage = String(cat.img || "").trim();
+            const media = categoryImage
+                ? `<img class="drawer-category-thumb" src="${escapeMenuText(categoryImage)}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><i class="fa-solid fa-folder drawer-category-fallback" style="display:none"></i>`
+                : `<i class="fa-solid fa-folder drawer-category-fallback"></i>`;
+            return `
+                <button type="button" data-drawer-category="${escapeMenuText(cat.name)}">
+                    ${media}
+                    <span>${escapeMenuText(cat.name)}</span>
+                </button>
+            `;
+        }).join("");
         drawerCategoryList.querySelectorAll("[data-drawer-category]").forEach(button => {
             button.addEventListener("click", () => {
                 const categoryName = button.getAttribute("data-drawer-category") || "";
@@ -1796,60 +1934,92 @@ function selectCategory(cat){
 
 function searchProducts(){
     currentCategory = "";
-    visualSearchCategory = "";
-    const status = document.getElementById("visualSearchStatus");
-    if(status){ status.style.display="none"; status.textContent=""; }
     document.getElementById("selectedCategoryBadge").innerText = "Showing All";
     renderProducts();
 }
 
-async function searchProductsByImage(event){
-    const file = event.target.files && event.target.files[0];
-    if(!file) return;
-    const status = document.getElementById("visualSearchStatus");
-    status.style.display="block";
-    status.textContent="ছবিটি বিশ্লেষণ করা হচ্ছে…";
-    try{
-        if(!window.mobilenet || !window.tf) throw new Error("ছবি শনাক্তকরণ মডেল লোড হয়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।");
-        if(!visualSearchModelPromise) visualSearchModelPromise = mobilenet.load();
-        const model = await visualSearchModelPromise;
-        const imageUrl = URL.createObjectURL(file);
-        const img = new Image();
-        img.src = imageUrl;
-        await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;});
-        const predictions = await model.classify(img, 10);
-        URL.revokeObjectURL(imageUrl);
-        const labels = predictions.map(x=>String(x.className||"").toLowerCase());
-        const rabbitMatch = labels.some(x=>/rabbit|hare|bunny/.test(x));
-        const hamsterMatch = labels.some(x=>/hamster/.test(x));
-        if(rabbitMatch && !hamsterMatch) visualSearchCategory="Rabbit";
-        else if(hamsterMatch && !rabbitMatch) visualSearchCategory="Hamster";
-        else if(rabbitMatch && hamsterMatch) visualSearchCategory = predictions.find(x=>/rabbit|hare|bunny|hamster/i.test(x.className))?.className.toLowerCase().match(/hamster/) ? "Hamster" : "Rabbit";
-        else {
-            status.textContent="ছবিতে Rabbit বা Hamster নিশ্চিতভাবে শনাক্ত করা যায়নি। পরিষ্কার ছবি দিয়ে আবার চেষ্টা করুন।";
-            event.target.value="";
-            return;
-        }
-        currentCategory="";
-        document.getElementById("searchInput").value="";
-        document.getElementById("selectedCategoryBadge").innerText=visualSearchCategory+" (ছবি দিয়ে খোঁজা)";
-        status.textContent=visualSearchCategory+" ছবির সঙ্গে মিলে এমন পণ্য দেখানো হচ্ছে।";
-        renderProducts();
-        document.getElementById("productsGrid").scrollIntoView({behavior:"smooth",block:"start"});
-    }catch(err){
-        status.textContent=err && err.message ? err.message : "ছবি বিশ্লেষণ করা যায়নি। আবার চেষ্টা করুন।";
-    }
-    event.target.value="";
-}
+let activeVoiceRecognition = null;
+let voiceSearchLanguage = "bn-BD";
+let voiceSearchFinalText = "";
+let voiceSearchShouldSubmit = false;
 
+function showVoiceSearchPopup(){
+    const popup = document.getElementById("voiceSearchPopup");
+    if(popup){ popup.classList.add("show"); popup.setAttribute("aria-hidden","false"); }
+}
+function hideVoiceSearchPopup(){
+    const popup = document.getElementById("voiceSearchPopup");
+    if(popup){ popup.classList.remove("show"); popup.setAttribute("aria-hidden","true"); }
+}
+function setVoiceSearchLanguage(language){
+    voiceSearchLanguage = language;
+    document.getElementById("voiceLangBn")?.classList.toggle("active", language === "bn-BD");
+    document.getElementById("voiceLangEn")?.classList.toggle("active", language === "en-US");
+    if(activeVoiceRecognition){
+        try{ activeVoiceRecognition.stop(); }catch(e){}
+        voiceSearchShouldSubmit = false;
+        setTimeout(startVoiceSearch, 250);
+    }
+}
+function stopVoiceSearch(){
+    voiceSearchShouldSubmit = false;
+    if(activeVoiceRecognition){ try{ activeVoiceRecognition.stop(); }catch(e){} }
+    activeVoiceRecognition = null;
+    hideVoiceSearchPopup();
+}
 function startVoiceSearch(){
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if(!SpeechRecognition){ showSiteMessage("এই ব্রাউজারে ভয়েস সার্চ সমর্থিত নয়।","ভয়েস সার্চ","fa-microphone-slash"); return; }
+    if(!SpeechRecognition){ showSiteMessage("আপনার ব্রাউজারে ভয়েস সার্চ সমর্থিত নয়। Chrome ব্রাউজার ব্যবহার করে দেখুন।","ভয়েস সার্চ","fa-microphone-slash"); return; }
+    if(activeVoiceRecognition){ stopVoiceSearch(); return; }
     const recognition = new SpeechRecognition();
-    recognition.lang="bn-BD";
-    recognition.onresult = e => { document.getElementById("searchInput").value=e.results[0][0].transcript; searchProducts(); };
-    recognition.onerror = () => showSiteMessage("ভয়েস সার্চ করা যায়নি। আবার চেষ্টা করুন।","ভয়েস সার্চ","fa-triangle-exclamation");
-    recognition.start();
+    activeVoiceRecognition = recognition;
+    voiceSearchFinalText = "";
+    voiceSearchShouldSubmit = true;
+    recognition.lang = voiceSearchLanguage;
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    document.getElementById("voiceSearchTitle").textContent = "শুনছি...";
+    document.getElementById("voiceSearchTranscript").textContent = "আপনি কী খুঁজছেন বলুন";
+    showVoiceSearchPopup();
+    recognition.onresult = event => {
+        let interim = "";
+        for(let i=event.resultIndex; i<event.results.length; i++){
+            const transcript = event.results[i][0].transcript.trim();
+            if(event.results[i].isFinal) voiceSearchFinalText += (voiceSearchFinalText ? " " : "") + transcript;
+            else interim += transcript;
+        }
+        document.getElementById("voiceSearchTranscript").textContent = voiceSearchFinalText || interim || "শুনছি...";
+    };
+    recognition.onerror = event => {
+        voiceSearchShouldSubmit = false;
+        document.getElementById("voiceSearchTitle").textContent = "ভয়েস সার্চ চালু করা যায়নি";
+        document.getElementById("voiceSearchTranscript").textContent = event.error === "not-allowed" ? "মাইক্রোফোন ব্যবহারের অনুমতি দিন" : "আবার মাইক্রোফোনে ক্লিক করে চেষ্টা করুন";
+        setTimeout(hideVoiceSearchPopup, 1800);
+    };
+    recognition.onend = () => {
+        const text = voiceSearchFinalText.trim();
+        activeVoiceRecognition = null;
+        hideVoiceSearchPopup();
+        if(voiceSearchShouldSubmit && text){
+            const input = document.getElementById("searchInput");
+            input.value = text;
+            searchProducts();
+        }
+        voiceSearchShouldSubmit = false;
+    };
+    try{ recognition.start(); }
+    catch(error){ activeVoiceRecognition = null; voiceSearchShouldSubmit = false; hideVoiceSearchPopup(); showSiteMessage("মাইক্রোফোন চালু করা যায়নি। আবার চেষ্টা করুন।","ভয়েস সার্চ","fa-triangle-exclamation"); }
+}
+
+function viewAllProducts(){
+    currentCategory = "";
+    const searchInput = document.getElementById("searchInput");
+    if(searchInput) searchInput.value = "";
+    const badge = document.getElementById("selectedCategoryBadge");
+    if(badge) badge.innerText = "Showing All";
+    renderProducts();
+    const grid = document.getElementById("productsGrid");
+    if(grid) grid.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 function renderProducts(){
@@ -1858,8 +2028,7 @@ function renderProducts(){
     if(!grid) return;
     const search = searchInput ? searchInput.value.trim().toLowerCase() : "";
     let filtered = products.filter(p => p.is_active !== false);
-    if(visualSearchCategory) filtered = filtered.filter(p => String(p.category || "").toLowerCase() === visualSearchCategory.toLowerCase() || String(p.name || "").toLowerCase().includes(visualSearchCategory.toLowerCase()));
-    else if(currentCategory) filtered = filtered.filter(p => p.category && p.category.toLowerCase() === currentCategory.toLowerCase());
+    if(currentCategory) filtered = filtered.filter(p => p.category && p.category.toLowerCase() === currentCategory.toLowerCase());
     else if(search) filtered = filtered.filter(p => p.name && p.name.toLowerCase().includes(search));
 
     if(filtered.length === 0){
