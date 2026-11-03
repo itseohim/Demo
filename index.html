@@ -507,8 +507,11 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
   padding:12px;margin:0 0 12px;box-shadow:0 3px 12px rgba(15,23,42,.035);
 }
 .customer-order-main{display:flex;align-items:flex-start;gap:12px;min-width:0}
-.customer-order-photo{width:112px;flex:0 0 112px;aspect-ratio:1/1;border-radius:13px;overflow:hidden;background:#e2e8f0}
-.customer-order-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.customer-order-photo{width:112px;flex:0 0 112px;min-width:0;display:flex;flex-direction:column;gap:7px}
+.customer-order-photo img{display:block;width:100%;aspect-ratio:1/1;height:auto;object-fit:cover;border-radius:13px;background:#e2e8f0}
+.customer-order-whatsapp{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;box-sizing:border-box;padding:8px 5px;border:0;border-radius:10px;background:#168b55;color:#fff;text-decoration:none;text-align:center;font-size:10px;line-height:1.25;font-weight:900;box-shadow:0 3px 8px rgba(22,139,85,.18);}
+.customer-order-whatsapp i{font-size:14px;flex:0 0 auto}
+.customer-order-whatsapp:active{transform:scale(.98)}
 .customer-order-summary{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}
 .customer-order-id-row{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;flex-wrap:wrap}
 .customer-order-id-row strong{color:var(--teal);font-size:14px;font-weight:900;overflow-wrap:anywhere}
@@ -629,7 +632,6 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 .admin-order-actions{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;padding:1px 0 5px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .admin-order-actions::-webkit-scrollbar{display:none}
 .admin-order-actions button{flex:1 0 auto;min-width:0;white-space:nowrap;border:0;border-radius:9px;padding:9px 10px;font-size:12px;font-weight:700;line-height:1.1;cursor:pointer}
-.admin-action-message{background:#2563eb;color:#fff}
 .admin-action-voucher{background:#078b7b;color:#fff}
 .admin-action-fee{background:#0f766e;color:#fff}
 .admin-action-cancel{background:#f97316;color:#fff}
@@ -897,24 +899,6 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 }
 
 
-/* ADORE'S PET order-linked text messenger */
-.order-chat-overlay{position:fixed;inset:0;z-index:100500;background:rgba(15,23,42,.62);display:none;align-items:center;justify-content:center;padding:12px;}
-.order-chat-overlay.show{display:flex;}
-.order-chat-panel{width:min(100%,520px);height:min( min(760px,92dvh),760px);background:#f8fafc;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 22px 70px rgba(0,0,0,.28);}
-.order-chat-head{background:linear-gradient(135deg,#00897b,#004d40);color:white;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
-.order-chat-head strong{font-size:15px;display:block}.order-chat-head small{opacity:.88;font-size:11px;}
-.order-chat-close{width:34px;height:34px;border:0;border-radius:50%;background:rgba(255,255,255,.18);color:white;font-size:20px;cursor:pointer;}
-.order-chat-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px;background:#edf4f3;}
-.order-chat-empty{margin:auto;text-align:center;color:#64748b;font-size:13px;padding:24px;}
-.order-chat-msg{max-width:84%;padding:9px 12px;border-radius:14px;font-size:13px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;box-shadow:0 1px 2px #0f172a12;}
-.order-chat-msg.customer{align-self:flex-end;background:#d1fae5;color:#065f46;border-bottom-right-radius:4px;}
-.order-chat-msg.admin{align-self:flex-start;background:white;color:#1e293b;border-bottom-left-radius:4px;}
-.order-chat-msg b{display:block;font-size:10px;opacity:.7;margin-bottom:3px}.order-chat-msg time{display:block;text-align:right;font-size:9px;opacity:.6;margin-top:4px;}
-.order-chat-compose{display:flex;gap:8px;padding:10px;background:white;border-top:1px solid #e2e8f0;align-items:flex-end;}
-.order-chat-compose textarea{flex:1;resize:none;max-height:110px;min-height:42px;border:1px solid #cbd5e1;border-radius:12px;padding:10px;font:inherit;font-size:13px;outline:none;}
-.order-chat-compose button{height:42px;padding:0 16px;border:0;border-radius:12px;background:#00897b;color:white;font-weight:800;cursor:pointer;}
-.order-chat-compose button:disabled{opacity:.55;cursor:not-allowed}.customer-order-chat-btn{background:#e0f2fe!important;color:#075985!important;border:1px solid #bae6fd!important;}
-@media(max-width:480px){.order-chat-overlay{padding:0}.order-chat-panel{width:100%;height:100dvh;max-height:100dvh;border-radius:0}.order-chat-head{padding-top:max(14px,env(safe-area-inset-top));}.order-chat-compose{padding-bottom:max(10px,env(safe-area-inset-bottom));}}
 </style>
 </head>
 
@@ -3453,6 +3437,14 @@ async function renderUserOrdersList(){
             const itemShort = orderItems.length
                 ? orderItems.map(it => `${it.product_name || 'পণ্য'} × ${Number(it.quantity) || 1}`).join(' • ')
                 : 'পণ্যের তথ্য পাওয়া যায়নি';
+            const whatsappOrderMessage = [
+                'আসসালামু আলাইকুম, ADORE’S PET। আমার অর্ডার সম্পর্কে যোগাযোগ করতে চাই।',
+                `অর্ডার নম্বর: #${o.order_number || saved.order_number || o.id}`,
+                `কাস্টমারের নাম: ${o.customer_name || currentUser?.name || '—'}`,
+                `ফোন নম্বর: ${o.phone || currentUser?.phone || '—'}`,
+                `সর্বমোট: ৳${o.total || 0}`
+            ].join('\n');
+            const whatsappOrderUrl = 'https://wa.me/message/NTZHEUXXC6DTN1?text=' + encodeURIComponent(whatsappOrderMessage);
 
             html += `
                 <article class="customer-order-card">
@@ -3460,6 +3452,9 @@ async function renderUserOrdersList(){
                         <div class="customer-order-photo">
                             <img src="${orderImage}" alt="${firstItem.product_name || 'অর্ডারকৃত পণ্য'}" loading="lazy"
                                  onerror="this.onerror=null;this.src='https://via.placeholder.com/240x240?text=Product';">
+                            <a class="customer-order-whatsapp" href="${whatsappOrderUrl}" target="_blank" rel="noopener noreferrer" aria-label="অর্ডার সম্পর্কে WhatsApp-এ যোগাযোগ করুন">
+                                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i><span>অর্ডার সম্পর্কে<br>যোগাযোগ করুন</span>
+                            </a>
                         </div>
                         <div class="customer-order-summary">
                             <div class="customer-order-id-row">
@@ -3490,9 +3485,6 @@ async function renderUserOrdersList(){
                         ${customAdminMessage}
                         ${cancelMsg}
                         <div class="customer-order-actions">
-                            <button type="button" class="customer-order-chat-btn" onclick="openCustomerOrderChat('${saved.tracking_token}', '${String(o.order_number || saved.order_number || o.id).replace(/[^a-zA-Z0-9_-]/g, '')}')">
-                                <i class="fa-solid fa-message"></i> মেসেজ করুন
-                            </button>
                             <button type="button" onclick="openVoucherForOrder('${o.id}')">
                                 <i class="fa-solid fa-receipt"></i> ভাউচার দেখুন
                             </button>
@@ -4016,7 +4008,6 @@ async function renderAdminOrders(){
                     <option value="Shipped">Shipped</option><option value="Completed">Completed</option>
                 </select>` : ''}
                 <div class="admin-order-actions">
-                    <button class="admin-action-message" onclick="openAdminOrderChat('${o.id}', '${String(o.order_number || o.id).replace(/[^a-zA-Z0-9_-]/g, '')}')">Message</button>
                     <button class="admin-action-voucher" onclick="openVoucherForOrder('${o.id}')">Voucher</button>
                     <button class="admin-action-fee" onclick="adminEditDeliveryFee('${o.id}', ${Number(o.delivery_fee)||0})">Delivery Fee</button>
                     ${!isCancelled && String(o.status).toLowerCase() !== 'completed' ? `<button class="admin-action-cancel" onclick="adminCancelOrder('${o.id}')">Cancel</button>` : ''}
@@ -4366,90 +4357,5 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHeaderP
 </div>
 
 
-<div id="orderChatOverlay" class="order-chat-overlay" aria-hidden="true" onclick="if(event.target===this)closeOrderChat()">
- <section class="order-chat-panel" role="dialog" aria-modal="true" aria-labelledby="orderChatTitle">
-  <header class="order-chat-head"><div><strong id="orderChatTitle">অর্ডার মেসেজ</strong><small id="orderChatSubtitle">শুধু টেক্সট মেসেজ</small></div><button type="button" class="order-chat-close" aria-label="বন্ধ করুন" onclick="closeOrderChat()">×</button></header>
-  <div id="orderChatMessages" class="order-chat-messages"><div class="order-chat-empty">মেসেজ লোড হচ্ছে...</div></div>
-  <form class="order-chat-compose" onsubmit="event.preventDefault();sendActiveOrderChatMessage();"><textarea id="orderChatInput" rows="1" maxlength="2000" placeholder="আপনার মেসেজ লিখুন..." onkeydown="orderChatEnterSend(event)"></textarea><button type="submit" id="orderChatSend">পাঠান</button></form>
- </section>
-</div>
-
-<script>
-/* Order-linked Messenger: customer uses private tracking token; admin uses Supabase session. */
-let activeOrderChat = null;
-let orderChatRefreshTimer = null;
-function orderChatSetHeader(orderNo, customer, phone, role){
- const title=document.getElementById('orderChatTitle');
- const sub=document.getElementById('orderChatSubtitle');
- if(title) title.textContent='অর্ডার #'+orderNo+' · '+(role==='admin'?'কাস্টমার চ্যাট':'ADORE\'S PET');
- if(sub) sub.textContent=(customer||'কাস্টমার')+(phone?' · '+phone:'')+' — শুধু টেক্সট মেসেজ';
-}
-function orderChatOpen(meta){
- activeOrderChat=meta;
- orderChatSetHeader(meta.orderNo,meta.customer,meta.phone,meta.role);
- const overlay=document.getElementById('orderChatOverlay');
- overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
- const input=document.getElementById('orderChatInput'); if(input){input.value='';input.focus();}
- loadActiveOrderChat();
- if(orderChatRefreshTimer) clearInterval(orderChatRefreshTimer);
- orderChatRefreshTimer=setInterval(()=>{if(activeOrderChat)loadActiveOrderChat(true);},7000);
-}
-function closeOrderChat(){
- activeOrderChat=null;
- if(orderChatRefreshTimer){clearInterval(orderChatRefreshTimer);orderChatRefreshTimer=null;}
- const overlay=document.getElementById('orderChatOverlay'); if(overlay){overlay.classList.remove('show');overlay.setAttribute('aria-hidden','true');}
-}
-async function openAdminOrderChat(orderId,orderNo){
- if(!supabaseClient) return showAlert('সংযোগ নেই','Supabase সংযোগ পাওয়া যায়নি।');
- const {data:{session}}=await supabaseClient.auth.getSession();
- if(!session) return showAlert('অ্যাডমিন লগইন প্রয়োজন','চ্যাট দেখতে আগে Admin Panel-এ লগইন করুন।');
- const order=(window.__adoresVoucherOrders||{})[String(orderId)]||{};
- orderChatOpen({role:'admin',orderId:String(orderId),orderNo:String(orderNo),customer:String(order.customer_name||'কাস্টমার'),phone:String(order.phone||'')});
-}
-function openCustomerOrderChat(token,orderNo){
- if(!token) return showAlert('চ্যাট খোলা যাচ্ছে না','এই অর্ডারের tracking token পাওয়া যায়নি।');
- orderChatOpen({role:'customer',token:String(token),orderNo:String(orderNo),customer:"ADORE'S PET"});
-}
-function renderOrderChatMessages(rows){
- const box=document.getElementById('orderChatMessages'); if(!box)return;
- const oldAtBottom=box.scrollHeight-box.scrollTop-box.clientHeight<70;
- if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="order-chat-empty"><i class="fa-regular fa-comments" style="font-size:30px;display:block;margin-bottom:8px;"></i>এখনো কোনো মেসেজ নেই।<br>কথোপকথন শুরু করুন।</div>';return;}
- box.innerHTML=rows.map(m=>{
-  const side=(activeOrderChat.role==='admin' ? m.sender_role==='admin' : m.sender_role==='customer')?'customer':'admin';
-  const label=m.sender_role==='admin'?"ADORE'S PET":(m.sender_name||'কাস্টমার');
-  const date=m.created_at?new Date(m.created_at).toLocaleString('bn-BD',{dateStyle:'short',timeStyle:'short'}):'';
-  return `<div class="order-chat-msg ${side}"><b>${escapeOrderText(label)}</b>${escapeOrderText(m.message)}<time>${escapeOrderText(date)}</time></div>`;
- }).join('');
- if(oldAtBottom||!box.dataset.firstRender){box.scrollTop=box.scrollHeight;box.dataset.firstRender='1';}
-}
-async function loadActiveOrderChat(silent=false){
- const chat=activeOrderChat;if(!chat||!supabaseClient)return;
- const box=document.getElementById('orderChatMessages');
- if(!silent)box.innerHTML='<div class="order-chat-empty">মেসেজ লোড হচ্ছে...</div>';
- try{
-  const rpc=chat.role==='admin'?'admin_get_adores_order_chat':'customer_get_adores_order_chat';
-  const args=chat.role==='admin'?{p_order_id:chat.orderId}:{p_tracking_token:chat.token};
-  const {data,error}=await supabaseClient.rpc(rpc,args);if(error)throw error;
-  if(data&&data.success===false)throw new Error(data.message||'চ্যাট লোড করা যায়নি');
-  renderOrderChatMessages(Array.isArray(data)?data:(data.messages||[]));
- }catch(err){if(!silent)box.innerHTML=`<div class="order-chat-empty">চ্যাট লোড করা যায়নি।<br>${escapeOrderText(err.message)}<br><small>প্রয়োজনীয় SQL migration চালানো হয়েছে কি না দেখুন।</small></div>`;}
-}
-async function sendActiveOrderChatMessage(){
- const chat=activeOrderChat,input=document.getElementById('orderChatInput'),btn=document.getElementById('orderChatSend');
- if(!chat||!input||!btn)return;
- const message=input.value.trim();if(!message)return;
- if(message.length>2000)return showAlert('বার্তা বড় হয়েছে','সর্বোচ্চ ২০০০ অক্ষরের মেসেজ পাঠানো যাবে।');
- btn.disabled=true;
- try{
-  const rpc=chat.role==='admin'?'admin_send_adores_order_chat':'customer_send_adores_order_chat';
-  const args=chat.role==='admin'?{p_order_id:chat.orderId,p_message:message}:{p_tracking_token:chat.token,p_message:message};
-  const {data,error}=await supabaseClient.rpc(rpc,args);if(error)throw error;
-  if(data&&data.success===false)throw new Error(data.message||'মেসেজ পাঠানো যায়নি');
-  input.value='';await loadActiveOrderChat(true);
- }catch(err){showAlert('মেসেজ পাঠানো যায়নি',err.message+' — SQL migration চালানো হয়েছে কি না দেখুন।');}
- finally{btn.disabled=false;input.focus();}
-}
-function orderChatEnterSend(event){if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendActiveOrderChatMessage();}}
-</script>
 </body>
 </html>
