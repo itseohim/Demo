@@ -514,6 +514,33 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
  .customer-order-detail-grid>div.full{grid-column:auto}
 }
 
+
+/* Product upload notifications */
+.notification-action{position:relative}
+.notification-dot{display:none}
+.notification-count-badge{
+ position:absolute;right:0;top:0;min-width:18px;height:18px;padding:0 4px;
+ display:none;align-items:center;justify-content:center;border:2px solid #006b54;
+ border-radius:20px;background:#ef4444;color:#fff;font-size:10px;font-weight:900;
+ line-height:1;z-index:5
+}
+.notification-count-badge.show{display:flex}
+.notification-content{padding:12px 2px 4px;text-align:left;max-height:min(68vh,620px);overflow-y:auto}
+.notification-intro{font-size:12px;color:#64748b;margin:0 0 12px;line-height:1.5}
+.product-notification-list{display:flex;flex-direction:column;gap:10px}
+.product-notification-item{
+ display:flex;gap:11px;align-items:center;padding:10px;border:1px solid #e2e8f0;
+ border-radius:13px;background:#f8fafc;text-align:left;width:100%;cursor:pointer
+}
+.product-notification-item:active{background:#e0f2f1}
+.product-notification-item img{width:66px;height:66px;flex:0 0 66px;object-fit:cover;border-radius:10px;background:#e2e8f0}
+.product-notification-info{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
+.product-notification-name{font-size:13px;font-weight:900;color:#263445;line-height:1.35;overflow-wrap:anywhere}
+.product-notification-meta{font-size:11px;color:#64748b;line-height:1.4}
+.product-notification-price{font-size:13px;color:var(--teal);font-weight:900}
+.product-notification-new{font-size:9px;color:#fff;background:#ef4444;border-radius:20px;padding:2px 7px;margin-left:5px;vertical-align:middle}
+.notification-empty{padding:28px 12px;text-align:center;color:#64748b;font-size:13px;background:#f8fafc;border-radius:12px}
+
 </style>
 </head>
 
@@ -582,7 +609,7 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
     <div class="logo-area header-banner-area" onclick="goHome()" role="button" aria-label="ADORE'S PET Home" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goHome();}">
       <img src="https://i.postimg.cc/d3N6hfMD/file-00000000b5648211b197e639ac4f8be4.png" alt="ADORE'S PET logo" class="header-brand-banner" loading="eager">
     </div>
-    <button class="header-action-btn notification-action" type="button" onclick="openNotifications()" aria-label="নোটিফিকেশন দেখুন"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="notification-dot"></span></button>
+    <button class="header-action-btn notification-action" type="button" onclick="openNotifications()" aria-label="নোটিফিকেশন দেখুন"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="notification-count-badge" id="notificationCountBadge">0</span></button>
   </div>
   <div class="header-paw paw-left"><i class="fa-solid fa-paw"></i></div><div class="header-paw paw-right"><i class="fa-solid fa-paw"></i></div>
   <div class="header-leaf leaf-left"><i class="fa-solid fa-leaf"></i></div><div class="header-leaf leaf-right"><i class="fa-solid fa-leaf"></i></div>
@@ -1582,7 +1609,7 @@ async function fetchProducts(){
     if(!supabaseClient){
         try {
             const cached = JSON.parse(localStorage.getItem("adoresCachedProducts") || "[]");
-            if(Array.isArray(cached) && cached.length){ products = cached; renderProducts(); return; }
+            if(Array.isArray(cached) && cached.length){ products = cached; renderProducts(); updateProductNotificationBadge(); return; }
         } catch(e){}
         if(grid) grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px 18px;color:#64748b;">পণ্য লোড করার সার্ভিসে সংযোগ পাওয়া যাচ্ছে না। ইন্টারনেট সংযোগ চালু করে পেজটি Refresh করুন।</div>`;
         return;
@@ -1593,6 +1620,7 @@ async function fetchProducts(){
         products = Array.isArray(data) ? data : [];
         localStorage.setItem("adoresCachedProducts", JSON.stringify(products));
         renderProducts();
+        updateProductNotificationBadge();
     } catch(err){
         console.error("Product loading failed:", err);
         // Show the last successfully loaded catalogue when the network/API is temporarily unavailable.
@@ -1601,6 +1629,7 @@ async function fetchProducts(){
             if(Array.isArray(cached) && cached.length){
                 products = cached;
                 renderProducts();
+                updateProductNotificationBadge();
                 showToast("ইন্টারনেট সমস্যার কারণে সংরক্ষিত পণ্য দেখানো হচ্ছে।");
                 return;
             }
@@ -3197,7 +3226,87 @@ document.addEventListener('change',async function(e){
 
 
 function openSideMenu(){closeHeaderPanels();const el=document.getElementById('sideMenuOverlay');if(el)el.classList.add('show');}
-function openNotifications(){closeHeaderPanels();const el=document.getElementById('notificationOverlay');const box=document.getElementById('notificationContent');const announcement=document.getElementById('announcementBox');if(box){const msg=announcement&&announcement.textContent.trim();box.textContent=msg?msg:'এখন কোনো নতুন নোটিফিকেশন নেই।';}if(el)el.classList.add('show');}
+const PRODUCT_NOTIFICATION_SEEN_KEY = 'adoresSeenProductNotificationsV1';
+function getSeenProductNotificationIds(){
+    try{return JSON.parse(localStorage.getItem(PRODUCT_NOTIFICATION_SEEN_KEY)||'[]').map(String);}
+    catch(e){return [];}
+}
+function escapeNotificationText(value){
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function getLatestNotificationProducts(){
+    return (Array.isArray(products)?products:[])
+        .filter(p=>p && p.is_active!==false)
+        .slice()
+        .sort((a,b)=>{
+            const da=Date.parse(a.created_at||a.inserted_at||'')||0;
+            const db=Date.parse(b.created_at||b.inserted_at||'')||0;
+            return db-da;
+        }).slice(0,10);
+}
+function updateProductNotificationBadge(){
+    const badge=document.getElementById('notificationCountBadge');
+    if(!badge)return;
+    const latest=getLatestNotificationProducts();
+    const seen=getSeenProductNotificationIds();
+    const unseen=latest.filter(p=>!seen.includes(String(p.id||p.product_code||p.name))).length;
+    badge.textContent=unseen>9?'9+':String(unseen);
+    badge.classList.toggle('show',unseen>0);
+}
+function renderProductNotificationFeed(markSeen=false){
+    const box=document.getElementById('notificationContent');
+    if(!box)return;
+    const latest=getLatestNotificationProducts();
+    const seen=getSeenProductNotificationIds();
+    const announcement=document.getElementById('announcementBox');
+    const announcementText=announcement?.textContent?.trim()||'';
+    if(!latest.length){
+        box.innerHTML=`${announcementText?`<div class="notification-empty">${escapeNotificationText(announcementText)}</div>`:''}<div class="notification-empty">এখনো কোনো পণ্য আপলোড করা হয়নি। নতুন পণ্য যোগ হলে এখানে দেখা যাবে।</div>`;
+        return;
+    }
+    box.innerHTML=`
+      <p class="notification-intro">ADORE'S PET-এ সম্প্রতি যোগ করা নতুন পণ্যগুলো এখানে দেখা যাবে। কোনো পণ্যে চাপ দিলে তার বিস্তারিত খুলবে।</p>
+      <div class="product-notification-list">
+      ${latest.map(p=>{
+        const key=String(p.id||p.product_code||p.name);
+        const isNew=!seen.includes(key);
+        const image=escapeNotificationText(p.image_url||'https://via.placeholder.com/160?text=ADORE%27S+PET');
+        const name=escapeNotificationText(p.name||'নতুন পণ্য');
+        const category=escapeNotificationText(p.category||'');
+        const price=Number(p.sale_price)>0 && Number(p.sale_price)<Number(p.price)?Number(p.sale_price):Number(p.price||0);
+        const created=Date.parse(p.created_at||p.inserted_at||'');
+        const dateLabel=created?new Date(created).toLocaleDateString('bn-BD',{day:'numeric',month:'short',year:'numeric'}):'সাম্প্রতিক আপলোড';
+        const code=escapeNotificationText(p.product_code||p.id||'');
+        return `<button type="button" class="product-notification-item" onclick="openProductFromNotification('${code}')">
+          <img src="${image}" alt="${name}" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/160?text=Product';">
+          <span class="product-notification-info">
+            <span class="product-notification-name">${name}${isNew?'<span class="product-notification-new">NEW</span>':''}</span>
+            <span class="product-notification-meta">${category?category+' · ':''}${dateLabel}</span>
+            <span class="product-notification-price">৳${price}</span>
+          </span>
+          <i class="fa-solid fa-chevron-right" style="color:#94a3b8;font-size:12px"></i>
+        </button>`;
+      }).join('')}
+      </div>`;
+    if(markSeen){
+        const keys=latest.map(p=>String(p.id||p.product_code||p.name));
+        localStorage.setItem(PRODUCT_NOTIFICATION_SEEN_KEY,JSON.stringify(Array.from(new Set([...seen,...keys])).slice(-100)));
+        updateProductNotificationBadge();
+        box.querySelectorAll('.product-notification-new').forEach(el=>el.remove());
+    }
+}
+function openProductFromNotification(code){
+    closeHeaderPanels();
+    openProductDetail(code);
+}
+function openNotifications(){
+    closeHeaderPanels();
+    renderProductNotificationFeed(true);
+    const el=document.getElementById('notificationOverlay');
+    if(el)el.classList.add('show');
+}
+
+window.addEventListener('load',function(){updateProductNotificationBadge();});
 function closeHeaderPanels(){['sideMenuOverlay','notificationOverlay'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('show');});}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHeaderPanels();});
 </script>
