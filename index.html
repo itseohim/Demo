@@ -860,6 +860,23 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
   #productsGrid .product-stock-line{margin-bottom:3px !important;}
   #productsGrid .product-price-box{min-height:27px !important;height:27px !important;}
 }
+
+/* Homepage product cards: current price + stock on one row, Add to Cart below */
+@media (max-width: 767px){
+  #productsGrid .product-stock-price-row{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:4px!important;width:100%;min-width:0;margin:1px 0 6px!important;line-height:1.15!important;}
+  #productsGrid .product-current-price{font-size:clamp(13px,3.55vw,16px)!important;font-weight:900!important;color:#07866b!important;white-space:nowrap!important;}
+  #productsGrid .product-stock-compact{font-size:clamp(9px,2.55vw,11px)!important;font-weight:800!important;color:#27ad8b!important;white-space:nowrap!important;text-align:right!important;}
+  #productsGrid .product-card-add-btn{width:100%!important;min-height:30px!important;padding:6px 3px!important;border:0!important;border-radius:9px!important;background:#078f70!important;color:#fff!important;font-size:clamp(9px,2.6vw,11px)!important;font-weight:800!important;line-height:1.1!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:4px!important;cursor:pointer!important;box-shadow:0 2px 7px rgba(7,143,112,.16)!important;}
+  #productsGrid .product-card-add-btn:disabled{background:#cbd5e1!important;color:#64748b!important;box-shadow:none!important;cursor:not-allowed!important;}
+}
+@media (min-width:768px){
+  #productsGrid .product-stock-price-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:4px 0 8px;}
+  #productsGrid .product-current-price{font-size:16px;font-weight:900;color:#07866b;white-space:nowrap;}
+  #productsGrid .product-stock-compact{font-size:12px;font-weight:800;color:#27ad8b;white-space:nowrap;}
+  #productsGrid .product-card-add-btn{width:100%;padding:9px;border:0;border-radius:10px;background:#078f70;color:#fff;font-weight:800;cursor:pointer;}
+  #productsGrid .product-card-add-btn:disabled{background:#cbd5e1;color:#64748b;cursor:not-allowed;}
+}
+
 </style>
 </head>
 
@@ -2263,10 +2280,13 @@ function renderProducts(){
                     <div class="product-rating-favorite-row product-rating-only-row">
                         ${ratingHtml}
                     </div>
-                    <div class="product-stock-line">${stockText}</div>
-                    <div class="product-price-box">
-                        ${salePrice > 0 && salePrice < price ? `<span class="old-price">৳${price}</span><span class="product-price">৳${salePrice}</span>` : `<span class="product-price">৳${price}</span>`}
+                    <div class="product-stock-price-row">
+                        <span class="product-current-price">৳${salePrice > 0 && salePrice < price ? salePrice : price}</span>
+                        <span class="product-stock-compact">${p.stock > 0 ? `In Stock: ${p.stock}` : 'Out of Stock'}</span>
                     </div>
+                    <button type="button" class="product-card-add-btn" ${p.stock > 0 ? '' : 'disabled'} onclick="event.stopPropagation(); addToCart('${safeCode}', ${Number(salePrice > 0 && salePrice < price ? salePrice : price)});">
+                        <i class="fa-solid fa-cart-plus"></i> ${p.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+                    </button>
                 </div>
             </div>
         `;
