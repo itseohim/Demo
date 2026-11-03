@@ -2022,14 +2022,56 @@ function viewAllProducts(){
     if(grid) grid.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
+function normalizeSearchText(value){
+    return String(value == null ? "" : value)
+        .toLocaleLowerCase("en-US")
+        .normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^\p{L}\p{N}]+/gu, " ")
+        .trim();
+}
+
+function productMatchesSearch(product, query){
+    const q = normalizeSearchText(query);
+    if(!q) return true;
+
+    // Search across every customer-facing product field, not only the product name.
+    const searchable = [
+        product.name, product.category, product.description,
+        product.piece_type, product.color, product.age, product.unit,
+        product.product_code, product.id
+    ].map(normalizeSearchText).filter(Boolean);
+
+    const words = q.split(/\s+/).filter(Boolean);
+    const directMatch = searchable.some(value => value.includes(q));
+    if(directMatch) return true;
+
+    // Match common category wording and singular/plural variations.
+    const aliases = {
+        rabbit: ["rabbit", "rabbits"],
+        rabbits: ["rabbit", "rabbits"],
+        hamster: ["hamster", "hamsters"],
+        hamsters: ["hamster", "hamsters"],
+        food: ["food", "pet food", "rabbit food", "hamster food"],
+        foods: ["food", "pet food", "rabbit food", "hamster food"],
+        accessory: ["accessory", "accessories"],
+        accessories: ["accessory", "accessories"]
+    };
+    const expanded = aliases[q] || [];
+    if(expanded.some(alias => searchable.some(value => value.includes(alias)))) return true;
+
+    // Multi-word searches match when every word occurs somewhere in the product fields.
+    return words.length > 1 && words.every(word => searchable.some(value => value.includes(word)));
+}
+
 function renderProducts(){
     const grid = document.getElementById("productsGrid");
     const searchInput = document.getElementById("searchInput");
     if(!grid) return;
-    const search = searchInput ? searchInput.value.trim().toLowerCase() : "";
+    const search = searchInput ? searchInput.value.trim() : "";
     let filtered = products.filter(p => p.is_active !== false);
-    if(currentCategory) filtered = filtered.filter(p => p.category && p.category.toLowerCase() === currentCategory.toLowerCase());
-    else if(search) filtered = filtered.filter(p => p.name && p.name.toLowerCase().includes(search));
+    if(currentCategory) filtered = filtered.filter(p => normalizeSearchText(p.category) === normalizeSearchText(currentCategory));
+    else if(search) filtered = filtered.filter(p => productMatchesSearch(p, search));
 
     if(filtered.length === 0){
         grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:30px; color:#64748b;">কোনো পণ্য পাওয়া যায়নি।</div>`;
