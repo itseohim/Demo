@@ -157,6 +157,7 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 .edit-product-modal.show, .admin-sub-modal.show{display:flex;}
 
 #editCategoryModal { z-index: 6000 !important; }
+#voucherModal { z-index: 6500 !important; }
 
 .cart-box{position:absolute; right:0; top:0; width:100%; max-width:440px; height:100%; background:white; display:flex; flex-direction:column; box-shadow: -5px 0 25px rgba(0,0,0,0.15);}
 .cart-header{background: var(--teal); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; color: white;}
@@ -1571,7 +1572,7 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 <div id="cartAddedSheet" class="cart-added-sheet" role="status" aria-live="polite">
   <div class="cart-added-top"><span><i class="fa-solid fa-circle-check"></i> পণ্যটি কার্টে যোগ হয়েছে!</span><button type="button" onclick="hideCartAddedSheet()" aria-label="বন্ধ করুন" style="border:0;background:#f1f5f9;border-radius:50%;width:28px;height:28px;color:#64748b;font-size:16px;">×</button></div>
   <div class="cart-added-product"><img id="cartAddedImage" src="" alt=""><div style="flex:1;min-width:0;"><div id="cartAddedName" class="cart-added-product-name"></div><div id="cartAddedPrice" class="cart-added-product-price"></div></div></div>
-  <div class="cart-added-actions"><button type="button" class="cart-added-continue" onclick="hideCartAddedSheet()"><i class="fa-solid fa-bag-shopping"></i> Continue Shopping</button><button type="button" class="cart-added-view" onclick="hideCartAddedSheet();openCart();"><i class="fa-solid fa-cart-shopping"></i> View Cart</button></div>
+  <div class="cart-added-actions"><button type="button" class="cart-added-continue" onclick="hideCartAddedSheet()"><i class="fa-solid fa-bag-shopping"></i> Continue Shopping</button><button type="button" class="cart-added-view" onclick="viewCartFromAddedSheet()"><i class="fa-solid fa-cart-shopping"></i> View Cart</button></div>
 </div>
 
 <div id="cartOverlay" class="cart-overlay" onclick="handleCartBackdropClick(event)">
@@ -2577,6 +2578,18 @@ function renderRelatedProducts(currentProd){
 function handleCartBackdropClick(e){ if(e.target.id === 'cartOverlay') closeCart(); }
 function handleMyAccountBackdropClick(e){ if(e.target.id === 'myAccountModal') closeMyAccountModal(); }
 function handleVoucherBackdropClick(e){ if(e.target.id === 'voucherModal') closeVoucherModal(); }
+
+function viewCartFromAddedSheet(){
+    hideCartAddedSheet();
+    // The product detail screen has a higher stacking layer than the cart.
+    // Close it first so the cart opens visibly instead of underneath it.
+    const detail = document.getElementById("productDetailFullscreen");
+    if(detail) detail.classList.remove("show");
+    if(window.location.hash === "#product"){
+        history.replaceState(history.state, "", window.location.pathname + window.location.search);
+    }
+    openCart();
+}
 
 function addToCart(code, activePrice){
     const p = products.find(prod => String(prod.product_code) === String(code) || String(prod.id) === String(code));
