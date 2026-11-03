@@ -580,7 +580,8 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 .site-dialog-box h3{margin:0 0 9px;color:#087f70;font-size:20px;font-weight:900}
 .site-dialog-box p{margin:0;color:#64748b;font-size:14px;line-height:1.65;overflow-wrap:anywhere}
 .site-dialog-box input{display:block;width:100%;box-sizing:border-box;margin-top:15px;padding:12px 13px;border:1.5px solid #cbd5e1;border-radius:11px;background:#fff;color:#263445;font-size:16px;outline:none}
-.site-dialog-box input:focus{border-color:#008f7d;box-shadow:0 0 0 3px rgba(0,143,125,.12)}
+.site-dialog-box input:focus,.site-dialog-box textarea:focus{border-color:#008f7d;box-shadow:0 0 0 3px rgba(0,143,125,.12)}
+.site-dialog-box textarea{display:block;width:100%;box-sizing:border-box;margin-top:15px;padding:12px 13px;border:1.5px solid #cbd5e1;border-radius:11px;background:#fff;color:#263445;font:inherit;font-size:15px;line-height:1.5;resize:vertical;outline:none}
 .site-dialog-actions{display:flex;gap:10px;margin-top:21px}
 .site-dialog-actions button{flex:1;min-width:0;border:0;border-radius:12px;padding:12px 8px;font-size:13px;font-weight:900;cursor:pointer}
 .site-dialog-cancel{background:#e2e8f0;color:#334155}
@@ -593,6 +594,19 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 .customer-order-admin-message{display:flex;flex-direction:column;gap:5px;margin:10px 0;padding:12px 13px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;line-height:1.55}
 .customer-order-admin-message strong{font-size:13px}
 .customer-order-admin-message span{font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+
+
+/* Admin order controls: status dropdown above a single-line English action bar */
+.admin-order-controls{width:100%;display:flex;flex-direction:column;gap:8px;min-width:0}
+.admin-order-status-select{display:block;width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #cbd5e1;border-radius:10px;background:#f8fafc;color:#1f2937;font-size:13px;min-height:42px}
+.admin-order-actions{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;padding:1px 0 5px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.admin-order-actions::-webkit-scrollbar{display:none}
+.admin-order-actions button{flex:1 0 auto;min-width:0;white-space:nowrap;border:0;border-radius:9px;padding:9px 10px;font-size:12px;font-weight:700;line-height:1.1;cursor:pointer}
+.admin-action-message{background:#2563eb;color:#fff}
+.admin-action-voucher{background:#078b7b;color:#fff}
+.admin-action-fee{background:#0f766e;color:#fff}
+.admin-action-cancel{background:#f97316;color:#fff}
+.admin-action-delete{background:#dc2626;color:#fff}
 
 </style>
 </head>
@@ -3203,17 +3217,19 @@ async function renderAdminOrders(){
             <div style="margin-bottom:5px;">${o.customer_name || 'নাম নেই'} · ${o.phone || 'ফোন নেই'}</div>
             ৳${o.total || 0} | TrxID: ${o.payment_trxid || o.trx_id || 'N/A'}
             ${cancellationBlock}
-            <div class="admin-order-actions" style="margin-top:8px; display:flex; gap:6px; align-items:center; flex-wrap:nowrap; overflow-x:auto; padding-bottom:3px;">
-                ${!isCancelled ? `<select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:5px; border-radius:6px; font-size:11px; flex:1; min-width:120px;">
+            <div class="admin-order-controls" style="margin-top:10px;">
+                ${!isCancelled ? `<select class="admin-order-status-select" onchange="updateOrderStatus('${o.id}', this.value)">
                     <option value="">Change Status</option>
                     <option value="Pending">Pending</option><option value="Confirmed">Confirmed</option>
                     <option value="Shipped">Shipped</option><option value="Completed">Completed</option>
                 </select>` : ''}
-                <button onclick="adminSendOrderMessage('${o.id}', '${String(o.order_number || o.id).replace(/'/g, '')}')" style="background:#2563eb;color:#fff;border:none;padding:6px 9px;border-radius:6px;font-size:11px;white-space:nowrap;cursor:pointer;">Message</button>
-                <button onclick="openVoucherForOrder('${o.id}')" style="background:var(--teal); color:#fff; border:none; padding:6px 9px; border-radius:6px; font-size:11px; cursor:pointer;">Voucher</button>
-                <button onclick="adminEditDeliveryFee('${o.id}', ${Number(o.delivery_fee)||0})" style="background:#0f766e; color:#fff; border:none; padding:6px 9px; border-radius:6px; font-size:11px; cursor:pointer;">Delivery Fee</button>
-                ${!isCancelled && String(o.status).toLowerCase() !== 'completed' ? `<button onclick="adminCancelOrder('${o.id}')" style="background:#f97316; color:#fff; border:none; padding:6px 9px; border-radius:6px; font-size:11px; cursor:pointer;">বাতিল</button>` : ''}
-                <button onclick="adminDeleteOrder('${o.id}', '${String(o.order_number || o.id).replace(/'/g, '')}')" style="background:#dc2626; color:#fff; border:none; padding:6px 9px; border-radius:6px; font-size:11px; cursor:pointer;">ডিলিট</button>
+                <div class="admin-order-actions">
+                    <button class="admin-action-message" onclick="adminSendOrderMessage('${o.id}', '${String(o.order_number || o.id).replace(/'/g, '')}')">Message</button>
+                    <button class="admin-action-voucher" onclick="openVoucherForOrder('${o.id}')">Voucher</button>
+                    <button class="admin-action-fee" onclick="adminEditDeliveryFee('${o.id}', ${Number(o.delivery_fee)||0})">Delivery Fee</button>
+                    ${!isCancelled && String(o.status).toLowerCase() !== 'completed' ? `<button class="admin-action-cancel" onclick="adminCancelOrder('${o.id}')">Cancel</button>` : ''}
+                    <button class="admin-action-delete" onclick="adminDeleteOrder('${o.id}', '${String(o.order_number || o.id).replace(/'/g, '')}')">Delete</button>
+                </div>
             </div>
         </div>`;
     }).join("");
@@ -3256,27 +3272,34 @@ function openSiteDialog({title='নিশ্চিত করুন',message='',m
   document.getElementById('siteDialogMessage').textContent=message;
   document.getElementById('siteDialogIcon').innerHTML=`<i class="fa-solid ${icon}"></i>`;
   const input=document.getElementById('siteDialogInput');
+  const textarea=document.getElementById('siteDialogTextarea');
   const cancel=overlay.querySelector('.site-dialog-cancel');
   const ok=overlay.querySelector('.site-dialog-ok');
   input.style.display=mode==='input'?'block':'none';
-  input.value=defaultValue;
+  textarea.style.display=mode==='textarea'?'block':'none';
+  input.value=mode==='input'?defaultValue:'';
+  textarea.value=mode==='textarea'?defaultValue:'';
   cancel.style.display=mode==='alert'?'none':'block';
   ok.textContent=okText;
   overlay.classList.add('show');overlay.setAttribute('aria-hidden','false');
-  if(mode==='input'){setTimeout(()=>input.focus(),80);}
+  if(mode==='input' || mode==='textarea'){setTimeout(()=>{(mode==='textarea'?textarea:input).focus();},80);}
  });
 }
 function resolveSiteDialog(value){
  const overlay=document.getElementById('siteDialogOverlay');
  const input=document.getElementById('siteDialogInput');
+ const textarea=document.getElementById('siteDialogTextarea');
  if(overlay){overlay.classList.remove('show');overlay.setAttribute('aria-hidden','true');}
- if(siteDialogResolver){const resolve=siteDialogResolver;siteDialogResolver=null;resolve(value===true?(input.style.display==='block'?input.value:true):value);}
+ if(siteDialogResolver){const resolve=siteDialogResolver;siteDialogResolver=null;resolve(value===true?(textarea.style.display==='block'?textarea.value:(input.style.display==='block'?input.value:true)):value);}
 }
 function showSiteConfirm(message,title='নিশ্চিত করুন'){
  return openSiteDialog({title,message,mode:'confirm',icon:'fa-circle-question'});
 }
 function showSiteInput(message,defaultValue='',title='তথ্য লিখুন'){
  return openSiteDialog({title,message,mode:'input',defaultValue,okText:'সংরক্ষণ',icon:'fa-pen-to-square'});
+}
+function showSiteTextarea(message,defaultValue='',title='বার্তা লিখুন'){
+ return openSiteDialog({title,message,mode:'textarea',defaultValue,okText:'Send Message',icon:'fa-paper-plane'});
 }
 function showSiteMessage(message,title='তথ্য',icon='fa-circle-info'){
  return openSiteDialog({title,message,mode:'alert',okText:'ঠিক আছে',icon}).then(()=>true);
@@ -3315,7 +3338,7 @@ function escapeOrderText(value){
  return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 }
 async function adminSendOrderMessage(orderId, orderNumber){
- const message=await showSiteInput('কাস্টমারের My Orders-এ যে বার্তাটি দেখাতে চান তা লিখুন।', '', 'Send Customer Message');
+ const message=await showSiteTextarea('কাস্টমারের My Orders-এ যে বার্তাটি দেখাতে চান তা লিখুন।', '', 'Send Customer Message');
  if(message===null || !String(message).trim()) return;
  try{
   const {data,error}=await supabaseClient.rpc('admin_set_adores_order_message',{p_order_id:orderId,p_admin_message:String(message).trim()});
@@ -3329,7 +3352,7 @@ async function adminEditDeliveryFee(orderId, currentFee){
     const raw = await showSiteInput('নতুন ডেলিভারি চার্জ লিখুন (৳):', String(currentFee), 'Update Delivery Fee');
     if(raw === null) return;
     const fee = Number(raw);
-    if(!Number.isFinite(fee) || fee < 0 || fee > 100000) return showAlert('Invalid amount', 'সঠিক ডেলিভারি চার্জ লিখুন।');
+    if(!Number.isFinite(fee) || fee < 0 || fee > 100000) return showAlert('Invalid amount', 'Enter a valid delivery fee.');
     const message = await showSiteInput('কাস্টমারকে My Orders-এ কী বার্তা দেখাতে চান? খালি রাখলে স্বয়ংক্রিয় বার্তা যাবে।',
       `আপনার অর্ডারের ডেলিভারি চার্জ ৳${fee} নির্ধারণ করা হয়েছে।`, 'Notify Customer');
     if(message === null) return;
@@ -3541,7 +3564,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHeaderP
   <div class="site-dialog-icon" id="siteDialogIcon"><i class="fa-solid fa-circle-question"></i></div>
   <h3 id="siteDialogTitle">নিশ্চিত করুন</h3>
   <p id="siteDialogMessage"></p>
-  <input id="siteDialogInput" type="number" inputmode="decimal" style="display:none" />
+  <input id="siteDialogInput" type="text" inputmode="decimal" style="display:none" />
+  <textarea id="siteDialogTextarea" rows="4" maxlength="1000" placeholder="বার্তা লিখুন..." style="display:none"></textarea>
   <div class="site-dialog-actions">
    <button type="button" class="site-dialog-cancel" onclick="resolveSiteDialog(null)">বাতিল</button>
    <button type="button" class="site-dialog-ok" onclick="resolveSiteDialog(true)">ঠিক আছে</button>
