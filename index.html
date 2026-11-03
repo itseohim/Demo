@@ -1218,7 +1218,7 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
                         </div>
                     </div>
 
-                    <div style="margin-bottom:14px;"><label style="font-size:11px; font-weight:700;">বিস্তারিত ঠিকানা (বাসা ও রোড নম্বর) *</label><textarea id="accAddress" placeholder="বাসা ও রোড নম্বর..." class="checkout-input" style="height:55px; resize:vertical; margin-top:2px;"></textarea></div>
+                    <div style="margin-bottom:14px;"><label style="font-size:11px; font-weight:700;">বিস্তারিত ঠিকানা (বাসা/রোড নম্বর — ঐচ্ছিক)</label><textarea id="accAddress" placeholder="লোকেশনে দেওয়া গ্রামের/এলাকার নাম আবার লিখবেন না; শুধু বাড়ি বা রোড নম্বর লিখুন (ঐচ্ছিক)..." class="checkout-input" style="height:55px; resize:vertical; margin-top:2px;"></textarea></div>
                     
                     <button onclick="saveUserProfileData()" class="thankyou-btn">তথ্য সেভ করুন</button>
                 </div>
@@ -2434,14 +2434,28 @@ function renderProfileTabState(){
     loggedInState.style.display = "flex";
 
     document.getElementById("displayLoggedUser").innerText = currentUser;
+    const prof = userProfiles[currentUser] || {};
 
-    let prof = userProfiles[currentUser] || {};
-    
+    // Restore the complete selected location so the user does not need to enter
+    // the village/local area again in the separate address field.
+    selectedDivisionVal = prof.division || "";
+    selectedDistrictVal = prof.district || "";
+    selectedUpazilaVal = prof.upazila || "";
+    selectedUnionVal = prof.union || "";
+    selectedLocalAreaVal = prof.local_area || "";
+    selectedCityVal = prof.city || [selectedUpazilaVal, selectedUnionVal, selectedLocalAreaVal].filter(Boolean).join(" > ");
+
     if(prof.name && prof.district){
         document.getElementById("viewAccName").innerText = prof.name;
         document.getElementById("viewAccPhone").innerText = prof.phone || currentUser;
-        document.getElementById("viewAccLocation").innerText = `${prof.district} > ${prof.city}`;
-        document.getElementById("viewAccAddress").innerText = prof.address;
+        const locationText = [prof.division, prof.district, prof.upazila, prof.union, prof.local_area].filter(Boolean).join(" > ");
+        document.getElementById("viewAccLocation").innerText = locationText || `${prof.district} > ${prof.city || ""}`;
+        const extraAddress = (prof.address || "").trim();
+        const sameAsArea = extraAddress && prof.local_area &&
+            extraAddress.replace(/\\s+/g,' ').toLowerCase() === prof.local_area.replace(/\\s+/g,' ').toLowerCase();
+        const addressRow = document.getElementById("viewAccAddress").parentElement;
+        addressRow.style.display = extraAddress && !sameAsArea ? "" : "none";
+        document.getElementById("viewAccAddress").innerText = extraAddress;
 
         document.getElementById("profileDisplayCard").style.display = "block";
         document.getElementById("profileEditForm").style.display = "none";
@@ -2450,21 +2464,21 @@ function renderProfileTabState(){
         document.getElementById("viewAccPhone").innerText = currentUser.includes('@') ? "-" : currentUser;
         document.getElementById("viewAccLocation").innerText = "-";
         document.getElementById("viewAccAddress").innerText = "-";
+        document.getElementById("viewAccAddress").parentElement.style.display = "";
         document.getElementById("profileDisplayCard").style.display = "block";
         document.getElementById("profileEditForm").style.display = "none";
     }
 
     document.getElementById("accName").value = prof.name || "";
     document.getElementById("accPhone").value = prof.phone || (!currentUser.includes('@') ? currentUser : '');
-    selectedDistrictVal = prof.district || "";
-    selectedCityVal = prof.city || "";
     document.getElementById("accAddress").value = prof.address || "";
 
-    let locDisp = (selectedDistrictVal && selectedCityVal) ? `${selectedDistrictVal} > ${selectedCityVal}` : "District > City";
+    const locationParts = [selectedDivisionVal, selectedDistrictVal, selectedUpazilaVal, selectedUnionVal, selectedLocalAreaVal].filter(Boolean);
+    const locDisp = locationParts.length ? locationParts.join(" > ") : "বিভাগ > জেলা > উপজেলা > ইউনিয়ন/পৌরসভা > গ্রাম/এলাকা";
     const locDispEl = document.getElementById("accLocationDisplay");
     locDispEl.innerText = locDisp;
-    locDispEl.style.color = (selectedDistrictVal && selectedCityVal) ? "var(--text-dark)" : "#94a3b8";
-    locDispEl.style.fontWeight = (selectedDistrictVal && selectedCityVal) ? "800" : "normal";
+    locDispEl.style.color = locationParts.length ? "var(--text-dark)" : "#94a3b8";
+    locDispEl.style.fontWeight = locationParts.length ? "800" : "normal";
 }
 
 function toggleProfileEditMode(isEdit){
@@ -2500,12 +2514,28 @@ function saveUserProfileData(){
     const phone = document.getElementById("accPhone").value.trim();
     const address = document.getElementById("accAddress").value.trim();
 
-    if(!name || !phone || !selectedDistrictVal || !selectedCityVal || !address) return showAlert("সতর্কতা", "দয়া করে নাম, মোবাইল, জেলা ও এলাকা এবং বিস্তারিত ঠিকানা পূরণ করুন!");
+    if(!name || !phone || !selectedDivisionVal || !selectedDistrictVal || !selectedUpazilaVal || !selectedUnionVal || !selectedLocalAreaVal) {
+        return showAlert("সতর্কতা", "দয়া করে নাম, মোবাইল নম্বর এবং সম্পূর্ণ লোকেশন নির্বাচন করুন!");
+    }
 
-    userProfiles[currentUser] = { name, phone, division:selectedDivisionVal, district:selectedDistrictVal, upazila:selectedUpazilaVal, union:selectedUnionVal, local_area:selectedLocalAreaVal, city:selectedCityVal, address };
+    const city = [selectedUpazilaVal, selectedUnionVal, selectedLocalAreaVal].filter(Boolean).join(" > ");
+    userProfiles[currentUser] = {
+        name, phone,
+        division:selectedDivisionVal,
+        district:selectedDistrictVal,
+        upazila:selectedUpazilaVal,
+        union:selectedUnionVal,
+        local_area:selectedLocalAreaVal,
+        city,
+        address
+    };
     localStorage.setItem("adoresUserProfiles", JSON.stringify(userProfiles));
     renderProfileTabState();
-    showAlert("সফল হয়েছে", "আপনার প্রোফাইলের তথ্য সফলভাবে সেভ হয়েছে।");
+    toggleProfileEditMode(false);
+
+    // Use the visible toast instead of the modal alert, which could sit behind
+    // the account modal and only become visible after leaving the profile.
+    showToast("আপনার প্রোফাইলের তথ্য সফলভাবে সেভ হয়েছে!");
 }
 
 async function renderUserOrdersList(){
