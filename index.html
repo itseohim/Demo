@@ -333,6 +333,8 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 .app-header .search-box input{height:56px;padding:14px 94px 14px 48px;border-radius:18px;font-size:16px;box-shadow:0 4px 12px rgba(0,0,0,.13);}
 .app-header .search-icon{left:17px;font-size:19px;color:#64748b}.app-header .search-tools{right:8px;gap:4px}.app-header .search-tool-btn{width:38px;height:38px;border-radius:11px;background:#e8f5f3;color:#00796b;font-size:17px}
 #visualSearchStatus{position:relative;z-index:2;color:#fff;margin:7px auto 0;max-width:900px}
+
+.header-drawer{overflow-y:auto;overscroll-behavior:contain}.drawer-category-list{display:flex;flex-direction:column;gap:4px;padding:0 0 6px 12px;margin:0 0 4px 10px;border-left:2px solid #d9efeb}.drawer-category-list button{border:0;background:#f7fbfa;color:#334155;text-align:left;padding:10px 12px;border-radius:10px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:10px;cursor:pointer}.drawer-category-list button i{color:#00897b;width:18px;text-align:center}.drawer-category-list button:active{background:#e0f2f1}
 .header-overlay{display:none;position:fixed;inset:0;background:rgba(0,25,22,.48);z-index:6000}.header-overlay.show{display:block}.header-drawer{height:100%;width:min(82vw,330px);background:#fff;padding:18px 14px;box-shadow:8px 0 28px rgba(0,0,0,.2);animation:drawerIn .22s ease;display:flex;flex-direction:column;gap:5px}.drawer-heading{display:flex;align-items:center;justify-content:space-between;padding:8px 8px 16px;color:#00695c;font-size:18px;border-bottom:1px solid #e2e8f0;margin-bottom:8px}.drawer-heading button{border:0;background:#e8f5f3;color:#00695c;border-radius:50%;width:34px;height:34px;font-size:24px;line-height:1;cursor:pointer}.header-drawer>button{border:0;background:#fff;color:#263238;text-align:left;padding:13px 12px;border-radius:12px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:13px;cursor:pointer}.header-drawer>button:active{background:#e8f5f3}.header-drawer>button i{color:#00897b;width:20px;text-align:center}.notification-overlay{display:flex;align-items:flex-start;justify-content:center;padding:18px}.notification-overlay:not(.show){display:none}.notification-overlay.show{display:flex}.notification-panel{width:min(100%,440px);margin-top:12px;background:#fff;border-radius:18px;padding:16px;box-shadow:0 12px 32px rgba(0,0,0,.22);animation:drawerIn .2s ease}.notification-content{padding:22px 10px;color:#64748b;text-align:center;font-size:14px;line-height:1.6;white-space:pre-wrap}
 @keyframes drawerIn{from{opacity:.5;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
 @media(max-width:480px){.app-header{padding:7px 12px 15px;border-radius:0 0 27px 27px}.header-topline{min-height:116px;grid-template-columns:40px minmax(0,1fr) 40px}.header-action-btn{width:38px;height:38px;font-size:23px}.logo-area.header-banner-area{height:116px}.header-brand-banner{width:min(100%,360px);height:108px;max-height:108px}.header-paw{font-size:20px}.paw-left{left:13%;top:52px}.paw-right{right:13%;top:52px}.header-leaf{font-size:25px;top:17px}.leaf-left{left:17%}.leaf-right{right:17%}.app-header:before,.app-header:after{bottom:105px;width:29%}.app-header .search-box input{height:54px;font-size:15px;padding-right:92px}.app-header .search-tool-btn{width:36px;height:36px;font-size:16px}}
@@ -560,12 +562,12 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
     <div class="drawer-heading"><strong>ADORE’S PET</strong><button type="button" onclick="closeHeaderPanels()" aria-label="বন্ধ করুন">×</button></div>
     <button type="button" onclick="closeHeaderPanels();goHome()"><i class="fa-solid fa-house"></i> Home</button>
     <button type="button" onclick="closeHeaderPanels();openCategoryPopup()"><i class="fa-solid fa-layer-group"></i> All Categories</button>
-    <button type="button" onclick="closeHeaderPanels();selectCategory('Rabbit')"><i class="fa-solid fa-carrot"></i> Rabbit</button>
-    <button type="button" onclick="closeHeaderPanels();selectCategory('Hamster')"><i class="fa-solid fa-paw"></i> Hamster</button>
+    <div id="drawerDynamicCategories" class="drawer-category-list" aria-label="ক্যাটাগরি তালিকা"></div>
     <button type="button" onclick="closeHeaderPanels();openCart()"><i class="fa-solid fa-cart-shopping"></i> My Cart</button>
     <button type="button" onclick="closeHeaderPanels();openMyOrdersFromNav()"><i class="fa-solid fa-box"></i> My Orders</button>
     <button type="button" onclick="closeHeaderPanels();openMyAccountModal()"><i class="fa-solid fa-user"></i> My Account</button>
     <button type="button" onclick="closeHeaderPanels();openSupportModal()"><i class="fa-solid fa-headset"></i> Support</button>
+    <button type="button" onclick="closeHeaderPanels();openNotifications()"><i class="fa-regular fa-bell"></i> Notifications</button>
   </aside>
 </div>
 <div id="notificationOverlay" class="header-overlay notification-overlay" onclick="if(event.target===this)closeHeaderPanels()">
@@ -1429,6 +1431,27 @@ function renderCategoryUI(){
         }).join("");
         listContainer.innerHTML = gridHtml;
     }
+
+    // Header drawer categories are generated from the same live category list
+    // used by the category selector, so newly-added admin categories appear here automatically.
+    const drawerCategoryList = document.getElementById("drawerDynamicCategories");
+    if(drawerCategoryList){
+        const escapeMenuText = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+        drawerCategoryList.innerHTML = categoriesList.map(cat => `
+            <button type="button" data-drawer-category="${escapeMenuText(cat.name)}">
+                <i class="${escapeMenuText(cat.icon || 'fa-solid fa-folder')}"></i>
+                <span>${escapeMenuText(cat.name)}</span>
+            </button>
+        `).join("");
+        drawerCategoryList.querySelectorAll("[data-drawer-category]").forEach(button => {
+            button.addEventListener("click", () => {
+                const categoryName = button.getAttribute("data-drawer-category") || "";
+                closeHeaderPanels();
+                selectCategory(categoryName);
+            });
+        });
+    }
+
     const newProdCat = document.getElementById("newProdCat");
     const editProdCat = document.getElementById("editProdCat");
     let optionsHtml = categoriesList.map(cat => `<option value="${cat.name}">${cat.name}</option>`).join("");
