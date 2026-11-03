@@ -234,9 +234,15 @@ body{font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg-light); co
 
 .admin-product-card{display: flex; align-items: center; justify-content: space-between; padding: 10px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 8px; gap: 10px;}
 
-.welcome-popup{display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:5000; align-items:center; justify-content:center; padding:20px;}
+.welcome-popup{display:none;position:fixed;inset:0;background:rgba(8,15,20,.58);-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);z-index:5000;align-items:center;justify-content:center;padding:14px;}
 .welcome-popup.show{display:flex;}
-.welcome-popup-content{background:#fff; border-radius:20px; max-width:400px; width:100%; padding:15px; text-align:center; position:relative;}
+/* Frameless popup: display the administrator-supplied banner exactly as uploaded. */
+.welcome-popup-content{background:transparent;border:0;border-radius:0;max-width:520px;width:min(92vw,520px);padding:0;text-align:center;position:relative;box-shadow:none;animation:welcomePopupIn .24s ease-out;display:flex;flex-direction:column;align-items:center;}
+.welcome-popup-banner-link{display:block;width:100%;max-height:calc(100dvh - 105px);cursor:pointer;line-height:0;border:0;border-radius:0;overflow:visible;outline:none;background:transparent;}
+#welcomePopupImg{display:block;width:100%;height:auto;max-height:calc(100dvh - 105px);object-fit:contain;object-position:center;border:0;border-radius:0;clip-path:none;background:transparent;-webkit-tap-highlight-color:transparent;}
+.welcome-popup-close{display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin:9px auto 0;width:48px;height:48px;border:2px solid rgba(255,255,255,.9);border-radius:50%;background:rgba(20,28,35,.28);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);color:#fff;font-size:27px;line-height:1;box-shadow:0 3px 16px rgba(0,0,0,.22);cursor:pointer;}
+@keyframes welcomePopupIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:480px){.welcome-popup{padding:10px}.welcome-popup-content{width:min(94vw,520px);padding:0;border-radius:0;background:transparent;box-shadow:none} .welcome-popup-banner-link,#welcomePopupImg{max-height:calc(100dvh - 100px)}.welcome-popup-close{width:46px;height:46px;margin-top:8px;}}
 
 #toastNotification{position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:#1e293b; color:#fff; padding:10px 20px; border-radius:30px; font-size:13px; font-weight:700; z-index:9999; display:none; box-shadow:0 4px 12px rgba(0,0,0,0.2);}
 
@@ -904,13 +910,12 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
     </div>
 </div>
 
-<div id="welcomePopupModal" class="welcome-popup">
-    <div class="welcome-popup-content">
-        <button onclick="closeWelcomePopup()" style="position:absolute; top:10px; right:10px; background:#e2e8f0; border:none; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer; z-index:10;">✕</button>
-        <div onclick="handlePopupClick()" style="cursor:pointer;">
-            <img id="welcomePopupImg" src="" alt="Welcome Banner" style="width:100%; border-radius:12px; max-height:280px; object-fit:cover;" loading="lazy">
-            <button style="margin-top:12px; width:100%; padding:12px; background:var(--teal); color:white; border:none; border-radius:10px; font-weight:800; font-size:14px; cursor:pointer;">এখনই কিনুন</button>
-        </div>
+<div id="welcomePopupModal" class="welcome-popup" onclick="if(event.target===this)closeWelcomePopup()">
+    <div class="welcome-popup-content" role="dialog" aria-modal="true" aria-label="ADORE'S PET promotional offer">
+        <a href="#" id="welcomePopupBannerLink" class="welcome-popup-banner-link" onclick="handlePopupClick(event)" aria-label="অফারটি দেখতে ক্লিক করুন">
+            <img id="welcomePopupImg" src="" alt="ADORE'S PET Offer Banner" loading="eager" decoding="async" fetchpriority="high">
+        </a>
+        <button type="button" class="welcome-popup-close" onclick="closeWelcomePopup()" aria-label="পপআপ বন্ধ করুন">×</button>
     </div>
 </div>
 
@@ -1338,7 +1343,17 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
         </div>
         <label style="font-size:11px; font-weight:700;">পপআপ ছবির লিংক (Image URL)</label>
         <input id="settingPopupImg" placeholder="https://...">
-        <label style="font-size:11px; font-weight:700;">যে প্রোডাক্টে নিয়ে যাবে তার Product Code</label>
+        <div style="margin:-2px 0 12px;padding:11px;border:1px dashed #9ccbc4;border-radius:12px;background:#f2fbf9;">
+            <div style="font-size:12px;font-weight:900;color:#087f72;margin-bottom:5px;"><i class="fa-solid fa-gauge-high"></i> Popup Image Speed Optimizer</div>
+            <div style="font-size:11px;color:#52616b;line-height:1.5;margin-bottom:8px;">বড় PNG/JPG ছবি এখানে দিলে WebP-তে কমপ্রেস করে ছোট ফাইল ডাউনলোড করতে পারবেন। চেষ্টা করবে ৪৫০ KB-এর মধ্যে রাখতে, তবে ছবির মান বজায় রাখতে ফাইলভেদে সাইজ আলাদা হতে পারে।</div>
+            <input id="popupImageOptimizeFile" type="file" accept="image/png,image/jpeg,image/webp" style="font-size:11px;margin-bottom:7px;">
+            <button type="button" onclick="optimizePopupImageFile()" style="width:100%;padding:10px;border:0;border-radius:9px;background:#087f72;color:#fff;font-weight:800;cursor:pointer;"><i class="fa-solid fa-compress"></i> ছবি কমপ্রেস করে WebP ডাউনলোড</button>
+            <div id="popupImageOptimizeStatus" role="status" style="font-size:11px;color:#52616b;margin-top:7px;line-height:1.5;"></div>
+            <div style="font-size:10px;color:#64748b;margin-top:5px;">ডাউনলোড হওয়া WebP ছবিটি ইমেজ হোস্টিংয়ে আপলোড করে তার URL উপরের Image URL ঘরে বসিয়ে সেভ করুন।</div>
+        </div>
+        <label style="font-size:11px; font-weight:700;">ব্যানারে ক্লিক করলে যে লিংকে যাবে (Destination URL)</label>
+        <input id="settingPopupLink" type="url" placeholder="https://example.com অথবা আপনার পছন্দের লিংক">
+        <label style="font-size:11px; font-weight:700;">(ঐচ্ছিক) প্রোডাক্ট কোড — লিংক না দিলে ব্যবহার হবে</label>
         <input id="settingPopupProdCode" placeholder="প্রোডাক্ট কোড দিন">
         <button onclick="saveSiteSettings()" class="admin-submit-btn" style="margin-top:8px;">পপআপ ব্যানার সেভ করুন</button>
     </div>
@@ -1744,7 +1759,7 @@ if(!Array.isArray(cart) || cart.length === 0){
     localStorage.removeItem("adoresCart");
 }
 
-let siteSettings = { popupImg: "", popupProdCode: "", notice: "", vacation: false, heroImg: "", heroProdCode: "" };
+let siteSettings = { popupImg: "", popupLink: "", popupProdCode: "", notice: "", vacation: false, heroImg: "", heroProdCode: "" };
 let couponsList = [];
 let appliedCouponData = null;
 let currentCategory = "";
@@ -2048,6 +2063,7 @@ async function fetchSiteSettings(){
                 if(s.key === 'vacation') siteSettings.vacation = s.value === 'true' || s.value === true;
                 if(s.key === 'notice') siteSettings.notice = s.value;
                 if(s.key === 'popup_img') siteSettings.popupImg = s.value;
+                if(s.key === 'popup_link') siteSettings.popupLink = s.value;
                 if(s.key === 'popup_product_id') siteSettings.popupProdCode = s.value;
                 if(s.key === 'hero_img') siteSettings.heroImg = s.value;
                 if(s.key === 'hero_product_id') siteSettings.heroProdCode = s.value;
@@ -2093,15 +2109,54 @@ function handleHeroBannerClick(){
 }
 
 function checkWelcomePopup(){
-    if(siteSettings.popupImg && !sessionStorage.getItem("popupShown")){
-        document.getElementById("welcomePopupImg").src = siteSettings.popupImg;
-        document.getElementById("welcomePopupModal").classList.add("show");
+    const imageUrl = String(siteSettings.popupImg || "").trim();
+    if(!imageUrl || sessionStorage.getItem("popupShown")) return;
+    const popup = document.getElementById("welcomePopupModal");
+    const popupImg = document.getElementById("welcomePopupImg");
+    if(!popup || !popupImg) return;
+
+    // Start fetching as soon as the setting arrives; only reveal the popup after decode.
+    try {
+        const parsedUrl = new URL(imageUrl, window.location.href);
+        if(parsedUrl.origin !== window.location.origin && !document.querySelector('link[data-popup-preconnect="true"]')){
+            const preconnect = document.createElement("link");
+            preconnect.rel = "preconnect";
+            preconnect.href = parsedUrl.origin;
+            preconnect.crossOrigin = "anonymous";
+            preconnect.dataset.popupPreconnect = "true";
+            document.head.appendChild(preconnect);
+        }
+    } catch(e) { console.warn("Popup image URL is invalid:", e); return; }
+
+    const preloadImage = new Image();
+    preloadImage.decoding = "async";
+    preloadImage.fetchPriority = "high";
+    preloadImage.onload = async () => {
+        try { if(typeof preloadImage.decode === "function") await preloadImage.decode(); } catch(e) {}
+        if(sessionStorage.getItem("popupShown")) return;
+        popupImg.src = imageUrl;
+        popup.classList.add("show");
         sessionStorage.setItem("popupShown", "true");
-    }
+    };
+    preloadImage.onerror = () => console.warn("Popup image could not be loaded. Check the image URL.");
+    preloadImage.src = imageUrl;
 }
 function closeWelcomePopup(){ document.getElementById("welcomePopupModal").classList.remove("show"); }
-function handlePopupClick(){
+function handlePopupClick(event){
+    if(event) event.preventDefault();
+    const destination = String(siteSettings.popupLink || "").trim();
     closeWelcomePopup();
+    if(destination){
+        try{
+            const parsed = new URL(destination, window.location.href);
+            if(parsed.protocol === "http:" || parsed.protocol === "https:"){
+                window.location.href = parsed.href;
+                return;
+            }
+        }catch(err){ console.warn("Invalid popup destination URL:", err); }
+        showAlert("ভুল লিংক", "পপআপের Destination URL সঠিক নয়। Admin Panel থেকে লিংকটি ঠিক করুন।");
+        return;
+    }
     if(siteSettings.popupProdCode) openProductDetail(siteSettings.popupProdCode);
 }
 
@@ -3557,6 +3612,7 @@ async function adminLogin(){
         document.getElementById("adminLoginModal").classList.remove("show");
         document.getElementById("adminFullscreenPanel").classList.add("show");
         document.getElementById("settingPopupImg").value = siteSettings.popupImg || "";
+        document.getElementById("settingPopupLink").value = siteSettings.popupLink || "";
         document.getElementById("settingPopupProdCode").value = siteSettings.popupProdCode || "";
         document.getElementById("settingNotice").value = siteSettings.notice || "";
         document.getElementById("settingHeroImg").value = siteSettings.heroImg || "";
@@ -3787,12 +3843,73 @@ async function deleteProduct(id){
     fetchProducts(); renderAdminProducts(); showToast("ডিলিট সম্পন্ন হয়েছে");
 }
 
+async function optimizePopupImageFile(){
+    const input = document.getElementById("popupImageOptimizeFile");
+    const status = document.getElementById("popupImageOptimizeStatus");
+    const file = input && input.files ? input.files[0] : null;
+    if(!file){ if(status) status.textContent = "আগে একটি PNG, JPG বা WebP ছবি নির্বাচন করুন।"; return; }
+    if(!file.type.startsWith("image/")){ if(status) status.textContent = "সঠিক image ফাইল নির্বাচন করুন।"; return; }
+    if(status) status.textContent = "ছবি কমপ্রেস হচ্ছে...";
+
+    let objectUrl = "";
+    try{
+        objectUrl = URL.createObjectURL(file);
+        const source = new Image();
+        source.decoding = "async";
+        source.src = objectUrl;
+        await new Promise((resolve,reject)=>{ source.onload=resolve; source.onerror=()=>reject(new Error("ছবিটি পড়া যায়নি।")); });
+
+        let width = source.naturalWidth, height = source.naturalHeight;
+        const maxDimension = 1440;
+        if(Math.max(width,height) > maxDimension){
+            const scale = maxDimension / Math.max(width,height);
+            width = Math.round(width * scale); height = Math.round(height * scale);
+        }
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d", {alpha:true});
+        if(!ctx) throw new Error("এই ব্রাউজারে image compression চালু করা যায়নি।");
+
+        let blob = null;
+        const qualitySteps = [0.86,0.82,0.78,0.74,0.70,0.66,0.62];
+        for(let dimensionPass=0; dimensionPass<3; dimensionPass++){
+            canvas.width = width; canvas.height = height;
+            ctx.clearRect(0,0,width,height);
+            ctx.drawImage(source,0,0,width,height);
+            for(const quality of qualitySteps){
+                blob = await new Promise(resolve=>canvas.toBlob(resolve,"image/webp",quality));
+                if(blob && blob.size <= 450 * 1024) break;
+            }
+            if(blob && blob.size <= 450 * 1024) break;
+            width = Math.round(width * 0.85); height = Math.round(height * 0.85);
+        }
+        if(!blob) throw new Error("WebP তৈরি করা যায়নি। অন্য ছবি দিয়ে চেষ্টা করুন।");
+
+        const downloadUrl = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.download = (file.name.replace(/\.[^.]+$/, "") || "adores-pet-popup") + "-optimized.webp";
+        document.body.appendChild(link); link.click(); link.remove();
+        setTimeout(()=>URL.revokeObjectURL(downloadUrl), 30000);
+
+        const kb = value => (value/1024).toFixed(0) + " KB";
+        const percent = Math.max(0, Math.round((1 - blob.size/file.size)*100));
+        if(status) status.innerHTML = `<b style="color:#087f72;">কমপ্রেস সম্পন্ন!</b> ${kb(file.size)} → ${kb(blob.size)} (${percent}% কমেছে)। এখন WebP ফাইলটি ইমেজ হোস্টিংয়ে আপলোড করে নতুন URL বসান।`;
+    }catch(error){
+        console.error("Popup image compression failed:",error);
+        if(status) status.textContent = error.message || "কমপ্রেস করা যায়নি।";
+    }finally{
+        if(objectUrl) URL.revokeObjectURL(objectUrl);
+    }
+}
+
 async function saveSiteSettings(){
     const popupImg = document.getElementById("settingPopupImg").value.trim();
+    const popupLink = document.getElementById("settingPopupLink").value.trim();
     const popupProdCode = document.getElementById("settingPopupProdCode").value.trim();
     const notice = document.getElementById("settingNotice").value.trim();
     await supabaseClient.from('site_settings').upsert([
         { key: 'popup_img', value: popupImg },
+        { key: 'popup_link', value: popupLink },
         { key: 'popup_product_id', value: popupProdCode },
         { key: 'notice', value: notice }
     ], { onConflict: 'key' });
