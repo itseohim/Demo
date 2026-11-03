@@ -2108,15 +2108,21 @@ function goHome(){
 }
 
 function selectCategory(cat){
-    currentCategory = cat;
+    currentCategory = String(cat || "").trim();
     closeCategoryPopup();
-    document.getElementById("selectedCategoryBadge").innerText = cat ? cat : "Showing All";
+    const badge = document.getElementById("selectedCategoryBadge");
+    if(badge) badge.innerText = currentCategory || "Showing All";
+    const searchInput = document.getElementById("searchInput");
+    if(searchInput) searchInput.value = "";
     renderProducts();
+    const grid = document.getElementById("productsGrid");
+    if(grid) grid.scrollIntoView({behavior:"smooth", block:"start"});
 }
 
 function searchProducts(){
     currentCategory = "";
-    document.getElementById("selectedCategoryBadge").innerText = "Showing All";
+    const badge = document.getElementById("selectedCategoryBadge");
+    if(badge) badge.innerText = "Showing All";
     renderProducts();
 }
 
@@ -2246,13 +2252,42 @@ function productMatchesSearch(product, query){
     return words.length > 1 && words.every(word => searchable.some(value => value.includes(word)));
 }
 
+function productMatchesCategory(product, selectedCategory){
+    const selected = normalizeSearchText(selectedCategory);
+    const stored = normalizeSearchText(product?.category || "");
+    const name = normalizeSearchText(product?.name || "");
+    const description = normalizeSearchText(product?.description || "");
+    const details = `${name} ${description}`.trim();
+    if(!selected) return true;
+    if(stored === selected) return true;
+
+    // Support the site's customer-facing subcategories even when older products
+    // were saved under the broader legacy category names in the database.
+    if(selected === "rabbit food"){
+        return stored === "pet food" || (stored === "food" && /\brabbit\b/.test(details));
+    }
+    if(selected === "hamster food"){
+        return stored === "pet food" || (stored === "food" && /\bhamster\b/.test(details));
+    }
+    if(selected === "pet food"){
+        return stored === "rabbit food" || stored === "hamster food";
+    }
+    if(selected === "hamster accessories"){
+        return stored === "accessories" && /\bhamster\b/.test(details);
+    }
+    if(selected === "accessories"){
+        return stored === "hamster accessories";
+    }
+    return false;
+}
+
 function renderProducts(){
     const grid = document.getElementById("productsGrid");
     const searchInput = document.getElementById("searchInput");
     if(!grid) return;
     const search = searchInput ? searchInput.value.trim() : "";
     let filtered = products.filter(p => p.is_active !== false);
-    if(currentCategory) filtered = filtered.filter(p => normalizeSearchText(p.category) === normalizeSearchText(currentCategory));
+    if(currentCategory) filtered = filtered.filter(p => productMatchesCategory(p, currentCategory));
     else if(search) filtered = filtered.filter(p => productMatchesSearch(p, search));
 
     if(filtered.length === 0){
