@@ -587,6 +587,13 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
 .site-dialog-ok{background:#008f7d;color:#fff}
 @media(max-width:360px){.site-dialog-box{padding:20px 15px 17px}.site-dialog-box h3{font-size:18px}}
 
+
+.admin-order-actions{scrollbar-width:thin}
+.admin-order-actions button,.admin-order-actions select{flex:0 0 auto!important;white-space:nowrap!important}
+.customer-order-admin-message{display:flex;flex-direction:column;gap:5px;margin:10px 0;padding:12px 13px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;line-height:1.55}
+.customer-order-admin-message strong{font-size:13px}
+.customer-order-admin-message span{font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+
 </style>
 </head>
 
@@ -1325,7 +1332,7 @@ body{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
                 <div id="profileEditForm" style="display:none; background:#f8fafc; border:1px solid #e2e8f0; border-radius:16px; padding:16px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                         <h3 style="font-size:14px; font-weight:900; color:var(--teal);">প্রোফাইল ও ঠিকানা আপডেট</h3>
-                        <button onclick="toggleProfileEditMode(false)" style="background:#64748b; color:#fff; border:none; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">বাতিল</button>
+                        <button onclick="toggleProfileEditMode(false)" style="background:#64748b; color:#fff; border:none; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">Cancel</button>
                     </div>
                     <div style="margin-bottom:10px;"><label style="font-size:11px; font-weight:700;">আপনার নাম *</label><input id="accName" placeholder="রহিম শিকদার" class="checkout-input" style="margin-top:2px;"></div>
                     <div style="margin-bottom:10px;"><label style="font-size:11px; font-weight:700;">মোবাইল নম্বর *</label><input id="accPhone" type="tel" placeholder="017xxxxxxxx" class="checkout-input" style="margin-top:2px;"></div>
@@ -2701,6 +2708,8 @@ async function renderUserOrdersList(){
                 ? `<div class="customer-order-cancel-reason"><i class="fa-solid fa-circle-info"></i> বাতিলের কারণ: ${o.cancel_reason}</div>` : '';
             const adminMessage = String(o.status || '').toLowerCase() !== 'pending'
                 ? `<div class="customer-order-status-note">📢 অর্ডার স্ট্যাটাস: ${o.status}</div>` : '';
+            const customAdminMessage = String(o.admin_message || '').trim()
+                ? `<div class="customer-order-admin-message"><strong>📩 ADORE'S PET থেকে বার্তা</strong><span>${escapeOrderText(o.admin_message)}</span></div>` : '';
             const orderItems = Array.isArray(data.items) ? data.items : [];
             window.__adoresVoucherOrders = window.__adoresVoucherOrders || {};
             window.__adoresVoucherOrders[String(o.id)] = {...o, items:orderItems};
@@ -2751,6 +2760,7 @@ async function renderUserOrdersList(){
                             <div><span>অর্ডার স্ট্যাটাস</span><strong>${o.status || 'Pending'}</strong></div>
                         </div>
                         ${adminMessage}
+                        ${customAdminMessage}
                         ${cancelMsg}
                         <div class="customer-order-actions">
                             <button type="button" onclick="openVoucherForOrder('${o.id}')">
@@ -2954,7 +2964,7 @@ async function renderAdminCoupons(){
         return `
         <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; background:#f8fafc; padding:6px; border-radius:6px; margin-bottom:4px; font-size:11px;">
             <div><b>${String(c.code || '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}</b> (${discountLabel}) <span style="color:${c.is_active ? '#059669' : '#64748b'}">· ${statusLabel}</span></div>
-            <button onclick="deleteCoupon('${c.id}')" style="background:#ef4444; color:#fff; border:none; padding:2px 6px; border-radius:4px; cursor:pointer;">ডিলিট</button>
+            <button onclick="deleteCoupon('${c.id}')" style="background:#ef4444; color:#fff; border:none; padding:2px 6px; border-radius:4px; cursor:pointer;">Delete</button>
         </div>`;
     }).join("");
 }
@@ -3193,14 +3203,15 @@ async function renderAdminOrders(){
             <div style="margin-bottom:5px;">${o.customer_name || 'নাম নেই'} · ${o.phone || 'ফোন নেই'}</div>
             ৳${o.total || 0} | TrxID: ${o.payment_trxid || o.trx_id || 'N/A'}
             ${cancellationBlock}
-            <div style="margin-top:8px; display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+            <div class="admin-order-actions" style="margin-top:8px; display:flex; gap:6px; align-items:center; flex-wrap:nowrap; overflow-x:auto; padding-bottom:3px;">
                 ${!isCancelled ? `<select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:5px; border-radius:6px; font-size:11px; flex:1; min-width:120px;">
-                    <option value="">স্ট্যাটাস পরিবর্তন করুন</option>
+                    <option value="">Change Status</option>
                     <option value="Pending">Pending</option><option value="Confirmed">Confirmed</option>
                     <option value="Shipped">Shipped</option><option value="Completed">Completed</option>
                 </select>` : ''}
-                <button onclick="openVoucherForOrder('${o.id}')" style="background:var(--teal); color:#fff; border:none; padding:6px 9px; border-radius:6px; font-size:11px; cursor:pointer;">ভাউচার</button>
-                <button onclick="adminEditDeliveryFee('${o.id}', ${Number(o.delivery_fee)||0})" style="background:#0f766e; color:#fff; border:none; padding:6px 9px; border-radius:6px; font-size:11px; cursor:pointer;">ডেলিভারি চার্জ</button>
+                <button onclick="adminSendOrderMessage('${o.id}', '${String(o.order_number || o.id).replace(/'/g, '')}')" style="background:#2563eb;color:#fff;border:none;padding:6px 9px;border-radius:6px;font-size:11px;white-space:nowrap;cursor:pointer;">Message</button>
+                <button onclick="openVoucherForOrder('${o.id}')" style="background:var(--teal); color:#fff; border:none; padding:6px 9px; border-radius:6px; font-size:11px; cursor:pointer;">Voucher</button>
+                <button onclick="adminEditDeliveryFee('${o.id}', ${Number(o.delivery_fee)||0})" style="background:#0f766e; color:#fff; border:none; padding:6px 9px; border-radius:6px; font-size:11px; cursor:pointer;">Delivery Fee</button>
                 ${!isCancelled && String(o.status).toLowerCase() !== 'completed' ? `<button onclick="adminCancelOrder('${o.id}')" style="background:#f97316; color:#fff; border:none; padding:6px 9px; border-radius:6px; font-size:11px; cursor:pointer;">বাতিল</button>` : ''}
                 <button onclick="adminDeleteOrder('${o.id}', '${String(o.order_number || o.id).replace(/'/g, '')}')" style="background:#dc2626; color:#fff; border:none; padding:6px 9px; border-radius:6px; font-size:11px; cursor:pointer;">ডিলিট</button>
             </div>
@@ -3299,19 +3310,42 @@ async function adminDeleteOrder(orderId, orderNumber){
     }catch(err){showAlert('ডিলিট করা যায়নি',err.message + ' প্রয়োজনে Supabase-এ দেওয়া SQL migration চালু করুন।');}
 }
 
+
+function escapeOrderText(value){
+ return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+async function adminSendOrderMessage(orderId, orderNumber){
+ const message=await showSiteInput('কাস্টমারের My Orders-এ যে বার্তাটি দেখাতে চান তা লিখুন।', '', 'Send Customer Message');
+ if(message===null || !String(message).trim()) return;
+ try{
+  const {data,error}=await supabaseClient.rpc('admin_set_adores_order_message',{p_order_id:orderId,p_admin_message:String(message).trim()});
+  if(error) throw error;
+  if(data && data.success===false) throw new Error(data.message||'Message could not be saved');
+  await renderAdminOrders();
+  showToast('Customer message saved. Customer will see it in My Orders.');
+ }catch(err){showAlert('Message পাঠানো যায়নি',err.message+' — SQL migration চালানো হয়েছে কি না দেখুন।');}
+}
 async function adminEditDeliveryFee(orderId, currentFee){
-    const raw = await showSiteInput('নতুন ডেলিভারি চার্জ লিখুন (৳):', String(currentFee), 'ডেলিভারি চার্জ পরিবর্তন');
+    const raw = await showSiteInput('নতুন ডেলিভারি চার্জ লিখুন (৳):', String(currentFee), 'Update Delivery Fee');
     if(raw === null) return;
     const fee = Number(raw);
-    if(!Number.isFinite(fee) || fee < 0 || fee > 100000) return showAlert('ভুল', 'সঠিক ডেলিভারি চার্জ লিখুন।');
+    if(!Number.isFinite(fee) || fee < 0 || fee > 100000) return showAlert('Invalid amount', 'সঠিক ডেলিভারি চার্জ লিখুন।');
+    const message = await showSiteInput('কাস্টমারকে My Orders-এ কী বার্তা দেখাতে চান? খালি রাখলে স্বয়ংক্রিয় বার্তা যাবে।',
+      `আপনার অর্ডারের ডেলিভারি চার্জ ৳${fee} নির্ধারণ করা হয়েছে।`, 'Notify Customer');
+    if(message === null) return;
+    const finalMessage = String(message).trim() || `আপনার অর্ডারের ডেলিভারি চার্জ ৳${fee} নির্ধারণ করা হয়েছে।`;
     try{
         const { data, error } = await supabaseClient.rpc('admin_update_adores_order', {
             p_order_id: orderId, p_status: null, p_cancel_reason: null, p_delivery_fee: fee
         });
         if(error) throw error;
         if(data && data.success === false) throw new Error(data.message || 'Update failed');
-        renderAdminOrders(); showToast('ডেলিভারি চার্জ আপডেট হয়েছে।');
-    }catch(err){ showAlert('ত্রুটি', err.message); }
+        const msgResult = await supabaseClient.rpc('admin_set_adores_order_message',{
+            p_order_id:orderId,p_admin_message:finalMessage
+        });
+        if(msgResult.error) throw msgResult.error;
+        await renderAdminOrders(); showToast('Delivery fee updated and customer notified in My Orders.');
+    }catch(err){ showAlert('Update failed', err.message+' — SQL migration চালানো হয়েছে কি না দেখুন।'); }
 }
 
 async function compressImageFileForUpload(file,maxBytes=450*1024){
