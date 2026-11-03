@@ -18,82 +18,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
 
-/* Order-linked Messenger: customer uses private tracking token; admin uses Supabase session. */
-let activeOrderChat = null;
-let orderChatRefreshTimer = null;
-function orderChatSetHeader(orderNo, customer, phone, role){
- const title=document.getElementById('orderChatTitle');
- const sub=document.getElementById('orderChatSubtitle');
- if(title) title.textContent='অর্ডার #'+orderNo+' · '+(role==='admin'?'কাস্টমার চ্যাট':'ADORE\'S PET');
- if(sub) sub.textContent=(customer||'কাস্টমার')+(phone?' · '+phone:'')+' — শুধু টেক্সট মেসেজ';
-}
-function orderChatOpen(meta){
- activeOrderChat=meta;
- orderChatSetHeader(meta.orderNo,meta.customer,meta.phone,meta.role);
- const overlay=document.getElementById('orderChatOverlay');
- overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
- const input=document.getElementById('orderChatInput'); if(input){input.value='';input.focus();}
- loadActiveOrderChat();
- if(orderChatRefreshTimer) clearInterval(orderChatRefreshTimer);
- orderChatRefreshTimer=setInterval(()=>{if(activeOrderChat)loadActiveOrderChat(true);},7000);
-}
-function closeOrderChat(){
- activeOrderChat=null;
- if(orderChatRefreshTimer){clearInterval(orderChatRefreshTimer);orderChatRefreshTimer=null;}
- const overlay=document.getElementById('orderChatOverlay'); if(overlay){overlay.classList.remove('show');overlay.setAttribute('aria-hidden','true');}
-}
-async function openAdminOrderChat(orderId,orderNo){
- if(!supabaseClient) return showAlert('সংযোগ নেই','Supabase সংযোগ পাওয়া যায়নি।');
- const {data:{session}}=await supabaseClient.auth.getSession();
- if(!session) return showAlert('অ্যাডমিন লগইন প্রয়োজন','চ্যাট দেখতে আগে Admin Panel-এ লগইন করুন।');
- const order=(window.__adoresVoucherOrders||{})[String(orderId)]||{};
- orderChatOpen({role:'admin',orderId:String(orderId),orderNo:String(orderNo),customer:String(order.customer_name||'কাস্টমার'),phone:String(order.phone||'')});
-}
-function openCustomerOrderChat(token,orderNo){
- if(!token) return showAlert('চ্যাট খোলা যাচ্ছে না','এই অর্ডারের tracking token পাওয়া যায়নি।');
- orderChatOpen({role:'customer',token:String(token),orderNo:String(orderNo),customer:"ADORE'S PET"});
-}
-function renderOrderChatMessages(rows){
- const box=document.getElementById('orderChatMessages'); if(!box)return;
- const oldAtBottom=box.scrollHeight-box.scrollTop-box.clientHeight<70;
- if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="order-chat-empty"><i class="fa-regular fa-comments" style="font-size:30px;display:block;margin-bottom:8px;"></i>এখনো কোনো মেসেজ নেই।<br>কথোপকথন শুরু করুন।</div>';return;}
- box.innerHTML=rows.map(m=>{
-  const side=(activeOrderChat.role==='admin' ? m.sender_role==='admin' : m.sender_role==='customer')?'customer':'admin';
-  const label=m.sender_role==='admin'?"ADORE'S PET":(m.sender_name||'কাস্টমার');
-  const date=m.created_at?new Date(m.created_at).toLocaleString('bn-BD',{dateStyle:'short',timeStyle:'short'}):'';
-  return `<div class="order-chat-msg ${side}"><b>${escapeOrderText(label)}</b>${escapeOrderText(m.message)}<time>${escapeOrderText(date)}</time></div>`;
- }).join('');
- if(oldAtBottom||!box.dataset.firstRender){box.scrollTop=box.scrollHeight;box.dataset.firstRender='1';}
-}
-async function loadActiveOrderChat(silent=false){
- const chat=activeOrderChat;if(!chat||!supabaseClient)return;
- const box=document.getElementById('orderChatMessages');
- if(!silent)box.innerHTML='<div class="order-chat-empty">মেসেজ লোড হচ্ছে...</div>';
- try{
-  const rpc=chat.role==='admin'?'admin_get_adores_order_chat':'customer_get_adores_order_chat';
-  const args=chat.role==='admin'?{p_order_id:chat.orderId}:{p_tracking_token:chat.token};
-  const {data,error}=await supabaseClient.rpc(rpc,args);if(error)throw error;
-  if(data&&data.success===false)throw new Error(data.message||'চ্যাট লোড করা যায়নি');
-  renderOrderChatMessages(Array.isArray(data)?data:(data.messages||[]));
- }catch(err){if(!silent)box.innerHTML=`<div class="order-chat-empty">চ্যাট লোড করা যায়নি।<br>${escapeOrderText(err.message)}<br><small>প্রয়োজনীয় SQL migration চালানো হয়েছে কি না দেখুন।</small></div>`;}
-}
-async function sendActiveOrderChatMessage(){
- const chat=activeOrderChat,input=document.getElementById('orderChatInput'),btn=document.getElementById('orderChatSend');
- if(!chat||!input||!btn)return;
- const message=input.value.trim();if(!message)return;
- if(message.length>2000)return showAlert('বার্তা বড় হয়েছে','সর্বোচ্চ ২০০০ অক্ষরের মেসেজ পাঠানো যাবে।');
- btn.disabled=true;
- try{
-  const rpc=chat.role==='admin'?'admin_send_adores_order_chat':'customer_send_adores_order_chat';
-  const args=chat.role==='admin'?{p_order_id:chat.orderId,p_message:message}:{p_tracking_token:chat.token,p_message:message};
-  const {data,error}=await supabaseClient.rpc(rpc,args);if(error)throw error;
-  if(data&&data.success===false)throw new Error(data.message||'মেসেজ পাঠানো যায়নি');
-  input.value='';await loadActiveOrderChat(true);
- }catch(err){showAlert('মেসেজ পাঠানো যায়নি',err.message+' — SQL migration চালানো হয়েছে কি না দেখুন।');}
- finally{btn.disabled=false;input.focus();}
-}
-function orderChatEnterSend(event){if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendActiveOrderChatMessage();}}
-
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -4449,5 +4373,83 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHeaderP
   <form class="order-chat-compose" onsubmit="event.preventDefault();sendActiveOrderChatMessage();"><textarea id="orderChatInput" rows="1" maxlength="2000" placeholder="আপনার মেসেজ লিখুন..." onkeydown="orderChatEnterSend(event)"></textarea><button type="submit" id="orderChatSend">পাঠান</button></form>
  </section>
 </div>
+
+<script>
+/* Order-linked Messenger: customer uses private tracking token; admin uses Supabase session. */
+let activeOrderChat = null;
+let orderChatRefreshTimer = null;
+function orderChatSetHeader(orderNo, customer, phone, role){
+ const title=document.getElementById('orderChatTitle');
+ const sub=document.getElementById('orderChatSubtitle');
+ if(title) title.textContent='অর্ডার #'+orderNo+' · '+(role==='admin'?'কাস্টমার চ্যাট':'ADORE\'S PET');
+ if(sub) sub.textContent=(customer||'কাস্টমার')+(phone?' · '+phone:'')+' — শুধু টেক্সট মেসেজ';
+}
+function orderChatOpen(meta){
+ activeOrderChat=meta;
+ orderChatSetHeader(meta.orderNo,meta.customer,meta.phone,meta.role);
+ const overlay=document.getElementById('orderChatOverlay');
+ overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
+ const input=document.getElementById('orderChatInput'); if(input){input.value='';input.focus();}
+ loadActiveOrderChat();
+ if(orderChatRefreshTimer) clearInterval(orderChatRefreshTimer);
+ orderChatRefreshTimer=setInterval(()=>{if(activeOrderChat)loadActiveOrderChat(true);},7000);
+}
+function closeOrderChat(){
+ activeOrderChat=null;
+ if(orderChatRefreshTimer){clearInterval(orderChatRefreshTimer);orderChatRefreshTimer=null;}
+ const overlay=document.getElementById('orderChatOverlay'); if(overlay){overlay.classList.remove('show');overlay.setAttribute('aria-hidden','true');}
+}
+async function openAdminOrderChat(orderId,orderNo){
+ if(!supabaseClient) return showAlert('সংযোগ নেই','Supabase সংযোগ পাওয়া যায়নি।');
+ const {data:{session}}=await supabaseClient.auth.getSession();
+ if(!session) return showAlert('অ্যাডমিন লগইন প্রয়োজন','চ্যাট দেখতে আগে Admin Panel-এ লগইন করুন।');
+ const order=(window.__adoresVoucherOrders||{})[String(orderId)]||{};
+ orderChatOpen({role:'admin',orderId:String(orderId),orderNo:String(orderNo),customer:String(order.customer_name||'কাস্টমার'),phone:String(order.phone||'')});
+}
+function openCustomerOrderChat(token,orderNo){
+ if(!token) return showAlert('চ্যাট খোলা যাচ্ছে না','এই অর্ডারের tracking token পাওয়া যায়নি।');
+ orderChatOpen({role:'customer',token:String(token),orderNo:String(orderNo),customer:"ADORE'S PET"});
+}
+function renderOrderChatMessages(rows){
+ const box=document.getElementById('orderChatMessages'); if(!box)return;
+ const oldAtBottom=box.scrollHeight-box.scrollTop-box.clientHeight<70;
+ if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="order-chat-empty"><i class="fa-regular fa-comments" style="font-size:30px;display:block;margin-bottom:8px;"></i>এখনো কোনো মেসেজ নেই।<br>কথোপকথন শুরু করুন।</div>';return;}
+ box.innerHTML=rows.map(m=>{
+  const side=(activeOrderChat.role==='admin' ? m.sender_role==='admin' : m.sender_role==='customer')?'customer':'admin';
+  const label=m.sender_role==='admin'?"ADORE'S PET":(m.sender_name||'কাস্টমার');
+  const date=m.created_at?new Date(m.created_at).toLocaleString('bn-BD',{dateStyle:'short',timeStyle:'short'}):'';
+  return `<div class="order-chat-msg ${side}"><b>${escapeOrderText(label)}</b>${escapeOrderText(m.message)}<time>${escapeOrderText(date)}</time></div>`;
+ }).join('');
+ if(oldAtBottom||!box.dataset.firstRender){box.scrollTop=box.scrollHeight;box.dataset.firstRender='1';}
+}
+async function loadActiveOrderChat(silent=false){
+ const chat=activeOrderChat;if(!chat||!supabaseClient)return;
+ const box=document.getElementById('orderChatMessages');
+ if(!silent)box.innerHTML='<div class="order-chat-empty">মেসেজ লোড হচ্ছে...</div>';
+ try{
+  const rpc=chat.role==='admin'?'admin_get_adores_order_chat':'customer_get_adores_order_chat';
+  const args=chat.role==='admin'?{p_order_id:chat.orderId}:{p_tracking_token:chat.token};
+  const {data,error}=await supabaseClient.rpc(rpc,args);if(error)throw error;
+  if(data&&data.success===false)throw new Error(data.message||'চ্যাট লোড করা যায়নি');
+  renderOrderChatMessages(Array.isArray(data)?data:(data.messages||[]));
+ }catch(err){if(!silent)box.innerHTML=`<div class="order-chat-empty">চ্যাট লোড করা যায়নি।<br>${escapeOrderText(err.message)}<br><small>প্রয়োজনীয় SQL migration চালানো হয়েছে কি না দেখুন।</small></div>`;}
+}
+async function sendActiveOrderChatMessage(){
+ const chat=activeOrderChat,input=document.getElementById('orderChatInput'),btn=document.getElementById('orderChatSend');
+ if(!chat||!input||!btn)return;
+ const message=input.value.trim();if(!message)return;
+ if(message.length>2000)return showAlert('বার্তা বড় হয়েছে','সর্বোচ্চ ২০০০ অক্ষরের মেসেজ পাঠানো যাবে।');
+ btn.disabled=true;
+ try{
+  const rpc=chat.role==='admin'?'admin_send_adores_order_chat':'customer_send_adores_order_chat';
+  const args=chat.role==='admin'?{p_order_id:chat.orderId,p_message:message}:{p_tracking_token:chat.token,p_message:message};
+  const {data,error}=await supabaseClient.rpc(rpc,args);if(error)throw error;
+  if(data&&data.success===false)throw new Error(data.message||'মেসেজ পাঠানো যায়নি');
+  input.value='';await loadActiveOrderChat(true);
+ }catch(err){showAlert('মেসেজ পাঠানো যায়নি',err.message+' — SQL migration চালানো হয়েছে কি না দেখুন।');}
+ finally{btn.disabled=false;input.focus();}
+}
+function orderChatEnterSend(event){if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendActiveOrderChatMessage();}}
+</script>
 </body>
 </html>
